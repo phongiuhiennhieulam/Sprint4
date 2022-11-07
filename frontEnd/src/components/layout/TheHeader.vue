@@ -45,8 +45,15 @@
                   viên</router-link>
               </el-dropdown-item>
               <el-dropdown-item>
+                <router-link to="/user" style="text-decoration: none;color:black;cursor:pointer width: 100%;">Quản lý phân quyền và mật khẩu</router-link>
+              </el-dropdown-item>
+              <el-dropdown-item>
                 <router-link to="/phucloi" style="text-decoration: none;color:black;cursor:pointer width: 100%;">Quản lý
                   phúc lợi</router-link>
+              </el-dropdown-item>
+              <el-dropdown-item>
+                <router-link to="/department" style="text-decoration: none;color:black;cursor:pointer width: 100%;">Quản lý
+                  phòng ban</router-link>
               </el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>

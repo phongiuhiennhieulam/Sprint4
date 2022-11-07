@@ -105,6 +105,7 @@ public class StaffController {
                         .body(new MessageResponse("Error: Email is already taken!"));
             }
             String pass = "123456";
+
             User user = new User(staffForm.getEmail(),
                     passwordEncoder.encode(pass));
             Set<Role> roles = new HashSet<>();
@@ -112,7 +113,12 @@ public class StaffController {
                     .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
             roles.add(userRole);
             user.setRoles(roles);
-            staffService.saveOrUpDate(staff);
+
+            Staff add = staffService.saveOrUpDate(staff);
+            user.setStaff(add);
+            user.setStatus(add.getStatus());
+            user.setCode(add.getCode());
+            user.setName(add.getName());
             userService.save(user);
             return ResponseEntity.ok(new MessageResponse("create staff successfully!"));
         }catch (Exception e){
@@ -121,14 +127,24 @@ public class StaffController {
         }
     }
 
+
+
     @PutMapping("/staff-delete/{id}")
     public ResponseEntity<Void> deleteStaff(@PathVariable Long id){
-        staffService.delete(id);
+        Staff lock = staffService.delete(id);
+        staffService.saveOrUpDate(lock);
+        User user= new User();
+        user.setStatus(lock.getStatus());
+        userService.save(user);
         return new ResponseEntity<Void>(HttpStatus.OK);
     }
     @PutMapping("/staff-unlock/{id}")
     public ResponseEntity<Void> unLookStaff(@PathVariable Long id){
-        staffService.unLock(id);
+        Staff unlock = staffService.unLock(id);
+        staffService.saveOrUpDate(unlock);
+        User user= new User();
+        user.setStatus(unlock.getStatus());
+        userService.save(user);
         return new ResponseEntity<Void>(HttpStatus.OK);
     }
     @PutMapping("/staff/{id}")
@@ -140,7 +156,7 @@ public class StaffController {
         staff.setDepartment(staffForm.getDepartment());
         staff.setWelfareMoney(staffForm.getWelfareMoney());
         staff.setDate(staffForm.getDate());
-        staffService.update(id, staff);
+        Staff edit = staffService.update(id, staff);
         return new ResponseEntity<Void>(HttpStatus.OK);
     }
 
@@ -207,7 +223,7 @@ public class StaffController {
     public List<Staff> getBirthday(){
         Calendar cal = Calendar.getInstance();
         int number = cal.get(Calendar.MONTH)+1;
-        System.out.println(number);
+//        System.out.println(number);
         return staffService.sinhNhat(number);
         //return new ResponseEntity<List<Staff>>(staffService.sinhNhat(number), HttpStatus.OK);
     }

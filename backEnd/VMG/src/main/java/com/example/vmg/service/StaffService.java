@@ -2,7 +2,6 @@ package com.example.vmg.service;
 
 import com.example.vmg.model.Staff;
 import com.example.vmg.model.StaffInterface;
-import com.example.vmg.model.Welfare;
 import com.example.vmg.respository.StaffRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -11,7 +10,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -49,18 +47,20 @@ public class StaffService {
         return staffRepository.findByEmail(email);
     }
 
-    public void saveOrUpDate(Staff staff){
-        staffRepository.save(staff);
+    public Staff saveOrUpDate(Staff staff){
+        return staffRepository.save(staff);
     }
     public Optional<Staff> findById(Long id){
         return staffRepository.findById(id);
     }
 
-    public void delete(Long id){
+    public Staff delete(Long id){
         staffRepository.delete(id);
+        return null;
     }
-    public void unLock(Long id){
+    public Staff unLock(Long id){
         staffRepository.unlock(id);
+        return null;
     }
 
 //    public void updateMoney(BigDecimal number, List<Long> ids) {
@@ -79,8 +79,9 @@ public class StaffService {
 
     public Integer getTotalMoney(Long id){return staffRepository.getMoney(id);}
 
-    public void update(Long id, Staff staff) {
+    public Staff update(Long id, Staff staff) {
         staffRepository.save(staff);
+        return staff;
     }
     public List<Staff> sinhNhat(int number){
         return staffRepository.getSinhNhat(number);

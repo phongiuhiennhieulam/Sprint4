@@ -8,6 +8,7 @@ public interface IUserService {
     Optional<User> findByUsername(String username);
 
     Boolean existsByUsername(String username);
+//    Optional<User> updateStatusByIdStaff(Long idStaff);
 
 //    Boolean existsByEmail(String email);
 }

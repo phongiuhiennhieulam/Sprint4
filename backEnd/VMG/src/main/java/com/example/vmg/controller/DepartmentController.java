@@ -3,7 +3,7 @@ package com.example.vmg.controller;
 import com.example.vmg.form.DepartmentForm;
 import com.example.vmg.model.Department;
 import com.example.vmg.respository.DepartmentRepository;
-import com.example.vmg.service.PhongBanService;
+import com.example.vmg.service.DepartmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +17,7 @@ import java.util.List;
 @RequestMapping("/api")
 public class DepartmentController {
     @Autowired
-    private PhongBanService phongBanService;
+    private DepartmentService departmentService;
     @Autowired
     private DepartmentRepository departmentRepository;
 
@@ -41,7 +41,26 @@ public class DepartmentController {
         department.setName(departmentForm.getName());
         department.setStatus(departmentForm.getStatus());
 
-        phongBanService.saveOrUpDate(department);
+        departmentService.saveOrUpDate(department);
         return new ResponseEntity<Void>(HttpStatus.OK);
+    }
+    @PostMapping("/department")
+    public ResponseEntity<String> addDepartment(@RequestBody DepartmentForm departmentForm){
+        Department department = new Department();
+
+        department.setId(departmentForm.getId());
+        department.setName(departmentForm.getName());
+        //department.setStatus(departmentForm.getStatus());
+
+        departmentService.saveOrUpDate(department);
+        return new ResponseEntity<String>(HttpStatus.OK);
+    }
+
+    @PutMapping("/department/{id}")
+    public ResponseEntity<String>UpdateDepartment(@PathVariable Long id, @RequestBody Department department){
+        Department department1 = departmentRepository.findById(id).get();
+        department1.setName(department.getName());
+        departmentService.update(id, department1);
+        return new ResponseEntity<String>(HttpStatus.OK);
     }
 }
