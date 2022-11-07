@@ -1,6 +1,7 @@
 package com.example.vmg.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -15,16 +16,17 @@ import java.util.Set;
         uniqueConstraints = {
                 @UniqueConstraint(columnNames = "username")
         })
-@Getter
-@Setter
+@Data
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    private String Name;
     private String userName;
     private String passWord;
 
     private Integer status;
+
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(	name = "user_roles",
@@ -34,10 +36,17 @@ public class User {
 
 
     public User() {
+
     }
 
     public User(String username, String password) {
         this.userName = username;
         this.passWord = password;
     }
+
+    @OneToOne(cascade = CascadeType.ALL)
+    private Staff staff;
+
+
+
 }

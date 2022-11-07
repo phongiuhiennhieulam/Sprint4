@@ -81,6 +81,7 @@
                         :ref="item.id"
                       />
                   </td>
+                  
                   <td>
                     <!-- <span class="icon-delete" @click="deleteStaff(item.id)">
                       <i class="fa fa-trash" aria-hidden="true"></i>
@@ -130,6 +131,7 @@
               hide-on-single-page
             >
             </el-pagination>
+
           </div>
         </div>
         <transition name="slideLeft" v-if="isShow">
@@ -824,6 +826,7 @@ export default {
           console.log(e);
         });
     },
+    
     onFind() {
       console.log(this.text);
       StaffService.getFind(this.text)

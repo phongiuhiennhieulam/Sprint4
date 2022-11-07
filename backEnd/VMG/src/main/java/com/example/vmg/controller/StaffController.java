@@ -141,6 +141,7 @@ public class StaffController {
                         .body(new MessageResponse("Error: Email is already taken!"));
             }
             String pass = "123456";
+
             User user = new User(staffForm.getEmail(),
                     passwordEncoder.encode(pass));
             Set<Role> roles = new HashSet<>();
@@ -148,7 +149,12 @@ public class StaffController {
                     .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
             roles.add(userRole);
             user.setRoles(roles);
-            staffService.saveOrUpDate(staff);
+
+            Staff add = staffService.saveOrUpDate(staff);
+            user.setStaff(add);
+            user.setStatus(add.getStatus());
+            user.setCode(add.getCode());
+            user.setName(add.getName());
             userService.save(user);
             return ResponseEntity.ok(new MessageResponse("create staff successfully!"));
         }catch (Exception e){
@@ -157,8 +163,11 @@ public class StaffController {
         }
     }
 
+
+
     @PutMapping("/staff-delete/{id}")
     public ResponseEntity<Void> deleteStaff(@PathVariable Long id){
+
         staffService.delete(id);
         Staff staff = staffService.getById(id);
         User user = userService.findByUsername(staff.getEmail()).get();
@@ -168,6 +177,7 @@ public class StaffController {
     }
     @PutMapping("/staff-unlock/{id}")
     public ResponseEntity<Void> unLookStaff(@PathVariable Long id){
+
         staffService.unLock(id);
         Staff staff = staffService.getById(id);
         User user = userService.findByUsername(staff.getEmail()).get();
@@ -176,6 +186,7 @@ public class StaffController {
         return new ResponseEntity<Void>(HttpStatus.OK);
     }
     @PutMapping("/staff/{id}")
+
     public ResponseEntity<Void> update(@PathVariable Long id, @RequestBody Staff staff){
         Staff _staff = staffService.findById(id).get();
         staff.setName(staff.getName());
@@ -255,7 +266,7 @@ public class StaffController {
     public List<Staff> getBirthday(){
         Calendar cal = Calendar.getInstance();
         int number = cal.get(Calendar.MONTH)+1;
-        System.out.println(number);
+//        System.out.println(number);
         return staffService.sinhNhat(number);
         //return new ResponseEntity<List<Staff>>(staffService.sinhNhat(number), HttpStatus.OK);
     }

@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class PhongBanService {
+public class DepartmentService {
     @Autowired
     private DepartmentRepository departmentRepository;
 
@@ -27,4 +27,12 @@ public class PhongBanService {
     public void delete(Long id){
         departmentRepository.deleteById(id);
     }
+    public void update(Long id, Department department) {
+        departmentRepository.save(department);
+    }
+
+//    public Page<Department> findText(String text, int pageNumber, int maxNumber) {
+//        Pageable pageable = PageRequest.of(pageNumber, maxNumber);
+//        return departmentRepository.finByText(text, pageable);
+//    }
 }

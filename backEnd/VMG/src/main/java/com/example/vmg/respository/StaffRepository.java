@@ -40,7 +40,7 @@ public interface StaffRepository extends JpaRepository<Staff,Long> {
     @Modifying
     @Transactional
     @Query("update Staff p set p.status = 0 where p.id =:id")
-    void unlock(Long id);
+    void unlock(@Param("id") Long id);
 
     Staff findByEmail(String email);
 

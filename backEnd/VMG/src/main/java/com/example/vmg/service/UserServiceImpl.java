@@ -1,11 +1,16 @@
 package com.example.vmg.service;
 
+import com.example.vmg.model.Department;
+import com.example.vmg.model.ERole;
+import com.example.vmg.model.Staff;
 import com.example.vmg.model.User;
 import com.example.vmg.respository.UserRepository;
 import com.example.vmg.service.impl.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Optional;
 
@@ -27,8 +32,37 @@ public class UserServiceImpl implements IUserService {
 //    public Boolean existsByEmail(String email) {
 //        return userRepository.existsByEmail(email);
 //    }
+    public void update(Long id, User user) {
+    userRepository.save(user);
+}
+
     public User save(User user){
         return userRepository.save(user);
+    }
+
+    public List<User> findAll(){
+        return userRepository.findAll();
+    }
+
+    public Optional<User> findById(Long id) {
+        return userRepository.findById(id);
+    }
+
+
+    public void delete(Long id){
+        User user = userRepository.findById(id).get();
+        user.setStatus(1);
+        userRepository.save(user);
+    }
+    public void unLock(Long id){
+       User user =  userRepository.findById(id).get();
+       user.setStatus(0);
+       userRepository.save(user);
+    }
+
+    public Page<User> getByPage(int pageNumber, int maxNumber){
+        Pageable pageable = PageRequest.of(pageNumber, maxNumber);
+        return userRepository.getPage(pageable);
     }
 
     public void looks(List<String> emails) {
