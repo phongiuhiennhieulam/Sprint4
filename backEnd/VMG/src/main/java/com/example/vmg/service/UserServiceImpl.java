@@ -11,8 +11,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import javax.persistence.criteria.CriteriaBuilder;
 import java.util.List;
 import java.util.Optional;
 
@@ -41,7 +39,7 @@ public class UserServiceImpl implements IUserService {
     public User save(User user){
         return userRepository.save(user);
     }
-    
+
     public List<User> findAll(){
         return userRepository.findAll();
     }
@@ -67,5 +65,7 @@ public class UserServiceImpl implements IUserService {
         return userRepository.getPage(pageable);
     }
 
-
+    public void looks(List<String> emails) {
+        userRepository.looks(emails);
+    }
 }

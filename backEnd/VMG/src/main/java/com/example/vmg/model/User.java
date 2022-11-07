@@ -27,8 +27,6 @@ public class User {
 
     private Integer status;
 
-    private String code;
-
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(	name = "user_roles",

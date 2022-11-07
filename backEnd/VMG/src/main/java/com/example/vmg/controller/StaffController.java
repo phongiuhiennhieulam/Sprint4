@@ -84,6 +84,42 @@ public class StaffController {
     public ResponseEntity<?> getStaff(@PathVariable Long id){
         return new ResponseEntity<Optional<Staff>>(staffService.findById(id), HttpStatus.OK);
     }
+    @PostMapping("/staffs")
+    public ResponseEntity<?> createStaff(@Valid @RequestBody Staff staff){
+        try {
+            DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+
+            Staff _staff = new Staff();
+            staff.setCode(staff.getCode());
+            staff.setName(staff.getName());
+            staff.setDate(staff.getDate());
+            staff.setEmail(staff.getEmail());
+            staff.setWelfareMoney(staff.getWelfareMoney());
+            staff.setDepartment(staff.getDepartment());
+            staff.setStatus(0);
+
+            //lấy thông tin user
+            if (userService.existsByUsername(staff.getEmail())) {
+                return ResponseEntity
+                        .badRequest()
+                        .body(new MessageResponse("Error: Email is already taken!"));
+            }
+            String pass = "123456";
+            User user = new User(staff.getEmail(),
+                    passwordEncoder.encode(pass));
+            Set<Role> roles = new HashSet<>();
+            Role userRole = roleService.findByName(ERole.ROLE_USER)
+                    .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+            roles.add(userRole);
+            user.setRoles(roles);
+            staffService.saveOrUpDate(staff);
+            userService.save(user);
+            return ResponseEntity.ok(new MessageResponse("create staff successfully!"));
+        }catch (Exception e){
+            e.printStackTrace();
+            return ResponseEntity.ok(new RuntimeException("Erorr!"));
+        }
+    }
     @PostMapping("/staff")
     public ResponseEntity<?> addNhanVien(@Valid @ModelAttribute StaffForm staffForm){
         try {
@@ -131,32 +167,35 @@ public class StaffController {
 
     @PutMapping("/staff-delete/{id}")
     public ResponseEntity<Void> deleteStaff(@PathVariable Long id){
-        Staff lock = staffService.delete(id);
-        staffService.saveOrUpDate(lock);
-        User user= new User();
-        user.setStatus(lock.getStatus());
+
+        staffService.delete(id);
+        Staff staff = staffService.getById(id);
+        User user = userService.findByUsername(staff.getEmail()).get();
+        user.setStatus(1);
         userService.save(user);
         return new ResponseEntity<Void>(HttpStatus.OK);
     }
     @PutMapping("/staff-unlock/{id}")
     public ResponseEntity<Void> unLookStaff(@PathVariable Long id){
-        Staff unlock = staffService.unLock(id);
-        staffService.saveOrUpDate(unlock);
-        User user= new User();
-        user.setStatus(unlock.getStatus());
+
+        staffService.unLock(id);
+        Staff staff = staffService.getById(id);
+        User user = userService.findByUsername(staff.getEmail()).get();
+        user.setStatus(0);
         userService.save(user);
         return new ResponseEntity<Void>(HttpStatus.OK);
     }
     @PutMapping("/staff/{id}")
-    public ResponseEntity<Void> update(@PathVariable Long id, @ModelAttribute StaffForm staffForm){
-        Staff staff = staffService.findById(id).get();
-        staff.setName(staffForm.getName());
-        staff.setCode(staffForm.getCode());
-        staff.setEmail(staffForm.getEmail());
-        staff.setDepartment(staffForm.getDepartment());
-        staff.setWelfareMoney(staffForm.getWelfareMoney());
-        staff.setDate(staffForm.getDate());
-        Staff edit = staffService.update(id, staff);
+
+    public ResponseEntity<Void> update(@PathVariable Long id, @RequestBody Staff staff){
+        Staff _staff = staffService.findById(id).get();
+        staff.setName(staff.getName());
+        staff.setCode(staff.getCode());
+        staff.setEmail(staff.getEmail());
+        staff.setDepartment(staff.getDepartment());
+        staff.setWelfareMoney(staff.getWelfareMoney());
+        staff.setDate(staff.getDate());
+        staffService.update(id, staff);
         return new ResponseEntity<Void>(HttpStatus.OK);
     }
 
@@ -170,6 +209,10 @@ public class StaffController {
     @PutMapping("/staff/deletes")
     public ResponseEntity<?> mutilpartDelete(@RequestParam("ids") List<Long> ids){
         staffService.mutipartDelete(ids);
+
+        List<String> emails = staffService.getEmailById(ids);
+        userService.looks(emails);
+
         String.join(",", ids.stream()
                 .map(value ->  Long.toString(value)).collect(Collectors.toList()));
         return ResponseEntity.ok(new MessageResponse("delete staff successfully!"));
