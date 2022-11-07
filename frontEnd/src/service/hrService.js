@@ -54,6 +54,9 @@ class StaffService {
     async createStaff(staff) {
         return await axios.post('http://localhost:8083/api/staff', staff)
     }
+    async createStaff2(staff) {
+        return await axios.post('http://localhost:8083/api/staffs', staff)
+    }
     async getRegisterWelfare() {
         return await axios.get('http://localhost:8083/api/registers')
     }
@@ -72,8 +75,8 @@ class StaffService {
     async getErorr () {
         return await axios.get('http://localhost:8083/api/staff-erorr')
     }
-    async getDepartment1 () {
-        return await axios.get('http://localhost:8083/api/list-department/2')
+    async getStaffByDepartment (id) {
+        return await axios.get(`http://localhost:8083/api/list-department/${id}`)
     }
     async getDepartment2 () {
         return await axios.get('http://localhost:8083/api/list-department/1')
