@@ -2,6 +2,7 @@
   <div class="hr-list">
     <div class="hr-content">
       <div class="hr-title"><strong> QUẢN LÝ NHÂN VIÊN</strong></div>
+      <div>{{selected}}</div>
       <br />
       <div class="row">
         <div class="col-4" style="margin-left: 35px">
@@ -61,12 +62,13 @@
             <table>
               <thead>
                 <tr>
-                  <th>Chọn</th>
+                  <th><input type="checkbox" @click="selectAllCheckboxes()"></th>
                   <th width="50px">Khóa</th>
                   <th width="70px">STT</th>
                   <th width="200px">Họ và tên</th>
                   <th width="200px">Mã nhân viên</th>
                   <th width="240px">Phòng ban</th>
+                  <th wtdth="80px">Số tiền hỗ trợ</th>
                   <th width="170x">Trạng thái</th>
                   <th width="50px">infor</th>
                 </tr>
@@ -106,6 +108,7 @@
                   <td style="text-align: left;">{{ item.name }}</td>
                   <td style="text-align: left;">{{ item.code }}</td>
                   <td style="text-align: left;">{{ item.department.name }}</td>
+                  <td style="text-align: right;">{{formatCurrency(item.welfareMoney)}}</td>
                   <td style="text-align: left;">
                     <div v-if="item.status == 0">Đang làm việc</div>
                     <div v-if="item.status == 1">Nghỉ làm</div>
@@ -212,7 +215,7 @@
       title="Sửa thông tin nhân viên"
     >
       <div class="row">
-        <form id="form-staff2">
+        <form name="form-update">
           <div class="row">
             <div class="col-6">
               <div>
@@ -254,6 +257,7 @@
                 <label class="form-label"><Strong>Email:</Strong></label>
                 <input
                   name="email"
+                  id="email"
                   v-model="staff.email"
                   type="email"
                   required
@@ -276,7 +280,7 @@
                     id="date"
                     name="date"
                     required
-                    type="text"
+                    type="date"
                     class="form-control"
                     placeholder="YYYY/MM/DD"
                   />
@@ -347,142 +351,7 @@
       top="5vh"
       left="150px"
       title="Thêm mới nhân viên"
-    >
-      <!-- <div class="row">
-        <form id="form-staff">
-          <div class="row">
-            <div class="col-6">
-              <div>
-                <div class="mb-3">
-                <label class="form-label">
-                  <strong v-if="showValidateCode" style="color: red">
-                    Mã nhân viên đã tồn tại, vui lòng nhập lại!
-                  </strong>
-                  <strong v-else>Mã nhân viên:</strong>
-                </label>
-                <input
-                  v-model="staff.code"
-                  type="text"
-                  id="code"
-                  name="code"
-                  class="form-control"
-                  required
-                  placeholder="Mã nhân viên"
-                  />
-                </div>             
-              </div>
-
-              <div>
-                <div class="mb-3">
-                <label class="form-label"
-                  ><Strong>Họ tên nhân viên:</Strong></label
-                >
-                <input
-                  v-model="staff.name"
-                  type="text"
-                  id="name"
-                  name="name"
-                  class="form-control"
-                  required
-                  placeholder="Họ tên nhân viên"
-                />
-                </div>
-              </div>
-              <div>
-                <div class="mb-3">
-                <label class="form-label">
-                  <strong v-if="showValidateEmail" style="color: red">
-                    Email đã tồn tại, vui lòng nhập lại!
-                  </strong>  
-                  <Strong v-else>Email: </Strong>
-                </label>
-                <input
-                  name="email"
-                  v-model="staff.email"
-                  type="email"
-                  required
-                  class="form-control"
-                  placeholder="Email nhân viên"
-                />
-                </div>
-              </div>
-            </div>
-
-            <div class="col-6">
-              <div>
-                <div class="mb-3">
-                  <label class="form-label"><Strong>Ngày sinh( năm / tháng / ngày):</Strong></label>
-                  <input
-                    v-model="staff.date"
-                    name="date"
-                    required
-                    type="date"
-                    value="staff.date"
-                    class="form-control"
-                    placeholder="YYYY/DD/MM"
-                  />
-                </div>
-              </div>  
-
-              <div>
-                <div class="mb-3">
-                  <label class="form-label"
-                    ><Strong>Số tiền hỗ trợ phúc lợi:   <span v-if="!staff.welfareMoney==''">
-                    {{formatCurrency(staff.welfareMoney)}}
-                  </span></Strong></label
-                  >
-                  <input
-                    v-model="staff.welfareMoney"
-                    required
-                    id="welfareMoney"
-                    name="welfareMoney" 
-                    type="number"
-                    class="form-control"
-                    placeholder="Tiền hỗ trợ phúc lợi"
-                  />
-                </div>
-              </div> 
-
-              <div>
-                  <div class="mb-3">
-                  <label class="form-label"><Strong>Chọn phòng ban:</Strong> </label>
-                  <select style="height: 55px;"
-                    v-model="staff.department"
-                    placeholder="Chọn phòng ban"
-                    class="form-control"
-                    name="department"
-                    id="department"
-                    required
-                  >
-                    <option v-for="x in departments" :value="x.id" :key="x.id">
-                      {{ x.name }}
-                    </option>
-                  </select>
-                  </div>
-              </div>
-            </div>
-          </div>
-          <div style="text-align: center">
-                <button @click.prevent="create" class="btn btn-danger">
-                  <strong>Thêm mới</strong>
-                </button>
-          </div>
-              <div v-if="staff.date.match(/^\d{4}\/\d{2}\/\d{2}$/)" style="text-align: center">
-                <button @click.prevent="create" class="btn btn-danger">
-                  <strong>Thêm mới</strong>
-                </button>
-              </div>
-              <div v-else style="text-align: center">
-                <button class="btn btn-danger">
-                  <strong>Thêm mới</strong>
-                </button>
-              </div>
-              <button style="text-align: center" @click.prevent="create" class="btn btn-danger">
-                  <strong>Thêm mới</strong>
-              </button>
-            </form>
-      </div> -->
-      
+    >    
       <div class="row">
         <form name="myForm">
           <div class="row">
@@ -532,6 +401,7 @@
                   <Strong v-else>Email: </Strong>
                 </label>
                 <input
+                  id="email"
                   name="email"
                   v-model="staff.email"
                   type="email"
@@ -549,6 +419,7 @@
                   <label class="form-label"><Strong>Ngày sinh:</Strong></label>
                   <input
                     v-model="staff.date"
+                    id="date"
                     name="date"
                     required
                     type="date"
@@ -597,9 +468,12 @@
               </div>
             </div>
           </div>
-              <button style="text-align: center" @click.prevent="create" class="btn btn-danger">
+          <div  style="text-align: center">
+            <button @click.prevent="create" class="btn btn-danger">
                   <strong>Thêm mới</strong>
               </button>
+          </div>
+              
         </form>
       </div>
     </el-dialog>
@@ -1074,15 +948,67 @@ export default {
                     title: "Warning",
                     message: "Mã nhân viên không được để trống!",
                     type: "warning",
+                  });
+        document.getElementById("code").focus();          
+        return false;
+      }
+      let name = document.forms["myForm"]["name"].value;
+      if (name == "") {
+        this.$notify({
+                    title: "Warning",
+                    message: "Họ tên nhân viên không được để trống!",
+                    type: "warning",
+                  });
+        document.getElementById("name").focus();       
+        return false;
+      }
+      let email = document.forms["myForm"]["email"].value;
+      if (email == "") {
+        this.$notify({
+                    title: "Warning",
+                    message: "Email không được để trống!",
+                    type: "warning",
+                  });
+        document.getElementById("email").focus();           
+        return false;
+      }
+      let date = document.forms["myForm"]["date"].value;
+      if (date == "") {
+        this.$notify({
+                    title: "Warning",
+                    message: "Ngày sinh không được để trống!",
+                    type: "warning",
+                  });
+        document.getElementById("date").focus();           
+        return false;
+      }     
+      let welfareMoney = document.forms["myForm"]["welfareMoney"].value;
+      if (welfareMoney == "") {
+        this.$notify({
+                    title: "Warning",
+                    message: "Số tiền hỗ trợ không được để trống!",
+                    type: "warning",
                     size: 100,
                   });
+          document.getElementById("welfareMoney").focus(); 
         return false;
-      }  
+      }
+      let department = document.forms["myForm"]["department"].value;
+      if (department == "") {
+        this.$notify({
+                    title: "Warning",
+                    message: "phòng ban không được để trống!",
+                    type: "warning",
+                    size: 100,
+                  });
+        document.getElementById("department").focus();           
+        return false;
+      }      
       else if (this.code.includes(this.staff.code)){
         this.showValidateCode = true;
         this.$notify({
               title: "Warning",
-              message: "Bạn nhập sai thông tin",
+              message: "Mã nhân viên đã tồn tại",
               type: "warning",
             });
       }
@@ -1091,7 +1017,7 @@ export default {
               this.showValidateEmail = true;
               this.$notify({
                     title: "Warning",
-                    message: "Bạn nhập sai thông tin",
+                    message: "Email đã tồn tại",
                     type: "warning",
                   });
         }
@@ -1125,10 +1051,70 @@ export default {
       }
     },
     update(id) {
-      let form = document.querySelector("#form-staff2");
-      let formdata = new FormData(form);
-
-      StaffService.updateStaff(id, formdata)
+      let x = document.forms["form-update"]["code"].value;
+      if (x == "") {
+        this.$notify({
+                    title: "Warning",
+                    message: "Mã nhân viên không được để trống!",
+                    type: "warning",
+                  });
+        document.getElementById("code").focus();          
+        return false;
+      }
+      let name = document.forms["form-update"]["name"].value;
+      if (name == "") {
+        this.$notify({
+                    title: "Warning",
+                    message: "Họ tên nhân viên không được để trống!",
+                    type: "warning",
+                  });
+        document.getElementById("name").focus();       
+        return false;
+      }
+      let email = document.forms["form-update"]["email"].value;
+      if (email == "") {
+        this.$notify({
+                    title: "Warning",
+                    message: "Email không được để trống!",
+                    type: "warning",
+                  });
+        document.getElementById("email").focus();           
+        return false;
+      }
+      let date = document.forms["form-update"]["date"].value;
+      if (date == "") {
+        this.$notify({
+                    title: "Warning",
+                    message: "Ngày sinh không được để trống!",
+                    type: "warning",
+                  });
+        document.getElementById("date").focus();           
+        return false;
+      }     
+      let welfareMoney = document.forms["form-update"]["welfareMoney"].value;
+      if (welfareMoney == "") {
+        this.$notify({
+                    title: "Warning",
+                    message: "Số tiền hỗ trợ không được để trống!",
+                    type: "warning",
+                    size: 100,
+                  });
+          document.getElementById("welfareMoney").focus(); 
+        return false;
+      }
+      let department = document.forms["form-update"]["department"].value;
+      if (department == "") {
+        this.$notify({
+                    title: "Warning",
+                    message: "phòng ban không được để trống!",
+                    type: "warning",
+                    size: 100,
+                  });
+        document.getElementById("department").focus();           
+        return false;
+      }      
+      else{
+        StaffService.updateStaff(id, this.staff)
         .then((response) => {
           console.log(response.data);
           this.retrieveStaff();
@@ -1147,6 +1133,8 @@ export default {
             type: "warning",
           });
         });
+      }
+     
     },
     validateForm() {
       let x = document.forms["myForm"]["code"].value;
@@ -1159,8 +1147,18 @@ export default {
                   });
         return false;
       }  
+    },
+    selectAllCheckboxes () {
+      const checkboxes = document.querySelectorAll('input[type=checkbox]');
+      checkboxes.forEach((cb) => { 
+        if(cb.checked == false ){
+           cb.checked = true; 
+        }
+        else{
+          cb.checked = false;
+        }
+      });
     }
-   
   },  
   mounted() {
     // this.staff.date = this.formatDate(this.staff.date)
@@ -1168,6 +1166,7 @@ export default {
     this.getDepartments();
     this.listCode();
     this.listEmail();
+    this.formatCurrency();
   },
 };
 </script>

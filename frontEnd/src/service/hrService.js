@@ -49,7 +49,7 @@ class StaffService {
         return await axios.put(`http://localhost:8083/api/staff-unlock/${id}`)
     }
     async updateStaff(id, staff) {
-        return await axios.put(`http://localhost:8083/api/staff/${id}`, staff)
+        return await axios.put(`http://localhost:8083/api/staffs/${id}`, staff)
     }
     async createStaff(staff) {
         return await axios.post('http://localhost:8083/api/staff', staff)

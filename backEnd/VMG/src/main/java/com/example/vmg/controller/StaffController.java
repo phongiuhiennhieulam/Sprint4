@@ -175,7 +175,7 @@ public class StaffController {
         userService.save(user);
         return new ResponseEntity<Void>(HttpStatus.OK);
     }
-    @PutMapping("/staff/{id}")
+    @PutMapping("/staffs/{id}")
     public ResponseEntity<Void> update(@PathVariable Long id, @RequestBody Staff staff){
         Staff _staff = staffService.findById(id).get();
         staff.setName(staff.getName());
