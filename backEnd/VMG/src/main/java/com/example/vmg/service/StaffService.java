@@ -45,10 +45,6 @@ public class StaffService {
     public List<String> getEmail(){
         return staffRepository.getEmail();
     }
-    public List<String> getEmailById(List<Long> longs){
-        return staffRepository.getEmailById(longs);
-    }
-
     public Staff getByEmail(String email){
         return staffRepository.findByEmail(email);
     }

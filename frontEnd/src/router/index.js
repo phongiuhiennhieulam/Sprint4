@@ -24,6 +24,12 @@ const routes = [
     meta: { requiresAuth: true }
   },
   {
+    path: "/statistical",
+    name: "Thống kê",
+    component: () => import("@/view/StatisticPage.vue"),
+    meta: { requiresAuth: true }
+  },
+  {
     path: "/register_welfare",
     name: "RegisterWelfare",
     component: () => import("@/view/RegisterWelfare.vue"),
@@ -78,7 +84,7 @@ router.beforeEach(async (to, from, next) => {
   // next-line: check if route ("to" object) needs authenticated
   if (to.matched.some((record) => record.meta.requiresAuth) && !isLogged) {
     next('/login');
-  } else next();
+  }  else next();
 });
 
 export default router;

@@ -141,4 +141,9 @@ public class WelfareController {
         return welfareStaffEntityService.getAcceptWelfareOfUser(id);
     }
 
+    @GetMapping("/getStatisticWelfare")
+    public List<WelfareSatistic> getSatisticWelfareOfUser(){
+        return welfareService.getAllStatistic();
+    }
+
 }

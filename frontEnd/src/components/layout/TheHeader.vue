@@ -15,7 +15,7 @@
         </defs>
       </svg>
     </div>
-    <Transition name="fade">
+    
       <div class="header-right" v-if="loggedIn">
         <div class="header-right__item" v-if="nhanvien">
           <div class="header-right__item">
@@ -34,6 +34,12 @@
           <div class="header-right__item--icon"></div>
         </div>
         <div class="header-right__item" v-if="quanly">
+         
+          <div style="margin-right: 16px">
+            <i class="el-icon-s-data"></i>
+            <router-link to="/statistical" style="text-decoration: none;color:black;cursor:pointer width: 100%;">Thống kê</router-link>
+          </div>
+          
           <i class="el-icon-s-order"></i>
           <el-dropdown>
             <span class="el-dropdown-link" style="cursor: pointer; font-size: 19px; color: black">
@@ -68,9 +74,7 @@
         <el-dropdown v-if="quanly">
           <el-badge :value="listbirthdays.length" :max="10" class="item" style="margin-right: 10px; margin-left: 5px">
             <span class="el-dropdown-link" style="cursor: pointer; font-size: 19px; color: black">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-gift-fill" viewBox="0 0 16 16">
-                <path d="M3 2.5a2.5 2.5 0 0 1 5 0 2.5 2.5 0 0 1 5 0v.006c0 .07 0 .27-.038.494H15a1 1 0 0 1 1 1v1a1 1 0 0 1-1 1H1a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h2.038A2.968 2.968 0 0 1 3 2.506V2.5zm1.068.5H7v-.5a1.5 1.5 0 1 0-3 0c0 .085.002.274.045.43a.522.522 0 0 0 .023.07zM9 3h2.932a.56.56 0 0 0 .023-.07c.043-.156.045-.345.045-.43a1.5 1.5 0 0 0-3 0V3zm6 4v7.5a1.5 1.5 0 0 1-1.5 1.5H9V7h6zM2.5 16A1.5 1.5 0 0 1 1 14.5V7h6v9H2.5z"/>
-              </svg>
+              <i class="el-icon-message-solid"></i>
             </span>
           </el-badge>
 
@@ -88,21 +92,16 @@
             </el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
-
-
         <div>
           <div v-if="staffErorr == ''">
+
           </div>
           <div v-else>
             <el-dropdown v-if="quanly">
               <el-badge :value="staffErorr.length" :max="10" class="item"
                 style="margin-right: 10px; margin-left: 5px ;">
                 <span class="el-dropdown-link" style="cursor: pointer; font-size: 19px; color: black;">
-                  <div>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bell-fill" viewBox="0 0 16 16">
-                      <path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2zm.995-14.901a1 1 0 1 0-1.99 0A5.002 5.002 0 0 0 3 6c0 1.098-.5 6-2 7h14c-1.5-1-2-5.902-2-7 0-2.42-1.72-4.44-4.005-4.901z"/>
-                    </svg>                    
-                  </div>
+                  <samp style="color: red;"><strong>Warning!</strong></samp>
                 </span>
               </el-badge>
               <el-dropdown-menu slot="dropdown">
@@ -136,19 +135,8 @@
           </el-dropdown>
         </div>
       </div>
-      
-      <div v-else class="header-right">
-        <div class="header-right__item">
-          <div class="header-right__item--text">
-            <i class="el-icon-s-custom"></i>
-            <router-link to="/" style="text-decoration: none; color: black; cursor: pointer">Đăng nhập</router-link>
-          </div>
-        </div>
-      </div>
-      <div>
-        
-      </div>
-    </Transition>
+   
+
   </div>
 </template>
   
@@ -223,10 +211,12 @@ export default {
         this.user = response.data;
         this.auth = this.user.roles;
         if (this.userExists("ROLE_USER")) {
+         
           this.nhanvien = true;
         }
         if (this.userExists("ROLE_MODERATOR")) {
           this.quanly = true;
+          
         }
       }
     },
@@ -248,20 +238,13 @@ export default {
 
     this.getDataHeader();
   },
+  
 
 };
 </script>
   
 <style>
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.5s ease;
-}
 
-.fade-enter-from,
-.fade-leave-to {
-  opacity: 0;
-}
 
 .header {
   display: flex;

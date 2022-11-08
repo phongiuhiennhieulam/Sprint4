@@ -32,38 +32,31 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
-    @Autowired private
+    @Autowired
     UserServiceImpl userService;
-    @Autowired private
+    @Autowired
     RoleServiceImpl roleService;
-    @Autowired private PasswordEncoder passwordEncoder;
-    @Autowired private AuthenticationManager authenticationManager;
-    @Autowired private
+    @Autowired PasswordEncoder passwordEncoder;
+    @Autowired AuthenticationManager authenticationManager;
+    @Autowired
     JwtProvider jwtProvider;
-
 
     @PostMapping("/signin")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginForm loginForm) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginForm.getUserName(), loginForm.getPassWord()));
-       // Authentication authentication2 = SecurityContextHolder.getContext().getAuthentication();
-        User user = userService.findByUsername(authentication.getName()).get();
-        if (user.getStatus() == 0){
 
-          SecurityContextHolder.getContext().setAuthentication(authentication);
-          String token = jwtProvider.createToken(authentication);
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        String token = jwtProvider.createToken(authentication);
 
-          UserPrinciple userPrinciple = (UserPrinciple) authentication.getPrincipal();
-          List<String> roles = userPrinciple.getAuthorities().stream()
-                  .map(item -> item.getAuthority())
-                  .collect(Collectors.toList());
-          return ResponseEntity.ok(new JwtResponse(token,
-                  userPrinciple.getUsername(),
-                  userPrinciple.getAuthorities()));
-      }else {
-            return ResponseEntity.ok(new MessageResponse("Account has been locked"));
-        }
+        UserPrinciple userPrinciple = (UserPrinciple) authentication.getPrincipal();
+        List<String> roles = userPrinciple.getAuthorities().stream()
+                .map(item -> item.getAuthority())
+                .collect(Collectors.toList());
 
+        return ResponseEntity.ok(new JwtResponse(token,
+                userPrinciple.getUsername(),
+                userPrinciple.getAuthorities()));
     }
 
     @PostMapping("/signup")
@@ -111,7 +104,7 @@ public class AuthController {
                 }
             });
         }
-        user.setStatus(0);
+
         user.setRoles(roles);
         userService.save(user);
 

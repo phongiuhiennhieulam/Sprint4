@@ -28,10 +28,6 @@ public interface StaffRepository extends JpaRepository<Staff,Long> {
     @Query("update Staff p set p.status = 1 where p.id in(:longs)")
     void MutipartDelete(List<Long> longs);
 
-    @Query("select s.email from Staff s where s.id in(:longs)")
-    public List<String> getEmailById(List<Long> longs);
-    @Query("select email from Staff")
-    public List<String> getEmail();
     @Modifying
     @Transactional
     @Query("update Staff p set p.status = 1 where p.id =:id")
@@ -60,7 +56,8 @@ public interface StaffRepository extends JpaRepository<Staff,Long> {
     @Query("select code from Staff")
     public List<String> getCode();
 
-
+    @Query("select email from Staff")
+    public List<String> getEmail();
 
 
     @Query(value = "select *  from staff s\n" +

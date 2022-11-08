@@ -13,6 +13,6 @@ export default {
 <style >
 .content {
     flex: 1;
-
+    position: relative;
 }
 </style>

@@ -164,7 +164,9 @@ export default {
 };
 </script>l
 
-<style>
+<style scoped>
+
+
 .pl-title {
   text-align: center;
   font-size: 34px;

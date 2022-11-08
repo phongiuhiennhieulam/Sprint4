@@ -1,47 +1,35 @@
 <template>
-  <div class="login">
-    <div class="login-title">
-      <h1>Quản lý phúc lợi</h1>
-    </div>
-    <div class="login-content">
-      <form name="form" @submit.prevent="handleLogin">
-        <div class="form-group">
-          <input
-            v-model="user.userName"
-            type="email"
-            class="form-control"
-            name="username"
-            placeholder="Nhập email"
-            required
-          />
-        </div>
-        <br />
-        <div class="form-group">
-          <input
-            v-model="user.passWord"
-            type="password"
-            class="form-control"
-            name="password"
-            placeholder="Nhập password"
-            required
-          />
-        </div>
-        <br />
-        <div class="form-group" id="bt">
-          <button class="btn btn-danger btn-block" :disabled="loading">
-            <span
-              v-show="loading"
-              class="spinner-border spinner-border-sm"
-            ></span>
-            <span>Login</span>
-          </button>
-        </div>
-        <!-- <div class="form-group">
+  <div class="login-page">
+    <div class="login">
+      <div class="login-title">
+        <h1>Quản lý phúc lợi</h1>
+      </div>
+      <div class="login-content">
+        <form name="form" @submit.prevent="handleLogin">
+          <div class="form-group">
+            <input v-model="user.userName" type="email" class="form-control" name="username" placeholder="Nhập email"
+              required />
+          </div>
+          <br />
+          <div class="form-group">
+            <input v-model="user.passWord" type="password" class="form-control" name="password"
+              placeholder="Nhập password" required />
+          </div>
+          <br />
+          <div class="form-group" id="bt">
+            <button class="btn btn-danger btn-block" :disabled="loading">
+              <span v-show="loading" class="spinner-border spinner-border-sm"></span>
+              <span>Đăng nhập</span>
+            </button>
+          </div>
+          <!-- <div class="form-group">
           <div v-if="message" class="alert alert-danger" role="alert">{{message}}</div>
         </div> -->
-      </form>
+        </form>
+      </div>
     </div>
   </div>
+
 </template>
 
 <script>
@@ -95,37 +83,50 @@ export default {
         }
       );
     },
-    
+
   },
 };
 </script>
 
 <style >
+.login-page {
+  background: url('@/assets/image/vmg-2192.jpg');
+  background-repeat: round;
+  background-size: auto;
+  width: 100%;
+  height: 100%;
+
+}
+
 .login {
-  text-align: center;
-  position: absolute;
-  left: 120px;
-  top: 80px;
-  width: 500px;
-  height: 608px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 482px;
+  height: 582px;
+  margin: 0 auto;
+  padding: 40px;
+  background: #e3edfd;
+  border-radius: 12px;
   box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.25);
-  margin-left: 400px;
-  margin-top: 80px;
-  background-color: pink;
+  position: absolute;
+  right: 0;
+  left: 0;
+  transform: translateY(15%);
 }
 
 .login-title {
-  font-size: 35px;
+  font-size: 35px !important;
   font-weight: 400;
-  line-height: 49px;
   text-align: center;
-  margin-top: 138px;
+  margin-bottom: 40px;
 }
 
 .login-content {
+  margin: 40px 0px;
   text-align: center;
   margin-top: 18px;
-  margin-right: 100px;
+
 }
 
 .hr-detail__button {
@@ -158,6 +159,7 @@ export default {
   font-size: 14px !important;
   font-weight: 600 !important;
 }
+
 input {
   outline: none;
   border: none;
@@ -165,14 +167,12 @@ input {
   padding-top: 15px !important;
   padding-bottom: 15px !important;
 }
+
 .btn {
   padding: 1px 10px 10px 10px;
   background-color: #f00;
   border: none;
   border-radius: 30%;
   cursor: pointer;
-}
-.form-group {
-  margin-left: 100px;
 }
 </style>

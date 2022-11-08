@@ -252,7 +252,7 @@ export default {
 };
 </script>
   
-<style>
+<style scoped>
 #colorful {
   border-bottom: none;
   height: 8% !important;
