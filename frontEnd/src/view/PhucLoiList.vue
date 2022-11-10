@@ -94,23 +94,23 @@
         <el-button type="primary" @click="showDeleteDialog(idDelete)">Xác nhận</el-button>
       </span>
     </el-dialog>
-    <el-dialog :visible.sync="isShowEdit" width="600px" label-width="100px" top="5vh">
-      <h3><strong>Thông tin phúc lợi</strong></h3>
+    <el-dialog :visible.sync="isShowEdit" width="600px" label-width="100px" top="5vh" left="150px"
+      title="Thông tin phúc lợi">
       <el-form :model="edit" ref="edit" label-width="120px" label-position="top">
-        <el-row>
-          <el-col :span="6">
-            <el-form-item label="Tên phúc lợi" prop="name">
-              <el-input v-model="edit.name"></el-input>
+        <el-row :gutter="24">
+
+          <el-col :span="24">
+            <el-form-item label="Tên phúc lợi">
+              <el-input v-model="edit.name" type="text"></el-input>
             </el-form-item>
           </el-col>
-          <el-col :span="6" :offset="2">
-            <el-form-item label="Thành tiền" prop="address">
-              <samp>formatCurrency(edit.price)</samp>
+          <el-col :span="12">
+            <el-form-item :label="'Thành tiền: ' + formatCurrency(edit.price)">
               <el-input type="number" v-model="edit.price"></el-input>
             </el-form-item>
           </el-col>
-          <el-col>
-            <el-form-item label="Loại" prop="code" v-if="value == 0">
+          <el-col :span="12">
+            <el-form-item prop="code" v-if="value == 0" label="Loại phúc lợi">
               <el-select v-model="edit.isQuantity">
                 <el-option type="text" :value="true" label="Chỉ 1"></el-option>
                 <el-option type="text" :value="false" label="Chọn số lượng"></el-option>
@@ -118,37 +118,37 @@
 
             </el-form-item>
           </el-col>
+
           <el-col>
-            <el-form-item label="Mô tả" prop="code">
+            <el-form-item prop="code" label="Mô tả">
               <el-input type="textarea" v-model="edit.text"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
       </el-form>
-      <span slot="footer" class="dialog-footer">
-        <el-button class="hr-detail__button" round @click="editWel(edit)">Cập nhật
+      <div slot="footer" class="dialog-footer" style="text-align: center">
+        <el-button class="btn btn-danger" round @click="editWel(edit)">Cập nhật
         </el-button>
-      </span>
+      </div>
     </el-dialog>
-    <el-dialog :visible.sync="isShowAdd" width="600px" label-width="100px" top="5vh" left="150px">
-      <h3><strong>Thêm mới phúc lợi</strong></h3>
+    <el-dialog :visible.sync="isShowAdd" width="600px" label-width="100px" top="5vh" left="150px"
+      title="Thêm mới phúc lợi">
+
       <el-form :model="add" ref="add" label-width="120px" label-position="top">
-        <el-row>
-          <el-col :span="9">
-            <el-form-item label="" class="el-item">
-              <samp>Tên phúc lợi</samp>
+        <el-row :gutter="24">
+
+          <el-col :span="24">
+            <el-form-item label="Tên phúc lợi">
               <el-input v-model="add.name" type="text"></el-input>
             </el-form-item>
           </el-col>
-          <el-col :span="11" :offset="4">
-            <el-form-item label="" class="el-item">
-              <samp>Thành tiền: {{ formatCurrency(add.price) }}</samp>
+          <el-col :span="12">
+            <el-form-item :label="'Thành tiền: ' + formatCurrency(add.price)">
               <el-input type="number" v-model="add.price"></el-input>
             </el-form-item>
           </el-col>
-          <br>
-          <el-col>
-            <el-form-item prop="code" v-if="value == 0">
+          <el-col :span="12">
+            <el-form-item prop="code" v-if="value == 0" label="Loại phúc lợi">
               <el-select v-model="add.isQuantity">
                 <el-option type="text" :value="true" label="Chỉ 1"></el-option>
                 <el-option type="text" :value="false" label="Chọn số lượng"></el-option>
@@ -156,9 +156,9 @@
 
             </el-form-item>
           </el-col>
+
           <el-col>
-            <el-form-item prop="code" class="el-item">
-              <samp>Mô tả</samp>
+            <el-form-item prop="code" label="Mô tả">
               <el-input type="textarea" v-model="add.text"></el-input>
             </el-form-item>
           </el-col>
@@ -169,6 +169,7 @@
         </el-button>
       </div>
     </el-dialog>
+
   </div>
 </template>
 
@@ -200,6 +201,8 @@ export default {
         isQuantity: false
       },
       list: [],
+      listAllWelfare:[],
+      nameWelfare: [],
       centerDialogVisible: false,
       addText: "Thêm mới phúc lợi cá nhân hóa"
     };
@@ -231,6 +234,17 @@ export default {
         this.$alert(
           "Thông tin đầu vào không hợp lệ vui lòng nhập đủ thông tin!",
           "Thông tin không hợp lệ",
+          {
+            confirmButtonText: "OK",
+            callback: () => { },
+          }
+        );
+        isValidate = false;
+      }
+      if (this.nameWelfare.includes(add.name)) {
+        this.$alert(
+          "Tên phúc lợi đã tồn tại",
+          "Vui lòng nhập phúc lợi khác",
           {
             confirmButtonText: "OK",
             callback: () => { },
@@ -373,16 +387,26 @@ export default {
       welfareApi.getAllWelfare().then((res) => {
         // self.isLoaded = true;
         this.list = res.data;
-        console.log(res.data);
-        console.log(this.list);
       });
     },
     getAllGeneralWelfares() {
       welfareApi.getAllGeneralWelfare().then((res) => {
         // self.isLoaded = true;
         this.list = res.data;
-        console.log(res.data);
-        console.log(this.list);
+      });
+    },
+    setUpListNameWelfare() {
+      welfareApi.getAllWelfare().then((res) => {
+        this.listAllWelfare = res.data;
+        this.listAllWelfare.forEach(element => {
+          this.nameWelfare.push(element.name);
+        });
+      });
+      welfareApi.getAllGeneralWelfare().then((res) => {
+        this.listAllWelfare = res.data;
+        this.listAllWelfare.forEach(element => {
+          this.nameWelfare.push(element.name);
+        });
       });
     },
     formatCurrency(value) {
@@ -396,18 +420,33 @@ export default {
     console.log("created");
     // const self = this;
     this.getAllWelfare();
+    this.setUpListNameWelfare();
   },
 };
 </script>
 
-<style scoped>
+<style >
+.el-select {
+  width: 100%;
+}
+
+textarea {
+  border: 1px solid #23282b8f !important;
+  border-radius: 8px !important;
+}
+
+.pl-form__title {
+  font-weight: 600;
+  font-size: 28px;
+}
+
 .el-item {
-  color: #f00 !important;
+
   font-size: 22px;
   font-weight: 600;
   line-height: 31px;
   letter-spacing: 0em;
-  text-align: center;
+
   line-height: 0px;
   margin-bottom: 6px;
 }
@@ -542,14 +581,10 @@ input::-webkit-inner-spin-button {
 }
 
 .el-form-item__label {
-  color: #f00 !important;
-  font-size: 22px;
   font-weight: 600;
-  line-height: 31px;
-  letter-spacing: 0em;
-  text-align: left;
-  line-height: 0px;
   margin-bottom: 6px;
+  padding: 0 !important;
+  margin-bottom: 0px !important;
 }
 
 .el-form-item__content input {
@@ -559,9 +594,8 @@ input::-webkit-inner-spin-button {
 }
 
 .el-dialog__title {
-  margin-left: 56px;
   font-size: 25px;
-  font-weight: 700;
+  font-weight: 600 !important;
   line-height: 35px;
   letter-spacing: 0em;
   text-align: left;

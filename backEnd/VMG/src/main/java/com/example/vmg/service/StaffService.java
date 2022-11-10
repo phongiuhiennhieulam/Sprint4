@@ -39,6 +39,16 @@ public class StaffService {
     public Staff getById(Long id){
         return staffRepository.findById(id).get();
     }
+
+    public List<String> getEmailByUpdate(Long id){
+        return staffRepository.getEmailByUpdate(id);
+    }
+
+    public List<String> getCodeByUpdate(Long id){
+        return staffRepository.getCodeByUpdate(id);
+    }
+
+
     public List<String> getCode(){
         return staffRepository.getCode();
     }
@@ -53,8 +63,9 @@ public class StaffService {
         return staffRepository.findByEmail(email);
     }
 
-    public void saveOrUpDate(Staff staff){
-        staffRepository.save(staff);
+    public Staff saveOrUpDate(Staff staff){
+        Staff res = staffRepository.save(staff);
+        return res;
     }
     public Optional<Staff> findById(Long id){
         return staffRepository.findById(id);

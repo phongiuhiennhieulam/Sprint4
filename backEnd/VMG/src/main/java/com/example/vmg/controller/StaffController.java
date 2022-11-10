@@ -112,6 +112,13 @@ public class StaffController {
                     .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
             roles.add(userRole);
             user.setRoles(roles);
+            user.setStatus(0);
+
+            Staff add = staffService.saveOrUpDate(staff);
+
+//            user.setStaff(add);
+            user.setStatus(add.getStatus());
+            user.setName(add.getName());
             staffService.saveOrUpDate(staff);
             userService.save(user);
             return ResponseEntity.ok(new MessageResponse("create staff successfully!"));
@@ -148,6 +155,7 @@ public class StaffController {
                     .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
             roles.add(userRole);
             user.setRoles(roles);
+            //user.setName(staff.getName());
             staffService.saveOrUpDate(staff);
             userService.save(user);
             return ResponseEntity.ok(new MessageResponse("create staff successfully!"));
@@ -188,8 +196,8 @@ public class StaffController {
         return new ResponseEntity<Void>(HttpStatus.OK);
     }
 
-    @PutMapping("/staff/update-money")
-    public ResponseEntity<?> updateMoney(@RequestParam("ids") List<Long> ids, @RequestBody BigDecimal money){
+    @PutMapping("/staff/update-money/{money}")
+    public ResponseEntity<?> updateMoney(@RequestParam("ids") List<Long> ids, @PathVariable BigDecimal money){
         staffService.updateMoney(money, ids);
         String.join(",", ids.stream()
                 .map(value ->  Long.toString(value)).collect(Collectors.toList()));
@@ -259,6 +267,13 @@ public class StaffController {
         return staffService.sinhNhat(number);
         //return new ResponseEntity<List<Staff>>(staffService.sinhNhat(number), HttpStatus.OK);
     }
+    @PutMapping("/return/{id}")
+    public ResponseEntity <?> ReturnRegisters(@PathVariable Long id){
+        WelfareStaffEntity welfareStaff = welfareStaffEntityService.findById(id).get();
+        welfareStaff.setStatus(2);
+        welfareStaffEntityService.update(id, welfareStaff);
+        return ResponseEntity.ok(new MessageResponse("successfully!"));
+    }
 //    @PutMapping("/update-money")
 //    public String updateMoney2(@RequestParam("ids") List<Long> ids, @RequestBody BigDecimal number) {
 //        staffService.updateMoney(number, ids);
@@ -310,6 +325,14 @@ public class StaffController {
     @GetMapping("/staff-name/{email}")
     public Staff getUserNameByEmail(@PathVariable String email){
         return staffService.getUsernameByEmail(email);
+    }
+    @GetMapping("/getemail2/{id}")
+    public List<String> getEmail2(@PathVariable("id") Long id){
+        return staffService.getEmailByUpdate(id);
+    }
+    @GetMapping("/getcode2/{id}")
+    public List<String> getCode2(@PathVariable("id") Long id){
+        return staffService.getCodeByUpdate(id);
     }
 
 

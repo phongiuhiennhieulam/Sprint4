@@ -24,6 +24,24 @@ const routes = [
     meta: { requiresAuth: true }
   },
   {
+    path: "/user",
+    name: "UserList",
+    component: () => import("../view/User.vue"),
+    meta: { requiresAuth: true }
+  },
+  {
+    path: "/department",
+    name: "DepartmentList",
+    component: () => import("../view/Department.vue"),
+    meta: { requiresAuth: true }
+  },
+  {
+    path: "/statistical",
+    name: "Thống kê",
+    component: () => import("@/view/StatisticPage.vue"),
+    meta: { requiresAuth: true }
+  },
+  {
     path: "/register_welfare",
     name: "RegisterWelfare",
     component: () => import("@/view/RegisterWelfare.vue"),

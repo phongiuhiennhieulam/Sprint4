@@ -80,6 +80,14 @@ public interface StaffRepository extends JpaRepository<Staff,Long> {
 
     @Query(value = "select s from Staff s where s.email like :email")
     public Staff finByEmail(String email);
+    @Modifying
+    @Transactional
+    @Query(value = "select s.email from Staff s where s.id not LIKE :id", nativeQuery = true)
+    public List<String> getEmailByUpdate(Long id);
+    @Modifying
+    @Transactional
+    @Query(value = "select s.code from Staff s where s.id not LIKE :id", nativeQuery = true)
+    public List<String> getCodeByUpdate(Long id);
 
 
 

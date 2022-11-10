@@ -48,6 +48,18 @@
                 <router-link to="/phucloi" style="text-decoration: none;color:black;cursor:pointer width: 100%;">Quản lý
                   phúc lợi</router-link>
               </el-dropdown-item>
+              <el-dropdown-item>
+                <router-link to="/user" style="text-decoration: none;color:black;cursor:pointer width: 100%;">
+                  Quản lý tài khoản</router-link>
+              </el-dropdown-item>
+              <el-dropdown-item>
+                <router-link to="/department" style="text-decoration: none;color:black;cursor:pointer width: 100%;">
+                  Quản lý phòng ban </router-link>
+              </el-dropdown-item>
+              <el-dropdown-item>
+                <router-link to="/statistical" style="text-decoration: none;color:black;cursor:pointer width: 100%;">
+                  Thống kê </router-link>
+              </el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
         </div>
@@ -79,16 +91,38 @@
               <strong>
                 Có {{ listbirthdays.length }} nhân viên sinh nhật trong tháng này
               </strong>
-              <ul v-for="x in listbirthdays" :key="x.id">
-                <li>
-                  <strong>Họ tên: </strong> {{ x.name
-                  }}<strong>&nbsp;-&nbsp;Mã Nhân viên: </strong> {{ x.code }}
-                </li>
-              </ul>
+              <hr>
+              <div>
+                <table>
+                        <tr v-for="x in listbirthdays" :key="x.id" style="border: 1px solid; " class="itemTbale"
+                        >
+                            <td class="item">
+                                <div class="d-flex">
+                                    <div class="pl-2">
+                                        Nhân viên: <strong> {{x.name}}</strong>
+                                        <div class=""><span class="fas fa-gift">_{{formatDate(x.date)}}</span></div>
+                                        <div class="d-flex flex-column justify-content-center">
+                                            <div class="text-muted">{{x.department.name}}</div>
+                                        </div>
+                                    </div>
+                                  </div>  
+                            </td>
+                            <td>Mã nhân viên: {{x.code}}</td>
+                            <td>
+                              <hr>
+                            </td>
+                        </tr>
+                        
+              </table>
+              </div>
             </el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
-
+        <div v-if="!quanly && !user">
+          <Strong style="color: red;">
+            Tài khoản của bạn đã bị khóa!
+          </Strong>
+        </div>
 
         <div>
           <div v-if="staffErorr == ''">
@@ -100,20 +134,21 @@
                 <span class="el-dropdown-link" style="cursor: pointer; font-size: 19px; color: black;">
                   <div>
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bell-fill" viewBox="0 0 16 16">
-                      <path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2zm.995-14.901a1 1 0 1 0-1.99 0A5.002 5.002 0 0 0 3 6c0 1.098-.5 6-2 7h14c-1.5-1-2-5.902-2-7 0-2.42-1.72-4.44-4.005-4.901z"/>
-                    </svg>                    
+                      <path style="color: crimson;" d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2zm.995-14.901a1 1 0 1 0-1.99 0A5.002 5.002 0 0 0 3 6c0 1.098-.5 6-2 7h14c-1.5-1-2-5.902-2-7 0-2.42-1.72-4.44-4.005-4.901z"/>
+                    </svg>  <span style="color: red;">Erorr!</span>                  
                   </div>
                 </span>
               </el-badge>
               <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item style="text-decoration: none;color:black;cursor:pointer width: 100%; font-size: 15px">
-                  <strong>
+                <el-dropdown-item style="text-decoration: none;color:black;cursor:pointer width: 60%; font-size: 15px">
+                  <strong>  
                     <H4>
                       Có {{ staffErorr.length }} nhân viên đang sử dụng quá số tiền trợ cấp phúc lợi
                     </H4>
                   </strong>
-                  <ul v-for="x in staffErorr" :key="x.id">
-                    <li><strong>Họ tên: </strong> {{ x.name }}<strong>&nbsp;-&nbsp;Mã Nhân viên: </strong> {{ x.code }}
+                  <ul v-for="x in staffErorr" :key="x.id" style="border: 1px solid;" class="itemTbale">
+                    <li> Họ tên:<strong> {{ x.name }}</strong> <br>
+                    Mã Nhân viên:<strong>{{ x.code }}</strong> 
                     </li>
                   </ul>
                 </el-dropdown-item>
@@ -135,18 +170,6 @@
             </el-dropdown-menu>
           </el-dropdown>
         </div>
-      </div>
-      
-      <div v-else class="header-right">
-        <div class="header-right__item">
-          <div class="header-right__item--text">
-            <i class="el-icon-s-custom"></i>
-            <router-link to="/" style="text-decoration: none; color: black; cursor: pointer">Đăng nhập</router-link>
-          </div>
-        </div>
-      </div>
-      <div>
-        
       </div>
     </Transition>
   </div>
@@ -310,6 +333,11 @@ export default {
 .header-right__item--text {
   margin-right: 6px;
 }
+.itemTbale:hover{
+  background-color: rgba(255, 0, 0, 0.1) !important;
+  border-color: rgba(255, 0, 0, 0.1) !important;
+}
+
 
 router-link {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,

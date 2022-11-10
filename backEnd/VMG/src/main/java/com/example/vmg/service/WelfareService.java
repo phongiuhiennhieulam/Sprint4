@@ -1,6 +1,7 @@
 package com.example.vmg.service;
 
 import com.example.vmg.model.Welfare;
+import com.example.vmg.model.WelfareSatistic;
 import com.example.vmg.model.WelfareStaff;
 import com.example.vmg.model.WelfareStaffEntity;
 import com.example.vmg.respository.WelfareRepository;
@@ -40,6 +41,8 @@ public class WelfareService {
     public BigDecimal getAllMoney(Long id) {
         return welfareRepository.getAllMoney(id);
     }
+    public List<WelfareSatistic> getAllStatistic(){return welfareRepository.getAllStatistic();}
+
 
 
 

@@ -21,6 +21,7 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    private String name;
     private String userName;
     private String passWord;
 
@@ -40,4 +41,7 @@ public class User {
         this.userName = username;
         this.passWord = password;
     }
+
+//    @OneToOne(cascade = CascadeType.ALL)
+//    private Staff staff;
 }

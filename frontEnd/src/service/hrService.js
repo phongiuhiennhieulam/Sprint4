@@ -23,6 +23,12 @@ class StaffService {
     async getEmail() {
         return await axios.get('http://localhost:8083/api/getemail')
     }
+    async getEmail2(id) {
+        return await axios.get(`http://localhost:8083/api/getemail2/${id}`)
+    }
+    async getCode2(id) {
+        return await axios.get(`http://localhost:8083/api/getcode2/${id}`)
+    }
     async getUser() {
         return await axios.get('http://localhost:8083/api/get-user', { headers: authHeader()})
     }
@@ -60,15 +66,11 @@ class StaffService {
     async getRegisterWelfare() {
         return await axios.get('http://localhost:8083/api/registers')
     }
-    async SuccessRegisterWelfare(id) {
-        return await axios.put(`http://localhost:8083/api/register/${id}`)
-    }
+   
     async DeleteRegisterWelfare(id) {
         return await axios.put(`http://localhost:8083/api/register-delete/${id}`)
     }
-    async updateMoney (ids) {
-        return await axios.put(`http://localhost:8083/api/staff/update-money?ids=${ids}`)
-    }
+   
     async deletes (ids) {
         return await axios.put(`http://localhost:8083/api/staff/deletes?ids=${ids}`)
     }
@@ -80,6 +82,15 @@ class StaffService {
     }
     async getDepartment2 () {
         return await axios.get('http://localhost:8083/api/list-department/1')
+    }
+async SuccessRegisterWelfare(id) {
+        return await axios.put(`http://localhost:8083/api/register/${id}`)
+    }
+    async ReturnRegisterWelfare(id) {
+        return await axios.put(`http://localhost:8083/api/return/${id}`)
+    }
+    async updateMoney (money,ids) {
+        return await axios.put(`http://localhost:8083/api/staff/update-money/${money}?ids=${ids}`)
     }
    
 }

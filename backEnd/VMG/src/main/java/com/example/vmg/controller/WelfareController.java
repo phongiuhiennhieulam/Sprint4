@@ -140,5 +140,13 @@ public class WelfareController {
     public List<WelfareStaffInterface> getAcceptWelfareOfUser(@PathVariable Long id){
         return welfareStaffEntityService.getAcceptWelfareOfUser(id);
     }
+    @GetMapping("/getStatisticWelfare")
+    public List<WelfareSatistic> getSatisticWelfareOfUser(){
+        return welfareService.getAllStatistic();
+    }
 
+    @GetMapping("/get-history-accept-welfare/{id}")
+    public List<WelfareStaffInterface> getHistoryAcceptWelfareOfUser(@PathVariable Long id){
+        return welfareStaffEntityService.getHistoryAcceptWelfareOfUser(id);
+    }
 }

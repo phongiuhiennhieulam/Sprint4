@@ -32,6 +32,48 @@
         </div>
       </div>
     </div>
+    <!-- dialog lịch sử xet duyet -->
+    <el-dialog
+      title="Lịch xử xét duyệt"
+      :visible.sync="isHistory"
+      width="53%"
+      :before-close="handleClose">
+      <span>Lịch sử xét duyệt của nhân viên {{staff.name}}</span>
+      <div label-width="120px" class="pl-table__content">
+      <table>
+          <thead>
+                  <tr>
+                    <th width="9%">STT</th>
+                    <th width="20%">Tên phúc lợi</th>
+                    <th width="12%">Đơn giá</th>
+                    <th width="10%">Số lượng</th>
+                    <th width="12%">Tổng tiền</th>
+                    <th wtdth="10%">Trạng thái</th>
+                    <th width="13%">Hoàn tác</th>
+                  </tr>
+          </thead>
+          <tr v-for="(item, index) in listHistory" :key="index">
+              <td>{{ index + 1}}</td>
+              <td style="text-align: left;">{{ item.name }}</td>
+              <td style="text-align: right;">{{ formatCurrency(item.price) }} </td>
+              <td>{{item.quantity}}</td>
+              <td style="text-align: right;">{{ formatCurrency(item.price*item.quantity) }} </td>
+              <td>
+                <span v-show="item.status == 0">
+                  <Strong style="color: seagreen;">Đã xét duyệt</Strong>
+                </span>
+                <span  v-show="item.status == 1">
+                  <Strong style="color: red">Đã hủy</Strong>
+                </span>
+              </td>
+              <td>
+                <el-button @click="handleReturn(item.id, index)" type="warning" icon="el-icon-refresh-left" circle></el-button>
+              </td>
+          </tr> 
+      </table>    
+    </div>
+    </el-dialog>
+    <!-- dialog xet duyet -->
     <el-dialog
       :visible.sync="isWelfare"
       width="1000px"
@@ -41,7 +83,14 @@
       title="Danh sách phúc lợi đăng ký"
       boder=""
     >
-    <strong><h5>Nhân viên: {{staff.name}}</h5></strong>
+    <div class="row">
+      <div class="col-6">
+        <strong><h5>Nhân viên: {{staff.name}}</h5></strong>
+      </div>
+      <div class="col-6" style="text-align: right; margin-bottom: 5px;">
+        <el-button @click="handShowHistory(staff.id)" type="warning"><strong><i class="el-icon-s-order"></i> Lịch sử</strong></el-button>
+      </div>
+    </div>
     <div label-width="120px" class="pl-table__content">
       <table>
           <thead>
@@ -91,6 +140,8 @@ export default {
       isWelfare: false,
       staff: {},
       listRegister: [],
+      listHistory: [],
+      isHistory: false
       
     };
   },
@@ -120,6 +171,23 @@ export default {
           message: 'Xét duyệt',
           type: 'success'
         });
+        if(this.listRegister.length < 1){
+          this.loading()
+        }
+        } catch (error) {
+          this.errorMessage = error
+        }
+    },
+    handleReturn (id,index) {
+        try {
+          StaffService.ReturnRegisterWelfare(id)
+          this.listHistory.splice(index,1);
+          this.loading()
+          this.$notify({  
+          title: 'Success',
+          message: 'Hoàn tác thành công',
+          type: 'success'
+        });
         } catch (error) {
           this.errorMessage = error
         }
@@ -129,6 +197,18 @@ export default {
       welfareApi.getAcceptWelfareOfUser(id)
         .then((response) => {
           this.listRegister = response.data;
+          console.log(response.data);
+      });
+      StaffService.getStaff(id)
+      .then((response) => {
+          this.staff = response.data;
+      });
+    },
+    handShowHistory(id) {
+      this.isHistory = true
+      welfareApi.getHistoryAcceptWelfareOfUser(id)
+        .then((response) => {
+          this.listHistory = response.data;
           console.log(response.data);
       });
       StaffService.getStaff(id)
@@ -155,12 +235,29 @@ export default {
         currency: "VND",
       }).format(value);
     },
+    loading(){
+      const loading = this.$loading({
+          lock: true,
+          text: 'Loading',
+          spinner: 'el-icon-loading',
+          background: 'rgba(0, 0, 0, 0.7)'
+        });
+        setTimeout(() => {
+          loading.close();
+          this.$router.go()
+        }, 1200);
+    },
 
   },
  
   created(){
     this.getAll()
+  },
+  mounted(){
+    this.getAll()
+  
   }
+  
 };
 </script>l
 

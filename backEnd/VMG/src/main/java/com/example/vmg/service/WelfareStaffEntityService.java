@@ -30,5 +30,7 @@ public class WelfareStaffEntityService {
     public List<StaffInterface> getStaffRegister(){
         return welfareStaffEntityRepository.getStaffRegister();
     }
+    public List<WelfareStaffInterface> getHistoryAcceptWelfareOfUser(Long id){return welfareStaffEntityRepository.getHistoryAcceptWelfareOfUser(id);}
+
 
 }

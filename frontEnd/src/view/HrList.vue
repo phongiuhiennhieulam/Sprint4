@@ -2,8 +2,7 @@
   <div class="hr-list">
     <div class="hr-content">
       <div class="hr-title"><strong> QUẢN LÝ NHÂN VIÊN</strong></div>
-      <div>{{selected}}</div>
-      <br />
+      <br/>
       <div class="row">
         <div class="col-4" style="margin-left: 35px">
         </div>
@@ -26,10 +25,10 @@
                               placeholder="Nhập tên/ mã nhân viên/ phòng ban">
                               <i slot="prefix" class="el-input__icon el-icon-search"></i>
                             </el-input>
-                            <el-button class="btn btn-warning" style="color: white; margin-left: 10px;" @click="onFind()">
-                              Tìm kiếm
-                            </el-button>
                           </el-form-item>
+                          <span>
+                            <el-button type="warning" @click="onFind">Tim kiếm </el-button>
+                          </span>
                     </el-form>
                     </div>  
                   </th>                                                  
@@ -39,6 +38,20 @@
                           <el-form-item>
                             <el-button class="btn btn-danger" @click="handlDeletes">
                              <i class="el-icon-lock"></i> Khóa
+                            </el-button>
+                          </el-form-item>
+                    </el-form>
+                    </div>  
+                  </th>
+
+                  <th width="10%">
+                    <div>
+                      <el-form :inline="true" class="demo-form-inline">
+                          <el-form-item>
+                            <el-button class="btn btn-danger"
+                            v-loading.fullscreen.lock="fullscreenLoading"
+                             @click="isUpdateMoney = true">
+                             <i class="el-icon-refresh"></i> Cập nhật tiền hỗ trợ 
                             </el-button>
                           </el-form-item>
                     </el-form>
@@ -62,13 +75,13 @@
             <table>
               <thead>
                 <tr>
-                  <th><input type="checkbox" @click="selectAllCheckboxes()"></th>
+                  <th><input type="checkbox" v-model="selectAll"></th>
                   <th width="50px">Khóa</th>
                   <th width="70px">STT</th>
                   <th width="200px">Họ và tên</th>
                   <th width="200px">Mã nhân viên</th>
                   <th width="240px">Phòng ban</th>
-                  <th wtdth="80px">Số tiền hỗ trợ</th>
+                  <!-- <th wtdth="80px">Số tiền hỗ trợ</th> -->
                   <th width="170x">Trạng thái</th>
                   <th width="50px">infor</th>
                 </tr>
@@ -81,6 +94,7 @@
                         :value="item.id"
                         v-model="selected"
                         :ref="item.id"
+                        required
                       />
                   </td>
                   <td>
@@ -108,7 +122,7 @@
                   <td style="text-align: left;">{{ item.name }}</td>
                   <td style="text-align: left;">{{ item.code }}</td>
                   <td style="text-align: left;">{{ item.department.name }}</td>
-                  <td style="text-align: right;">{{formatCurrency(item.welfareMoney)}}</td>
+                  <!-- <td style="text-align: right;">{{formatCurrency(item.welfareMoney)}}</td> -->
                   <td style="text-align: left;">
                     <div v-if="item.status == 0">Đang làm việc</div>
                     <div v-if="item.status == 1">Nghỉ làm</div>
@@ -204,7 +218,46 @@
         </transition>
       </div>
       <div class="hr-image"></div>
+      <!-- dialog cap nhat tien PL -->
+      <el-dialog
+      :visible.sync="isUpdateMoney"
+      width="500px"
+      label-width="100px"
+      top="5vh"
+      left="150px"
+      title="Cập nhật số tiền hỗ trợ"
+    >
+      <div class="row">
+        <form name="form-updateMoney">
+          <div class="row">            
+              <div>
+                <div class="mb-3">
+                  <label class="form-label"
+                    ><Strong>Số tiền hỗ trợ phúc lợi:   <span v-if="!moneyUpdate==''">
+                    {{formatCurrency(moneyUpdate)}}
+                  </span></Strong></label
+                  >
+                  <input
+                    v-model="moneyUpdate"
+                    required
+                    id="moneyUpdate"
+                    name="moneyUpdate" 
+                    type="text"
+                    class="form-control"
+                    placeholder="Tiền hỗ trợ phúc lợi"
+                  />
+                </div>
+              </div> 
+          </div>
+              <div style="text-align: center">
+                <button @click.prevent="handlUpdateMoney(moneyUpdate)" class="btn btn-danger">
+                  <strong>Cập nhật</strong>
+                </button>
+              </div>
+            </form>
 
+      </div>
+    </el-dialog>
 <!-- dialog update -->
     <el-dialog
       :visible.sync="isShowUpdate"
@@ -359,10 +412,7 @@
               <div>
                 <div class="mb-3">
                 <label class="form-label">
-                  <strong v-if="showValidateCode" style="color: red">
-                    Mã nhân viên đã tồn tại, vui lòng nhập lại!
-                  </strong>
-                  <strong v-else>Mã nhân viên:</strong>
+                  <strong>Mã nhân viên:</strong>
                 </label>
                 <input
                   v-model="staff.code"
@@ -395,10 +445,8 @@
               <div>
                 <div class="mb-3">
                 <label class="form-label">
-                  <strong v-if="showValidateEmail" style="color: red">
-                    Email đã tồn tại, vui lòng nhập lại!
-                  </strong>  
-                  <Strong v-else>Email: </Strong>
+            
+                  <Strong>Email: </Strong>
                 </label>
                 <input
                   id="email"
@@ -549,8 +597,26 @@ let welfareApi = new WelfareApi();
 import _ from 'lodash'
 export default {
   name: "HrList",
+  computed: {
+        selectAll: {
+            get: function (){
+                return this.staffs.content ? this.selected.length == this.staffs.content.length : false;
+            },
+            set: function (value) {
+                var selected = [];
+
+                if (value) {
+                    this.staffs.content.forEach(function (staff) {
+                        selected.push(staff.id);
+                    });
+                }
+                this.selected = selected;
+            }
+        }
+    },  
   data() {
     return {
+      fullscreenLoading: false,
       staffs: [],
       welfares: [],
       welfaresMoney: '',
@@ -577,8 +643,11 @@ export default {
       isShowAdd: false,
       isShowUpdate: false,
       isWelfare: false,
+      isUpdateMoney: false,
       code: [],
       email: [],
+      code2: [],
+      email2: [],
       price: [],
       value: "",
       isShow: false,
@@ -593,6 +662,7 @@ export default {
       showValidateNullDate2: false,
       showValidateNullMoney: false,
       showValidateNullDepartment: false,
+      moneyUpdate: ''
      
     };
   },
@@ -621,7 +691,6 @@ export default {
     },
     handlePageChange(value) {
       this.page = value;
-      console.log(this.page);
       this.retrieveStaff();
     },
     handleSelectionChange(val) {
@@ -630,8 +699,7 @@ export default {
         ids.push(v.id);
       });
       this.multipleSelection = [...ids];
-      console.log(ids);
-      console.log(this.multipleSelection);
+  
     },
     showDialog() {
       this.showDialogAdd = true;
@@ -647,7 +715,6 @@ export default {
           currency: "VND",
         });
         this.isShow = true;
-        console.log(item.welfareMoney);
       }, 100);
     },
     formatDate(value) {
@@ -705,7 +772,6 @@ export default {
           this.staffs = response.data;
           this.count = response.data.totalPages;
           this.itemCount = response.data.totalElements;
-          console.log(response.data);
         })
         .catch((e) => {
           console.log(e);
@@ -715,13 +781,11 @@ export default {
     getDepartments() {
       StaffService.getDepartments().then((response) => {
         this.departments = response.data;
-        console.log(response.data);
       });
     },
     handleShow(id) {
       this.isWelfare = true
       this.staffId = id;
-      console.log(id);
       welfareApi.getAllWelfareWithQuantity(id).then((response) => {
         this.welfares = response.data;
         this.Money2  = 0;
@@ -742,12 +806,21 @@ export default {
     },
 
     getEdit(id) {
+      this.retrieveStaff()
       this.showupdateForm()
+      StaffService.getEmail2(id)
+        .then( response =>{
+          this.email2= response.data
+        })
+        StaffService.getCode2(id)
+        .then( response =>{
+          this.code2= response.data
+        })
       StaffService.getStaff(id).then((response) => {
         this.staff = response.data;
         this.staff.date = this.formatDate(response.data.date);
-        console.log(id);
       });
+      
     },
     handlDeletes () {
       this.$confirm(
@@ -761,29 +834,80 @@ export default {
       )
       .then(() => {
           StaffService.deletes(this.selected)
+          this.loading()
           this.$message({
             type: "success",
-            message: "lock up completed",
+            message: "Khóa thành công!",
           });
-          this.$router.go()
         })
         .catch(() => {
           this.$message({
             type: "info",
-            message: "lock up canceled",
+            message: "Đã hủy khóa!",
+          });
+          this.loading()
+        });
+      
+    },
+    loading(){
+      const loading = this.$loading({
+          lock: true,
+          text: 'Loading',
+          spinner: 'el-icon-loading',
+          background: 'rgba(0, 0, 0, 0.7)'
+        });
+        setTimeout(() => {
+          loading.close();
+          this.$router.go()
+        }, 1200);
+    },
+    handlUpdateMoney (money) {
+      let x = document.forms["form-updateMoney"]["moneyUpdate"].value;
+      if (x == "") {
+        this.$notify({
+                    title: "Warning",
+                    message: "Tổng tiền không được để trống!",
+                    type: "warning",
+                  });
+        document.getElementById("moneyUpdate").focus();          
+        return false;
+      }
+      this.$confirm(
+        "Bạn có chắc sẽ cập nhật tiền cho những nhân viên này không?",
+        "Warning",
+        {
+          confirmButtonText: "OK",
+          cancelButtonText: "Cancel",
+          type: "warning",
+        }
+      )
+      .then(() => {
+
+          StaffService.updateMoney(money, this.selected)
+          this.loading()
+          this.$message({
+            type: "success",
+            message: "Đã cập nhật!",
+          });
+          
+        })
+        .catch(() => {
+          this.loading()
+          this.$message({
+            type: "info",
+            message: "Hủy cập nhật!",
           });
         });
       
     },
     unlockStaff(id){
       StaffService.unlookStaff(id);
+      this.loading();
       this.$notify({
             title: "Success",
             message: "Mở khóa thành công!",
             type: "success",
-          });
-      this.$router.go()
-    
+          });    
 
     },
     deleteStaff(id) {
@@ -798,11 +922,11 @@ export default {
       )
         .then(() => {
           StaffService.deleteStaff(id);
+          this.loading()
           this.$message({
             type: "success",
             message: "lock up completed",
           });
-          this.$router.go()
         })
         .catch(() => {
           this.$message({
@@ -886,53 +1010,6 @@ export default {
           console.log(e);
         });
     },
-    // create() {
-    //   if (this.code.includes(this.staff.code)){
-    //     this.showValidateCode = true;
-    //     this.$notify({
-    //           title: "Warning",
-    //           message: "Bạn nhập sai thông tin",
-    //           type: "warning",
-    //         });
-    //   }
-    //   else if (this.email.includes(this.staff.email)) {
-    //           this.showValidateCode = false;
-    //           this.showValidateEmail = true;
-    //           this.$notify({
-    //                 title: "Warning",
-    //                 message: "Bạn nhập sai thông tin",
-    //                 type: "warning",
-    //               });
-    //     }
- 
-    //   else {
-    //     this.showValidateCode = false;
-    //     this.showValidateEmail = false;
-    //     let form = document.querySelector("#form-staff");
-    //     let formdata = new FormData(form);
-    //     // moment(String(value)).format("YYYY/MM/DD");
-    //     StaffService.createStaff(formdata)
-    //       .then((response) => {
-    //         console.log(response.data);
-    //         this.retrieveStaff();
-    //         this.$notify({
-    //           title: "Success",
-    //           message: "Thêm mới nhân viên thành công",
-    //           type: "success",
-    //         });
-    //         this.reset();
-    //       })
-    //       .catch((e) => {
-    //         console.log(e);
-    //         this.$notify({
-    //           title: "Warning",
-    //           message: "Bạn nhập sai thông tin",
-    //           type: "warning",
-    //         });
-    //       });
-
-    //   }
-    // },
     create() {
       var data = {
           code: this.staff.code,
@@ -947,6 +1024,16 @@ export default {
         this.$notify({
                     title: "Warning",
                     message: "Mã nhân viên không được để trống!",
+                    type: "warning",
+                  });
+        document.getElementById("code").focus();          
+        return false;
+      }
+      let code2 = document.forms["myForm"]["code"].value;
+      if (this.code.includes(code2)) {
+        this.$notify({
+                    title: "Warning",
+                    message: "Mã nhân viên đã tồn tại!",
                     type: "warning",
                   });
         document.getElementById("code").focus();          
@@ -970,6 +1057,16 @@ export default {
                     type: "warning",
                   });
         document.getElementById("email").focus();           
+        return false;
+      }
+      let email2 = document.forms["myForm"]["code"].value;
+      if (this.email2.includes(email2)) {
+        this.$notify({
+                    title: "Warning",
+                    message: "Email này đã tồn tại!",
+                    type: "warning",
+                  });
+        document.getElementById("email").focus();          
         return false;
       }
       let date = document.forms["myForm"]["date"].value;
@@ -1004,30 +1101,7 @@ export default {
         document.getElementById("department").focus();           
         return false;
       }      
-      else if (this.code.includes(this.staff.code)){
-        this.showValidateCode = true;
-        this.$notify({
-              title: "Warning",
-              message: "Mã nhân viên đã tồn tại",
-              type: "warning",
-            });
-      }
-      else if (this.email.includes(this.staff.email)) {
-              this.showValidateCode = false;
-              this.showValidateEmail = true;
-              this.$notify({
-                    title: "Warning",
-                    message: "Email đã tồn tại",
-                    type: "warning",
-                  });
-        }
- 
       else {
-       
-        this.showValidateCode = false;
-        this.showValidateEmail = false;
-     
-        // moment(String(value)).format("YYYY/MM/DD");
         StaffService.createStaff2(data)
           .then((response) => {
             console.log(response.data);
@@ -1061,6 +1135,16 @@ export default {
         document.getElementById("code").focus();          
         return false;
       }
+      let code2 = document.forms["form-update"]["code"].value;
+      if (this.code2.includes(code2)) {
+        this.$notify({
+                    title: "Warning",
+                    message: "Mã nhân viên đã tồn tại!",
+                    type: "warning",
+                  });
+        document.getElementById("code").focus();          
+        return false;
+      }
       let name = document.forms["form-update"]["name"].value;
       if (name == "") {
         this.$notify({
@@ -1079,6 +1163,16 @@ export default {
                     type: "warning",
                   });
         document.getElementById("email").focus();           
+        return false;
+      }
+      let email2 = document.forms["form-update"]["email"].value;
+      if (this.email2.includes(email2)) {
+        this.$notify({
+                    title: "Warning",
+                    message: "Email nhân viên này đã tồn tại!",
+                    type: "warning",
+                  });
+        document.getElementById("email").focus();          
         return false;
       }
       let date = document.forms["form-update"]["date"].value;
@@ -1159,6 +1253,7 @@ export default {
         }
       });
     }
+
   },  
   mounted() {
     // this.staff.date = this.formatDate(this.staff.date)
@@ -1168,6 +1263,7 @@ export default {
     this.listEmail();
     this.formatCurrency();
   },
+  
 };
 </script>
 
