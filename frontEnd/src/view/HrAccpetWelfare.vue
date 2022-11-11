@@ -1,7 +1,7 @@
 <template>
   <div class="pl-body">
     <div class="pl-content">
-      <div class="pl-title"><strong>DANH SÁCH XÉT DUYỆT</strong></div>
+      <div class="hr-title"><strong >DANH SÁCH XÉT DUYỆT</strong></div>
       <div class="pl-ele">
         <div class="pl-table">
           <div class="pl-table__content">
@@ -147,6 +147,7 @@ export default {
   },
   methods: {
     showAddForm() {
+      
       this.edit = {};
       this.isShowAdd = true;
     },
@@ -158,11 +159,25 @@ export default {
           title: 'notification',
           message: 'Từ chối thành công'
         });
+        if(this.listRegister.length < 1){
+          this.$confirm(
+            "Bạn có chắc sẽ chốt danh sách này không. Continue?",
+            "Warning!",
+          {
+            confirmButtonText: "OK",
+            cancelButtonText: "Cancel",
+            type: "warning",
+        }
+      ).then(() => {
+        this.loading()
+      })
+        }
         } catch (error) {
           this.errorMessage = error
         }
     },
     handleSuccess (id,index) {
+
         try {
           StaffService.SuccessRegisterWelfare(id)
           this.listRegister.splice(index,1);
@@ -172,11 +187,22 @@ export default {
           type: 'success'
         });
         if(this.listRegister.length < 1){
-          this.loading()
+          this.$confirm(
+            "Bạn có chắc sẽ chốt danh sách này không. Continue?",
+            "Warning!",
+          {
+            confirmButtonText: "OK",
+            cancelButtonText: "Cancel",
+            type: "warning",
+        }
+          ).then(() => {
+            this.loading()
+          })
         }
         } catch (error) {
           this.errorMessage = error
         }
+        
     },
     handleReturn (id,index) {
         try {
