@@ -63,7 +63,7 @@
             </el-dropdown-menu>
           </el-dropdown>
         </div>
-        <div class="header-right__item" v-if="quanly">
+        <div class="header-right__item" v-if="quanly || nhansu">
           <el-badge :value="list.length" :max="99" class="item" style="margin-right: 10px; margin-left: 5px">
             <i class="el-icon-s-claim"></i>
             <router-link style="
@@ -94,7 +94,7 @@
               <hr>
               <div>
                 <table>
-                        <tr v-for="x in listbirthdays" :key="x.id" style="border: 1px solid; " class="itemTbale"
+                        <tr v-for="x in listbirthdays" :key="x.id" style="border: 1px solid;" class="itemTbale"
                         >
                             <td class="item">
                                 <div class="d-flex">
@@ -105,24 +105,19 @@
                                             <div class="text-muted">{{x.department.name}}</div>
                                         </div>
                                     </div>
-                                  </div>  
+                                </div>  
                             </td>
                             <td>Mã nhân viên: {{x.code}}</td>
                             <td>
                               <hr>
                             </td>
                         </tr>
-                        
               </table>
               </div>
             </el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
-        <div v-if="!quanly && !user">
-          <Strong style="color: red;">
-            Tài khoản của bạn đã bị khóa!
-          </Strong>
-        </div>
+     
 
         <div>
           <div v-if="staffErorr == ''">
@@ -156,6 +151,11 @@
             </el-dropdown>
           </div>
         </div>
+           <div v-if="!quanly && !user && !nhansu">
+          <Strong style="color: red;">
+            Tài khoản của bạn đã bị khóa!
+          </Strong>
+        </div>
 
         <div class="header-right__item">
           <i class="el-icon-s-custom"></i>
@@ -188,6 +188,7 @@ export default {
       auth: {},
       nhanvien: false,
       quanly: false,
+      nhansu: false,
       list: [],
       listbirthdays: [],
       staffErorr: []
@@ -248,8 +249,11 @@ export default {
         if (this.userExists("ROLE_USER")) {
           this.nhanvien = true;
         }
-        if (this.userExists("ROLE_MODERATOR")) {
+        if (this.userExists("ROLE_ADMIN")) {
           this.quanly = true;
+        }
+        if (this.userExists("ROLE_MODERATOR")) {
+          this.nhansu = true;
         }
       }
     },
@@ -336,6 +340,15 @@ export default {
 .itemTbale:hover{
   background-color: rgba(255, 0, 0, 0.1) !important;
   border-color: rgba(255, 0, 0, 0.1) !important;
+}
+.hr-title {
+  text-align: center;
+  font-size: 34px;
+  font-weight: 600;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+    Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+  background: rgba(255, 255, 255, 0.13);
+  padding: 6px 0px;
 }
 
 
