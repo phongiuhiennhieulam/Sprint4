@@ -255,7 +255,7 @@ public class StaffController {
     }
 
     @GetMapping("/get_all_money/{id}")
-    public Integer getMoneyWelfare(@PathVariable("id") Long id){
+    public Long getMoneyWelfare(@PathVariable("id") Long id){
         return staffService.getTotalMoney(id);
     }
 

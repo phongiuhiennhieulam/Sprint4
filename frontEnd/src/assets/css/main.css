@@ -110,3 +110,12 @@ input[type="checkbox"] {
 ::-webkit-scrollbar-thumb {
     background: #bdbdbd;
 }
+
+.router-link-active {
+
+    text-decoration: underline !important;
+}
+
+textarea {
+    border: 1px solid #DCDFE6 !important;
+}
