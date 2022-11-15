@@ -1,168 +1,289 @@
 <template>
-  <div class="pl-main">
-    <div class="pl-content">
-      <div class="pl-title"><strong>QUẢN LÍ TÀI KHOẢN</strong></div>
+  <div class="us-main">
+    <div class="us-content">
+      <div class="us-title"><strong>QUẢN LÍ TÀI KHOẢN</strong></div>
+      <br />
 
-      <div class="pl-table">
-        <el-form :inline="true" class="demo-form-inline">
-          <el-form-item>
-            <el-input v-model="keyWord" placeholder="Nhập tên hoặc nhập email" style="width: 400px">
-              <i slot="prefix" class="el-input__icon el-icon-search"></i>
-            </el-input>
-          </el-form-item>
-          <el-form-item>
-            <el-button type="warning" @click="onFind()">Tìm kiếm</el-button>
-          </el-form-item>
-        </el-form>
-        <div class="pl-table__content">
-          <div class="user-table__content">
-            <table>
-              <thead>
-                <tr class="user-table__row">
-                  <th>STT</th>
-                  <th>Họ và tên</th>
-                  <th>Email</th>
-                  <th>Quyền Admin</th>
-                  <th>Quyền Lãnh Đạo</th>
-                  <th>Quyền Nhân Viên</th>
-                  <th>Phân Quyền</th>
-                  <th>Đổi mật khẩu</th>
-                </tr>
-              </thead>
+      <div class="us-ele">
+        <div class="us-table">
+          <div class="us-table__content">
+            <tr width="100%">
+              <th>
+                <div>
+                  <el-form :inline="true" class="demo-form-inline">
+                    <el-form-item>
+                      <el-input
+                        v-model="keyWord"
+                        placeholder="Nhập tên hoặc nhập email"
+                        style="width: 500px"
+                      >
+                        <i
+                          slot="prefix"
+                          class="el-input__icon el-icon-search"
+                        ></i
+                      ></el-input>
+                    </el-form-item>
+                    <el-form-item>
+                      <el-button type="warning" @click="onFind()"
+                        >Tìm kiếm</el-button
+                      >
+                    </el-form-item>
+                  </el-form>
+                </div>
+              </th>
+            </tr>
 
-              <tbody>
-                <tr v-for="(item, index) in listUser.content" :key="index">
-                  <td style="width: 50px">{{ index + 1 }}</td>
-                  <td style="text-align: left">{{ item.name }}</td>
-                  <td style="text-align: left">{{ item.userName }}</td>
+            <div class="us-table_content">
+              <table>
+                <thead>
+                  <tr class="us-table_row">
+                    <th width="20px">STT</th>
+                    <th width="400px">Họ và tên</th>
+                    <th width="440px">Email</th>
+                    <th width="150px">Quyền Lãnh Đạo</th>
+                    <th width="150px">Quyền Admin</th>
+                    <th width="150px">Quyền Nhân Sự</th>
+                    <th width="150px">Phân Quyền</th>
+                    <th width="150px">Đổi mật khẩu</th>
+                  </tr>
+                </thead>
 
-                  <td>
-                    <template>
-                      <div v-for="(roles, index) in item.roles" :key="index">
-                        <el-checkbox v-if="roles.id === 2" checked disabled />
-                      </div>
-                    </template>
-                  </td>
+                <tbody>
+                  <tr v-for="(item, index) in listUser.content" :key="index">
+                    <td style="width: 50px">{{ index + 1 }}</td>
+                    <td style="text-align: left">{{ item.name }}</td>
+                    <td style="text-align: left">{{ item.userName }}</td>
 
-                  <td>
-                    <template>
-                      <div v-for="(roles, index) in item.roles" :key="index">
-                        <div v-if="roles.id === 3">
-                          <el-checkbox checked disabled />
+                    <td>
+                      <template>
+                        <div v-for="(roles, index) in item.roles" :key="index">
+                          <el-checkbox v-if="roles.id === 2" checked disabled />
                         </div>
-                      </div>
-                    </template>
-                  </td>
+                      </template>
+                    </td>
 
-                  <td>
-                    <template>
-                      <div v-for="(roles, index) in item.roles" :key="index">
-                        <el-checkbox v-if="roles.id === 1" checked disabled />
-                      </div>
-                    </template>
-                  </td>
+                    <td>
+                      <template>
+                        <div v-for="(roles, index) in item.roles" :key="index">
+                          <div v-if="roles.id === 3">
+                            <el-checkbox checked disabled />
+                          </div>
+                        </div>
+                      </template>
+                    </td>
 
-                  <td>
-                    <span class="icon-user" @click="showEditRole(item, index)">
-                      <i class="fa fa-user"></i>
+                    <td>
+                      <template>
+                        <div v-for="(roles, index) in item.roles" :key="index">
+                          <el-checkbox v-if="roles.id === 4" checked disabled />
+                        </div>
+                      </template>
+                    </td>
+
+                    <td>
+                      <span
+                        class="icon-user"
+                        @click="showEditRole(item, index)"
+                      >
+                        <i class="fa fa-user"></i>
+                      </span>
+                    </td>
+
+                    <span class="icon-edit">
+                      <span
+                        class="icon-role"
+                        @click="showEditForm(item, index)"
+                      >
+                        <i class="fa fa-key"></i>
+                      </span>
                     </span>
-                  </td>
-
-                  <span class="icon-edit">
-                    <span class="icon-role" @click="showEditForm(item, index)">
-                      <i class="fa fa-key"></i>
-                    </span>
-                  </span>
-                </tr>
-              </tbody>
-            </table>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <!-- phân trang -->
+            <el-pagination
+              style="text-align: right"
+              background
+              layout="prev, pager, next"
+              :page-count="count"
+              :page-size="pageSize"
+              :page-sizes="pageSizes"
+              @current-change="handlePageChange"
+            >
+            </el-pagination>
           </div>
         </div>
-        <el-pagination style="text-align: right" background layout="prev, pager, next" :page-count="count"
-          :page-size="pageSize" :page-sizes="pageSizes" @current-change="handlePageChange">
-        </el-pagination>
       </div>
     </div>
 
-    <!-- Khóa tài khoản -->
-    <el-dialog title="Xác nhận" :visible.sync="centerDialogVisible" width="50%" center>
-      <span>Bạn có chắc chắn muốn khóa tài khoản này?</span>
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="centerDialogVisible = false">Hủy</el-button>
-        <el-button type="primary" @click="showDeleteDialog(idDelete)">Xác nhận</el-button>
-      </span>
-    </el-dialog>
-
     <!-- Cập nhật thông tin tài khoản -->
-    <el-dialog title="Cập nhật thông tin tài khoản" :visible.sync="isShowEdit" width="500px" label-width="100px"
-      top="5vh">
-      <el-form :model="edit" ref="edit" label-width="120px" label-position="top">
-        <el-row>
-          <el-col>
-            <el-form-item label="Email" prop="name">
-              <el-input type="text" v-model="edit.userName" :disabled="true"></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col>
-            <el-form-item label="Mật khẩu mới" prop="password">
-              <el-input type="password" @input="checkpass" v-model="newPassword"></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col>
-            <el-form-item label="Xác nhận lại mật khẩu" prop="password">
-              <el-input type="password" @input="checkpass" v-model="rePassword"></el-input>
-            </el-form-item>
-          </el-col>
-        </el-row>
-      </el-form>
-      <span slot="footer" class="dialog-footer" style="text-align: center">
-        <el-button class="hr-detail__button" round @click="editUser(edit.id, edit)">Cập nhật
-        </el-button>
-      </span>
+    <el-dialog
+      title="Cập nhật thông tin tài khoản"
+      :visible.sync="isShowEdit"
+      width="500px"
+      label-width="100px"
+      top="5vh"
+    >
+      <ValidationObserver ref="observer" v-slot="{ handleSubmit }">
+        <el-form
+          :model="edit"
+          ref="edit"
+          label-width="120px"
+          label-position="top"
+        >
+          <el-row>
+            <el-col>
+              <el-form-item prop="name">
+                <strong>Email:</strong>
+                <el-input
+                  type="text"
+                  v-model="edit.userName"
+                  :disabled="true"
+                ></el-input>
+              </el-form-item>
+            </el-col>
+
+            <el-col>
+              <ValidationProvider
+                v-slot="{ errors }"
+                name="userName"
+                :rules="{
+                  required: true,
+                  regex: /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{6,20}$/,
+                }"
+              >
+                <el-form-item
+                  prop="password"
+                  :error="messageError(loginFields.password, errors[0])"
+                >
+                  <strong>Mật khẩu mới:</strong>
+                  <el-input
+                    type="password"
+                    @input="checkpass"
+                    v-model="newPassword"
+                    v-validate="'required'"
+                    placeholder="Mật khẩu mới"
+                  ></el-input>
+                </el-form-item>
+              </ValidationProvider>
+            </el-col>
+
+            <el-col>
+              <ValidationProvider
+                v-slot="{ errors }"
+                name="userName"
+                :rules="{
+                  required: true,
+                  regex: /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{6,20}$/,
+                }"
+              >
+                <el-form-item
+                  prop="password"
+                  :error="messageError(loginFields.password, errors[0])"
+                >
+                  <strong>Xác nhận lại mật khẩu:</strong>
+                  <el-input
+                    type="password"
+                    @input="checkpass"
+                    v-model="rePassword"
+                    placeholder="Xác nhận mật khẩu"
+                  ></el-input>
+                </el-form-item>
+              </ValidationProvider>
+            </el-col>
+          </el-row>
+        </el-form>
+
+        <span slot="footer" class="dialog-footer" style="text-align: center">
+          <el-button
+            class="us-detail__button"
+            round
+            @click="handleSubmit(submit)"
+            ><strong>Cập nhật</strong>
+          </el-button>
+        </span>
+      </ValidationObserver>
     </el-dialog>
 
     <!-- Cập nhật phân quyền -->
-    <el-dialog title="Cập nhật phân quyền" :visible.sync="isShowEditRole" width="400px" label-width="100px" top="5vh">
-      <el-form :model="editRole" ref="edit" label-width="120px" label-position="top">
+    <el-dialog
+      title="Cập nhật phân quyền"
+      :visible.sync="isShowEditRole"
+      width="500px"
+      label-width="100px"
+      top="5vh"
+    >
+      <el-form
+        :model="editRole"
+        ref="edit"
+        label-width="120px"
+        label-position="top"
+      >
         <el-row>
           <el-col>
-            <el-form-item style="text-align: left" label="Email" prop="name">
-              <el-input type="text" v-model="edit.userName" :disabled="true"></el-input>
+            <el-form-item style="text-align: left" prop="name">
+              <strong>Email:</strong>
+              <el-input
+                type="text"
+                v-model="edit.userName"
+                :disabled="true"
+              ></el-input>
             </el-form-item>
           </el-col>
           <el-col>
             <el-form-item>
               <div>
-                <el-checkbox v-model="editRole.editRoleModer" label="Quyền Lãnh Đạo" size="large" />
+                <el-checkbox
+                  v-model="editRole.editRoleModer"
+                  label="Quyền Lãnh Đạo"
+                  size="large"
+                />
               </div>
             </el-form-item>
             <el-form-item>
               <div>
-                <el-checkbox v-model="editRole.editRoleAdmin" label="Quyền Admin" size="large" />
+                <el-checkbox
+                  v-model="editRole.editRoleAdmin"
+                  label="Quyền Admin"
+                  size="large"
+                />
               </div>
             </el-form-item>
             <el-form-item>
               <div>
-                <el-checkbox v-model="editRole.editRoleUser" label="Quyền Nhân Sự" size="large" />
+                <el-checkbox
+                  v-model="editRole.editRolePersonnel"
+                  label="Quyền Nhân Sự"
+                  size="large"
+                />
               </div>
             </el-form-item>
           </el-col>
         </el-row>
       </el-form>
       <span slot="footer" class="dialog-footer">
-        <el-button class="hr-detail__button" round @click="editURole(edit.id, editRole)">Cập nhật
+        <el-button
+          class="us-detail__button"
+          round
+          @click="editURole(edit.id, editRole)"
+          ><strong>Cập nhật</strong>
         </el-button>
       </span>
     </el-dialog>
   </div>
 </template>
     
-<script>
+    <script>
 /* eslint-disable */
+import { ValidationObserver, ValidationProvider } from "vee-validate";
+import BaseValidate from "@/utils/BaseValidate";
 import UserService from "@/service/userService";
 let userService = new UserService();
 export default {
   name: "UserList",
+  components: { ValidationObserver, ValidationProvider },
+  mixins: [BaseValidate],
   data() {
     return {
       listUser: [],
@@ -199,7 +320,7 @@ export default {
       isShowEdit: false,
       isShowEditRole: false,
       editRole: {
-        editRoleUser: false,
+        editRolePersonnel: false,
         editRoleAdmin: false,
         editRoleModer: false,
       },
@@ -207,10 +328,13 @@ export default {
   },
   computed: {},
   watch: {
-    selected() { },
+    selected() {},
   },
 
   methods: {
+    submit() {
+      this.editUser(this.edit.id, this.edit);
+    },
     showEditForm(item, index) {
       this.edit = item;
       this.isShowEdit = true;
@@ -221,11 +345,11 @@ export default {
     showEditRole(item, index) {
       this.editRole.editRoleAdmin = false;
       this.editRole.editRoleModer = false;
-      this.editRole.editRoleUser = false;
+      this.editRole.editRolePersonnel = false;
       // console.log(item)
       for (let i = 0; i < item.roles.length; i++) {
-        if (item.roles[i].id == 1) {
-          this.editRole.editRoleUser = true;
+        if (item.roles[i].id == 4) {
+          this.editRole.editRolePersonnel = true;
         } else if (item.roles[i].id == 2) {
           this.editRole.editRoleModer = true;
         } else if (item.roles[i].id == 3) {
@@ -303,7 +427,7 @@ export default {
           "Thông tin không hợp lệ",
           {
             confirmButtonText: "OK",
-            callback: () => { },
+            callback: () => {},
           }
         );
         isValidate = false;
@@ -335,10 +459,10 @@ export default {
       console.log(editIdRoleUser);
       console.log(role);
       let list = [];
-      if (this.editRole.editRoleUser) {
+      if (this.editRole.editRolePersonnel) {
         let object1 = {
-          id: 1,
-          name: "ROLE_USER",
+          id: 4,
+          name: "ROLE_PERSONNEL",
         };
         list.push(object1);
       }
@@ -373,11 +497,13 @@ export default {
             message: "Phân quyền thành công",
             title: "success",
           });
+          this.getAllUser();
           const myTimeout = setTimeout(myGreeting, 100);
+          // const myTimeout = setTimeout(myGreeting, 100);
 
-          function myGreeting() {
-            window.location.reload();
-          }
+          // function myGreeting() {
+          //   window.location.reload();
+          // }
         });
         this.isShowEditRole = false;
       });
@@ -441,7 +567,221 @@ export default {
 };
 </script>
       
-<style scoped>
-@import "@/assets/css/user/user.css"
+      <style>
+.us-title {
+  text-align: center;
+  font-size: 34px;
+  font-weight: 600;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+    Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+  background: rgba(255, 255, 255, 0.13);
+  padding: 6px 0px;
+}
+.us-body {
+  background: linear-gradient(90deg, #e4c9ac 0%, rgba(255, 255, 255, 0) 100%),
+    #e3c1d3;
+  width: 100%;
+  height: 100%;
+}
+.us-table {
+  text-align: center;
+  margin-left: 35px;
+  margin-right: 35px;
+  z-index: 2;
+}
+.us-table__content {
+  text-align: center;
+  padding: 0 50px;
+  overflow: auto;
+  height: 100%;
+  margin: 20px 0px;
+}
+.us-table__content table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.us-table__content table tr {
+  background: #f2e7ddf8;
+}
+.us-table__content table tr th {
+  border-right: 1px solid #e4c9ac;
+  padding: 14px;
+}
+.us-table__content table tr td {
+  padding: 20px;
+  line-height: 30px;
+  height: 30px;
+}
+.us-table__content table thead tr {
+  background-color: #fdf9f8;
+}
+.us-table__content table thead th {
+  font-size: 14px;
+  font-weight: 600;
+}
+.us-table__content table tbody tr {
+  border-bottom: 1px solid #e4c9ac;
+}
+
+.us-table__content table tbody tr:hover {
+  background-color: rgb(255, 255, 255);
+}
+.icon-delete {
+  font-size: 20px;
+  color: coral;
+  cursor: pointer;
+}
+.icon-edit {
+  font-size: 20px;
+  color: greenyellow;
+  cursor: pointer;
+}
+/* input, */
+textarea {
+  outline: none;
+  padding: 20px;
+  width: 60%;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid #212529;
+}
+
+.us-button {
+  margin-left: 200px;
+  margin-top: 30px;
+}
+.us-button__detail {
+  color: white !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+}
+.us-button__detail:hover {
+  background-color: rgba(255, 0, 0, 0.1) !important;
+  border-color: rgba(255, 0, 0, 0.1) !important;
+}
+.us-button__detail:focus {
+  background-color: rgba(255, 0, 0, 0.2) !important;
+  border-color: rgba(255, 0, 0, 0.2) !important;
+}
+.us-button__detail:active {
+  background-color: rgba(255, 0, 0, 0.3) !important;
+  border-color: rgba(255, 0, 0, 0.3) !important;
+}
+.el-form-item__label {
+  color: rgb(0, 0, 0) !important;
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 31px;
+  letter-spacing: 0em;
+  text-align: left;
+  line-height: 0px;
+  margin-bottom: -10px;
+}
+
+.el-form-item__content input {
+  border-radius: 8px !important;
+  box-shadow: 1px 1px 4px rgba(255, 0, 0, 0.15);
+  border: 1px solid #23282b8f;
+}
+
+.el-dialog__title {
+  margin-left: 65px;
+  font-size: 25px;
+  font-weight: 700;
+  line-height: 35px;
+  letter-spacing: 0em;
+  text-align: left;
+  margin-left: 56px;
+  font-size: 25px;
+  font-weight: 700;
+  line-height: 35px;
+  letter-spacing: 0em;
+  color: rgb(255, 0, 0);
+  text-align: left;
+}
+
+.el-dialog__headerbtn i {
+  font-size: 24px;
+  font-weight: 700;
+  color: #f00 !important;
+}
+.fa-key:before {
+  color: red;
+}
+.fa-unlock:before {
+  color: red;
+}
+.fa-lock:before {
+  color: #e6a23c;
+}
+.el-checkbox__input.is-disabled.is-checked .el-checkbox__inner::after {
+  border-color: #ffffff;
+}
+.el-checkbox__input.is-disabled.is-checked .el-checkbox__inner {
+  background-color: #1d78ff;
+  border-color: #1a57e5;
+}
+.el-input.is-disabled .el-input__inner {
+  background-color: #f5f7fa;
+  border-color: #e4e7ed;
+  color: #212529;
+  cursor: not-allowed;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+    Ubuntu, Cantarell, "Poppins,sans-serif", sans-serif;
+
+  font-size: 15px;
+}
+.us-table_content {
+  overflow: auto;
+  height: 100vh;
+}
+.us-table__content table tr td {
+  padding: 18px;
+  line-height: 20px;
+  height: 30px;
+
+  border-right: 1px solid #e4c9ac;
+}
+.us-table__content {
+  text-align: center;
+  padding: 0 50px;
+  overflow: auto;
+  height: 100%;
+  margin: 0px 20px;
+}
+.us-table_content {
+  overflow: auto;
+  height: 65vh;
+}
+.el-pagination {
+  white-space: nowrap;
+  color: #000000;
+  font-weight: 700;
+}
+.el-form--label-top .el-form-item__label {
+  float: none;
+  display: inline-block;
+  text-align: left;
+  padding: 0 9px 17px;
+}
+
+.el-input__inner {
+  border-radius: 0px !important;
+  background-blend-mode: saturation;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 20;
+  height: 50px
+}
+.el-button.is-round {
+  border-radius: 20px;
+  padding: 12px 23px;
+  color: white;
+  background-color: #dc3545;
+}
+.el-button.is-round:hover {
+  color: white;
+  background-color: #bb2d3b;
+}
 </style>
       

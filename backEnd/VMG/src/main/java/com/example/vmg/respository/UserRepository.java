@@ -17,7 +17,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByUserName(String userName);
     Boolean existsByUserName(String userName);
 
-    @Query("select s from User s where s.name like (:keyWord) and s.userName like (:keyWord)  " )
+    @Query("select s from User s where  s.name like (:keyWord) or s.userName like (:keyWord) order by s.id DESC")
     public Page<User> getPage(Pageable pageable, String keyWord);
 
     @Modifying

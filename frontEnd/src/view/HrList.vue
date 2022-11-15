@@ -1358,6 +1358,219 @@ export default {
 };
 </script>
 
-<style scoped>
-@import "@/assets/css/hr/list.css";
+<style>
+.hr-image {
+  background-image: url("@/assets/image/profiledata.svg");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  width: 600px;
+  height: 600px;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+}
+.hr-list {
+  background: linear-gradient(90deg, #e4c9ac 0%, rgba(255, 255, 255, 0) 100%),
+    #e3c1d3;
+  width: 100%;
+  height: 100%;
+}
+.hr-info {
+  display: flex;
+}
+.hr-title {
+  text-align: center;
+  font-size: 34px;
+  font-weight: 600;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+    Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+  background: rgba(255, 255, 255, 0.13);
+  padding: 6px 0px;
+}
+.icon-delete {
+  cursor: pointer;
+}
+.icon-delete i {
+  color: #f00;
+}
+.icon-edit {
+  cursor: pointer;
+}
+.icon-edit i {
+  color: #409eff;
+}
+.hr-table {
+  width: fit-content;
+  margin-left: 35px;
+  margin-right: 35px;
+  z-index: 2;
+}
+.hr-table__content table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.hr-table__content table tr {
+  background: #f2e7ddf8;
+  text-align: center;
+}
+.hr-table__content table tr th {
+  border-right: 1px solid #e4c9ac;
+  padding: 14px;
+}
+.hr-table__content table tr td {
+  padding: 8px;
+  height: 30px;
+  line-height: 30px;
+}
+.hr-table__content table thead tr {
+  background: #fdf9f8;
+}
+.hr-table__content table thead th {
+  font-weight: 600;
+  font-size: 14px;
+}
+.hr-table__content table tbody tr {
+  border-bottom: 1px solid #94806af8;
+}
+.hr-table__content table tbody tr:hover {
+  background: #fdf9f8;
+}
+.hr-table__content table tbody tr:last-child {
+  border-bottom: none;
+}
+.hr-info {
+  display: flex;
+}
+.hr-table__detail {
+  width: 200px;
+  height: 500px;
+  background: #fff;
+  border-radius: 30px;
+  flex-direction: column;
+  flex: 0.7;
+  z-index: 2;
+}
+.hr-detail__header {
+  padding: 24px;
+  font-size: 24px;
+  font-weight: 700;
+  display: flex;
+  justify-content: space-between;
+}
+.hr-detail__title {
+  color: #000;
+  border-bottom: 2px solid #f004;
+}
+.hr-detail__close {
+  color: #f00;
+  cursor: pointer;
+}
+.hr-detail__body {
+  flex: 1;
+}
+.hr-detail__body ul {
+  margin: 0;
+}
+.hr-detail__body ul li {
+  padding: 8px 0px;
+}
+.hr-detail__footer {
+  display: flex;
+  justify-content: flex-end;
+}
+.hr-detail__button {
+  color: #f00 !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+}
+.hr-detail__button:hover {
+  background-color: rgba(255, 0, 0, 0.1) !important;
+  border-color: rgba(255, 0, 0, 0.1) !important;
+}
+.hr-detail__button:focus {
+  background-color: rgba(255, 0, 0, 0.2) !important;
+  border-color: rgba(255, 0, 0, 0.2) !important;
+}
+.hr-detail__button:active {
+  background-color: rgba(255, 0, 0, 0.3) !important;
+  border-color: rgba(255, 0, 0, 0.3) !important;
+}
+.hr-function {
+  margin-top: 40px;
+}
+.el-select {
+  width: 100%;
+}
+.el-input__inner {
+  border-radius: 0px !important;
+  font-family: "Poppins,sans-serif";
+  background-blend-mode: saturation;
+  font-style: normal;
+  font-weight: 600;
+  font-size: 20;
+}
+.el-form-item_label {
+  color: #f00 !important;
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 31px;
+  letter-spacing: 0em;
+  text-align: left;
+  line-height: 0px;
+  margin-bottom: 6px;
+}
+.el-form-item__content input {
+  border-radius: 8px !important;
+  box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.15);
+  border: 1px solid #23282b8f;
+}
+.el-dialog__title {
+  margin-left: 56px;
+  font-size: 25px;
+  font-weight: 700;
+  line-height: 35px;
+  letter-spacing: 0em;
+  text-align: left;
+}
+.el-dialog__headerbtn i {
+  font-size: 24px;
+  font-weight: 700;
+  color: #f00 !important;
+}
+.pl-table__content table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.pl-table__content table tr {
+  background: rgba(217, 217, 217, 0.13);
+}
+.pl-table__content table tr th {
+  border-right: 1px solid #c7c7c7;
+  padding: 14px;
+}
+.pl-table__content table tr td {
+  padding: 20px;
+  line-height: 30px;
+  height: 30px;
+}
+.pl-table__content table thead tr {
+  background-color: #d9d9d9;
+  position: sticky;
+  top: 0;
+}
+.pl-table__content table thead th {
+  font-size: 14px;
+  font-weight: 600;
+}
+.pl-table__content table tr td {
+  border-right: 1px solid #c7c7c7;
+}
+.pl-table__content table tbody tr {
+  border-bottom: 1px solid #c7c7c7;
+}
+.pl-table__content table tbody tr:hover {
+  background-color: pink;
+}
+
 </style>
