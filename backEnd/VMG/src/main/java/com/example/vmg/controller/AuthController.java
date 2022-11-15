@@ -31,7 +31,7 @@ import java.util.stream.Collectors;
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/api/auth")
-public class AuthController {
+public class  AuthController {
     @Autowired private
     UserServiceImpl userService;
     @Autowired private
@@ -102,6 +102,12 @@ public class AuthController {
                         Role modRole = roleService.findByName(ERole.ROLE_MODERATOR)
                                 .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
                         roles.add(modRole);
+
+                        break;
+                    case "per":
+                        Role perRole = roleService.findByName(ERole.ROLE_PERSONNEL)
+                                .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+                        roles.add(perRole);
 
                         break;
                     default:

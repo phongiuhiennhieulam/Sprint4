@@ -1419,7 +1419,7 @@ export default {
   font-weight: 600;
   font-size: 20;
 }
-.el-form-item__label {
+.el-form-item_label {
   color: #f00 !important;
   font-size: 20px;
   font-weight: 600;
