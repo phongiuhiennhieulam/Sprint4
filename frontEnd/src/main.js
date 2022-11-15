@@ -3,18 +3,16 @@ import App from "./App.vue";
 import router from './router'
 import store from './store'
 import components from "./components";
-import "@/assets/css/main.css";
 import ElementUI from "element-ui";
 import locale from 'element-ui/lib/locale/lang/en'
 import "element-ui/lib/theme-chalk/index.css";
+import "@/assets/css/main.css";
+import "@/assets/css/base.css";
 import VueSessionStorage from 'vue-sessionstorage'
 Vue.config.productionTip = false;
 
-Vue.use(components); 
+Vue.use(components);
 Vue.use(VueSessionStorage)
-
-
-
 
 
 Vue.use(ElementUI, { locale });

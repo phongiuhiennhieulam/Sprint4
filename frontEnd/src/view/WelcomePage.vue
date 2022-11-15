@@ -1,13 +1,12 @@
 <template>
   <div>
-    <!-- <img src="https://d1csarkz8obe9u.cloudfront.net/posterpreviews/pink-welcome-church-poster-template-6f80e2c16ac12041759cbf6816b1f474_screen.jpg?ts=1561468682"> -->
     <h1>Wellcome</h1>
   </div>
 </template>
 
 <script>
 export default {
-  
+  name: "WelcomePage"
 };
 </script>
 

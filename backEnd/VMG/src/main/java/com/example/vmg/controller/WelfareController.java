@@ -32,11 +32,15 @@ public class WelfareController {
     //@PreAuthorize("hasRole('ROLE_MODERATOR') or hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
     @GetMapping("/welfares")
     public List<Welfare> getlist(){
-        return welfareService.getList();
+        return welfareService.getListOrder();
+    }
+    @GetMapping("/welfares-user")
+    public List<Welfare> getByStatus(){
+        return welfareService.getListByStatus();
     }
     @GetMapping("/general-welfanes")
     public List<GeneralWelfare> getlistPhucLoiBiDong(){
-        return generalWelfareService.getList();
+        return generalWelfareService.getListOrder();
     }
     @PostMapping("/welfare")
     public ResponseEntity<Void> addPhucLoi(@ModelAttribute WelfareForm welfareForm){
@@ -55,7 +59,7 @@ public class WelfareController {
         generalWelfare.setName(welfareForm.getName());
         generalWelfare.setText(welfareForm.getText());
         generalWelfare.setPrice(welfareForm.getPrice());
-        generalWelfare.setStatus(1);
+        generalWelfare.setStatus(0);
         generalWelfareService.save(generalWelfare);
         return ResponseEntity.ok(new MessageResponse("create welfane successfully!"));
     }
@@ -148,5 +152,19 @@ public class WelfareController {
     @GetMapping("/get-history-accept-welfare/{id}")
     public List<WelfareStaffInterface> getHistoryAcceptWelfareOfUser(@PathVariable Long id){
         return welfareStaffEntityService.getHistoryAcceptWelfareOfUser(id);
+    }
+    @PutMapping("/status-welfare")
+    public ResponseEntity<Void> updateStatusGeneralWelfare(@RequestBody StatusFormRequest statusFormRequest){
+        if(statusFormRequest.getKindOfWelfare() == 1) {
+            GeneralWelfare generalWelfare = generalWelfareService.findById(statusFormRequest.getItemID()).get();
+            generalWelfare.setStatus(statusFormRequest.getStatus());
+            generalWelfareService.update(statusFormRequest.getItemID(), generalWelfare);
+        }else{
+            Welfare welfare = welfareService.findById(statusFormRequest.getItemID()).get();
+            welfare.setStatus(statusFormRequest.getStatus());
+            welfareService.update(statusFormRequest.getItemID(), welfare);
+
+        }
+        return new ResponseEntity<Void>(HttpStatus.OK);
     }
 }

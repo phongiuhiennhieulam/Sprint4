@@ -207,7 +207,7 @@ public class StaffController {
     }
     @PreAuthorize("hasRole('ROLE_MODERATOR') or hasRole('ROLE_ADMIN')")
     @GetMapping("/get_all_money/{id}")
-    public Integer getMoneyWelfare(@PathVariable("id") Long id){
+    public Long getMoneyWelfare(@PathVariable("id") Long id){
         return staffService.getTotalMoney(id);
     }
     @PreAuthorize("hasRole('ROLE_MODERATOR') or hasRole('ROLE_ADMIN')")
