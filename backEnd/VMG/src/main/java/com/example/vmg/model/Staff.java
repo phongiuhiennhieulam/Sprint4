@@ -39,7 +39,6 @@ public class Staff implements Serializable {
     @JoinColumn(name = "idDepartment")
     private Department department;
 
-
     @JsonIgnore
     @OneToMany(mappedBy = "staff")
     private List<WelfareStaff> welfareStaff;

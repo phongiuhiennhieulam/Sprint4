@@ -1,5 +1,5 @@
 
-<template>
+<template>  
   <div class="header">
     <div class="header-logo">
       <svg width="97" height="92" viewBox="0 0 97 92" fill="none" xmlns="http://www.w3.org/2000/svg"
@@ -41,30 +41,40 @@
               Quản Lý<i class="el-icon-arrow-down el-icon--right"></i>
             </span>
             <el-dropdown-menu slot="dropdown">
+              <router-link to="/hr" style="text-decoration: none;">
               <el-dropdown-item>
-                <router-link to="/hr" style="text-decoration: none;color:black;cursor:pointer width: 100%;">Quản lý nhân
-                  viên</router-link>
+                Quản lý nhân
+                  viên
               </el-dropdown-item>
+            </router-link>
+            <router-link to="/phucloi" style="text-decoration: none;color:black;cursor:pointer width: 100%;">
               <el-dropdown-item>
-                <router-link to="/phucloi" style="text-decoration: none;color:black;cursor:pointer width: 100%;">Quản lý
-                  phúc lợi</router-link>
+              Quản lý phúc lợi
               </el-dropdown-item>
+            </router-link>
+
+            <router-link to="/user" style="text-decoration: none;color:black;cursor:pointer width: 100%;">
               <el-dropdown-item>
-                <router-link to="/user" style="text-decoration: none;color:black;cursor:pointer width: 100%;">
-                  Quản lý tài khoản</router-link>
+                  Quản lý tài khoản
               </el-dropdown-item>
+            </router-link>
+
+            <router-link to="/department" style="text-decoration: none;color:black;cursor:pointer width: 100%;">
               <el-dropdown-item>
-                <router-link to="/department" style="text-decoration: none;color:black;cursor:pointer width: 100%;">
-                  Quản lý phòng ban </router-link>
+                  Quản lý phòng ban 
               </el-dropdown-item>
-              <el-dropdown-item>
-                <router-link to="/statistical" style="text-decoration: none;color:black;cursor:pointer width: 100%;">
-                  Thống kê </router-link>
-              </el-dropdown-item>
+            </router-link>
+
+            <router-link to="/statistical" style="text-decoration: none;color:black;cursor:pointer width: 100%;"> 
+            <el-dropdown-item>
+                  Thống kê 
+            </el-dropdown-item>
+          </router-link>
+          
             </el-dropdown-menu>
           </el-dropdown>
         </div>
-        <div class="header-right__item" v-if="quanly">
+        <div class="header-right__item" v-if="quanly || nhansu">
           <el-badge :value="list.length" :max="99" class="item" style="margin-right: 10px; margin-left: 5px">
             <i class="el-icon-s-claim"></i>
             <router-link style="text-decoration: none;
@@ -119,11 +129,7 @@
             </el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
-        <div v-if="!quanly && !user">
-          <Strong style="color: red;">
-            Tài khoản của bạn đã bị khóa!
-          </Strong>
-        </div>
+     
 
         <div>
           <div v-if="staffErorr == ''">
@@ -161,6 +167,11 @@
             </el-dropdown>
           </div>
         </div>
+           <div v-if="!quanly && !user && !nhansu">
+          <Strong style="color: red;">
+            Tài khoản của bạn đã bị khóa!
+          </Strong>
+        </div>
 
         <div class="header-right__item">
           <i class="el-icon-s-custom"></i>
@@ -193,6 +204,7 @@ export default {
       auth: {},
       nhanvien: false,
       quanly: false,
+      nhansu: false,
       list: [],
       listbirthdays: [],
       staffErorr: []
@@ -253,8 +265,11 @@ export default {
         if (this.userExists("ROLE_USER")) {
           this.nhanvien = true;
         }
-        if (this.userExists("ROLE_MODERATOR")) {
+        if (this.userExists("ROLE_ADMIN")) {
           this.quanly = true;
+        }
+        if (this.userExists("ROLE_MODERATOR")) {
+          this.nhansu = true;
         }
       }
     },
@@ -354,6 +369,15 @@ export default {
 .itemTbale:hover {
   background-color: rgba(255, 0, 0, 0.1) !important;
   border-color: rgba(255, 0, 0, 0.1) !important;
+}
+.hr-title {
+  text-align: center;
+  font-size: 34px;
+  font-weight: 600;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+    Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+  background: rgba(255, 255, 255, 0.13);
+  padding: 6px 0px;
 }
 
 
