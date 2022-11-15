@@ -17,7 +17,7 @@
               <thead>
                 <tr width="90%">
                   <th >     
-                    <div>
+                    <div >
                       <el-form :inline="true" class="demo-form-inline">
                           <el-form-item>
                             <el-input style="width: 300px;"
@@ -33,7 +33,7 @@
                     </div>  
                   </th>                                                  
                   <th width="10%" style="margin-right: 0px;">
-                    <div>
+                    <div v-if="selected.length !==0">
                       <el-form :inline="true" class="demo-form-inline">
                           <el-form-item>
                             <el-button class="btn btn-danger" @click="handlDeletes">
@@ -44,7 +44,7 @@
                     </div>  
                   </th>
                   <th width="10%" style="padding-right: 14px;">
-                    <div>
+                    <div v-if="selected.length !==0">
                       <el-form :inline="true" class="demo-form-inline">
                           <el-form-item>
                             <el-button class="btn btn-danger"
@@ -632,6 +632,7 @@ export default {
         email: "",
         department: "",
       },
+      isShowselected: false,
       selected: [],
       isShowAdd: false,
       isShowUpdate: false,
@@ -852,7 +853,7 @@ export default {
       )
       .then(() => {
           StaffService.deletes(this.selected)
-          this.loading()
+          // this.loading()
           this.$message({
             type: "success",
             message: "Khóa thành công!",
@@ -863,7 +864,6 @@ export default {
             type: "info",
             message: "Đã hủy khóa!",
           });
-          this.loading()
         });
       
     },
@@ -1096,6 +1096,17 @@ export default {
         document.getElementById("name").focus();       
         return false;
       }
+      var re = /^[\sa-zA-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂẾưăạảấầẩẫậắằẳẵặẹẻẽềềểếỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ\\s\\W|_]+$/;
+      if(!re.test(document.forms["myForm"]["name"].value))
+       {
+        this.$notify({
+                    title: "Warning",
+                    message: "Tên không được có số và ký tự đặc biệt!",
+                    type: "warning",
+                  });
+        document.getElementById("email").focus();           
+        return false;
+       }
       let email = document.forms["myForm"]["email"].value;
       if (email == "") {
         this.$notify({
@@ -1316,6 +1327,7 @@ export default {
     },
     selectAllCheckboxes () {
       const checkboxes = document.querySelectorAll('input[type=checkbox]');
+
       checkboxes.forEach((cb) => { 
         if(cb.checked == false ){
            cb.checked = true; 
@@ -1324,7 +1336,14 @@ export default {
           cb.checked = false;
         }
       });
-    }
+    },
+    validateName() {    
+    var re = /^[A-Za-z]+$/;
+    if(re.test(document.getElementById("textboxID").value))
+       alert('ddungs!');
+    else
+       alert('sai.');      
+}
 
   },  
   mounted() {

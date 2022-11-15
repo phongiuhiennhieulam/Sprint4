@@ -1,5 +1,5 @@
 
-<template>
+<template>  
   <div class="header">
     <div class="header-logo">
       <svg width="97" height="92" viewBox="0 0 97 92" fill="none" xmlns="http://www.w3.org/2000/svg"
@@ -40,26 +40,36 @@
               Quản Lý<i class="el-icon-arrow-down el-icon--right"></i>
             </span>
             <el-dropdown-menu slot="dropdown">
+              <router-link to="/hr" style="text-decoration: none;">
               <el-dropdown-item>
-                <router-link to="/hr" style="text-decoration: none;color:black;cursor:pointer width: 100%;">Quản lý nhân
-                  viên</router-link>
+                Quản lý nhân
+                  viên
               </el-dropdown-item>
+            </router-link>
+            <router-link to="/phucloi" style="text-decoration: none;color:black;cursor:pointer width: 100%;">
               <el-dropdown-item>
-                <router-link to="/phucloi" style="text-decoration: none;color:black;cursor:pointer width: 100%;">Quản lý
-                  phúc lợi</router-link>
+              Quản lý phúc lợi
               </el-dropdown-item>
+            </router-link>
+
+            <router-link to="/user" style="text-decoration: none;color:black;cursor:pointer width: 100%;">
               <el-dropdown-item>
-                <router-link to="/user" style="text-decoration: none;color:black;cursor:pointer width: 100%;">
-                  Quản lý tài khoản</router-link>
+                  Quản lý tài khoản
               </el-dropdown-item>
+            </router-link>
+
+            <router-link to="/department" style="text-decoration: none;color:black;cursor:pointer width: 100%;">
               <el-dropdown-item>
-                <router-link to="/department" style="text-decoration: none;color:black;cursor:pointer width: 100%;">
-                  Quản lý phòng ban </router-link>
+                  Quản lý phòng ban 
               </el-dropdown-item>
-              <el-dropdown-item>
-                <router-link to="/statistical" style="text-decoration: none;color:black;cursor:pointer width: 100%;">
-                  Thống kê </router-link>
-              </el-dropdown-item>
+            </router-link>
+
+            <router-link to="/statistical" style="text-decoration: none;color:black;cursor:pointer width: 100%;"> 
+            <el-dropdown-item>
+                  Thống kê 
+            </el-dropdown-item>
+          </router-link>
+          
             </el-dropdown-menu>
           </el-dropdown>
         </div>
