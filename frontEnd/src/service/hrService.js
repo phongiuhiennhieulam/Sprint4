@@ -47,7 +47,6 @@ class StaffService {
     async getDepartments() {
         return await axios.get('http://localhost:8083/api/departments', { headers: authHeader()});
     }
-
     async deleteStaff(id) {
         return await axios.put(`http://localhost:8083/api/staff-delete/${id}`, { headers: authHeader()})
     }
@@ -66,12 +65,12 @@ class StaffService {
     async getRegisterWelfare() {
         return await axios.get('http://localhost:8083/api/registers', { headers: authHeader()})
     }
-   
+      
     async DeleteRegisterWelfare(id) {
         return await axios.put(`http://localhost:8083/api/register-delete/${id}`, { headers: authHeader()})
     }
     async deletes (ids) {
-        return await axios.put(`http://localhost:8083/api/staff/deletes?ids=${ids}`, { headers: authHeader()})
+        return await axios.put(`http://localhost:8083/api/staffdeletes?ids=${ids}`, { headers: authHeader()})
     }
     async getErorr () {
         return await axios.get('http://localhost:8083/api/staff-erorr', { headers: authHeader()})

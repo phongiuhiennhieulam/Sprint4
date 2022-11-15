@@ -148,13 +148,11 @@ public class StaffController {
         return ResponseEntity.ok(new MessageResponse("update money staff successfully!"));
     }
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @PutMapping("/staff/deletes")
+    @PutMapping("/staffdeletes")
     public ResponseEntity<?> mutilpartDelete(@RequestParam("ids") List<Long> ids){
         staffService.mutipartDelete(ids);
-
         List<String> emails = staffService.getEmailById(ids);
         userService.looks(emails);
-
         String.join(",", ids.stream()
                 .map(value ->  Long.toString(value)).collect(Collectors.toList()));
         return ResponseEntity.ok(new MessageResponse("delete staff successfully!"));
