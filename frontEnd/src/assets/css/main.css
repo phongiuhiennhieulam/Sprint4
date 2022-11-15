@@ -102,14 +102,6 @@ input[type="checkbox"] {
     border-radius: 0;
 }
 
-::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
-}
-
-::-webkit-scrollbar-thumb {
-    background: #bdbdbd;
-}
 
 .router-link-active {
 
@@ -119,3 +111,14 @@ input[type="checkbox"] {
 textarea {
     border: 1px solid #DCDFE6 !important;
 }
+
+
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #bdbdbd;
+}
+

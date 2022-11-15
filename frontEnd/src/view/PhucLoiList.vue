@@ -45,8 +45,8 @@
                     <i class="fa fa-edit"></i> </span>&nbsp;
                   <span v-if="item.status == 1">
                     <el-popover placement="right" width="160" trigger="hover" content="Mở khóa phúc lợi">
-                      <el-button @click="statusWelfare(item.id, 0)" type="success" icon="el-icon-unlock" slot="reference"
-                        style="padding:3px 3px 3px 3px"></el-button>
+                      <el-button @click="statusWelfare(item.id, 0)" type="success" icon="el-icon-unlock"
+                        slot="reference" style="padding:3px 3px 3px 3px"></el-button>
                     </el-popover>
 
                   </span>
@@ -64,7 +64,6 @@
         </div>
       </div>
     </div>
-
     <el-dialog title="Xác nhận" :visible.sync="centerDialogVisible" width="30%" center>
       <span>Bạn có chắc chắn muốn xóa phúc lợi này?</span>
       <span slot="footer" class="dialog-footer">
@@ -72,117 +71,78 @@
         <el-button type="primary" @click="showDeleteDialog(idDelete)">Xác nhận</el-button>
       </span>
     </el-dialog>
-    <!-- Khu vực hiển thị thông tin phúc lợi -->
-    <el-dialog :visible.sync="isShowEdit" width="600px" label-width="100px" top="5vh" left="150px"
-      title="Thông tin phúc lợi">
-      <el-form :model="edit" ref="edit" label-width="120px" label-position="top">
-        <el-row :gutter="24">
-
-          <el-col :span="24">
-            <el-form-item label="Tên phúc lợi">
-              <el-input v-model="edit.name" type="text"></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item :label="'Thành tiền: ' + formatCurrency(edit.price)">
-              <el-input type="number" v-model="edit.price"></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item prop="code" v-if="value == 0" label="Loại phúc lợi">
-              <el-select v-model="edit.isQuantity">
-                <el-option type="text" :value="true" label="Chỉ 1"></el-option>
-                <el-option type="text" :value="false" label="Chọn số lượng"></el-option>
-              </el-select>
-
-            </el-form-item>
-          </el-col>
-
-          <el-col>
-            <el-form-item prop="code" label="Mô tả">
-              <el-input type="textarea" v-model="edit.text"></el-input>
-            </el-form-item>
-          </el-col>
-        </el-row>
-      </el-form>
-      <div slot="footer" class="dialog-footer" style="text-align: center">
-        <el-button class="btn btn-danger" round @click="editWel(edit)">Cập nhật
-        </el-button>
-      </div>
-    </el-dialog>
     <!-- Khu vực hiển thị thêm mới phúc lợi -->
-    <el-dialog :visible.sync="isShowAdd" width="600px" label-width="100px" top="5vh" left="150px"
-      title="Thêm mới phúc lợi">
-      <div class="row">
-        <div class="col-12">
-          <div class="mb-3">
+    <el-form :model="add" ref="addValidateForm" label-width="120px" class="demo-dynamic" :rules="rules">
+      <el-dialog :visible.sync="isShowAdd" width="600px" label-width="100px" top="5vh" left="150px"
+        :title="titleFormName">
+        <div class="row">
+          <div class="col-12">
+            <div class="mb-3">
+              <label class="form-label">
+                <strong>Tên phúc lợi<span style="color:red;">&nbsp;
+                    (*)</span></strong>
+              </label>
+              <el-form-item prop="name" label-width="0px">
+                <el-input v-model="add.name" type="text"></el-input>
+              </el-form-item>
+            </div>
+          </div>
+          <div class="col-12">
+            <div class="row">
+              <div class="mb-3 col-6">
+                <label class="form-label">
+                  <strong>Thành tiền:&nbsp;{{ formatCurrency(add.price) }}<span style="color:red;">&nbsp;
+                      (*)</span></strong>
+                </label>
+                <el-form-item prop="price" label-width="0px">
+                  <el-input type="number" :min="0" v-model.number="add.price"></el-input>
+                </el-form-item>
+              </div>
+              <div class="mb-3 col-6" v-if="value == 0">
+                <label class="form-label">
+                  <strong>Loại phúc lượng<span style="color:red;">&nbsp;
+                      (*)</span></strong>
+                </label>
+                <el-select v-model="add.isQuantity">
+                  <el-option type="text" :value="true" label="Chỉ 1"></el-option>
+                  <el-option type="text" :value="false" label="Chọn số lượng"></el-option>
+                </el-select>
+              </div>
+            </div>
+          </div>
+          <div class="col-12">
             <label class="form-label">
-              <strong>Tên phúc lợi<span style="color:red;">&nbsp;
+              <strong>Mô tả<span style="color:red;">&nbsp;
                   (*)</span></strong>
             </label>
-            <el-input v-model="add.name" type="text"></el-input>
+            <el-form-item prop="text" label-width="0px">
+              <el-input type="textarea" v-model="add.text"></el-input>
+            </el-form-item>
+
           </div>
         </div>
-        <div class="col-12">
-          <div class="row">
-            <div class="mb-3 col-6">
-              <label class="form-label">
-                <strong>Thành tiền:&nbsp;{{ formatCurrency(add.price) }}<span style="color:red;">&nbsp;
-                    (*)</span></strong>
-              </label>
-              <el-input type="number" v-model="add.price"></el-input>
-            </div>
-            <div class="mb-3 col-6" v-if="value == 0">
-              <label class="form-label">
-                <strong>Loại phúc lượng<span style="color:red;">&nbsp;
-                    (*)</span></strong>
-              </label>
-              <el-select v-model="add.isQuantity">
-                <el-option type="text" :value="true" label="Chỉ 1"></el-option>
-                <el-option type="text" :value="false" label="Chọn số lượng"></el-option>
-              </el-select>
-            </div>
-          </div>
-
+        <div slot="footer" class="dialog-footer" style="text-align: center">
+          <el-button class="btn btn-danger" round @click="submitForm('addValidateForm')">{{ buttonName }}
+          </el-button>
         </div>
-        <div class="col-12">
-          <label class="form-label">
-            <strong>Mô tả<span style="color:red;">&nbsp;
-                (*)</span></strong>
-          </label>
-          <el-input type="textarea" v-model="add.text"></el-input>
-        </div>
-      </div>
-
-      <div slot="footer" class="dialog-footer" style="text-align: center">
-        <el-button class="btn btn-danger" round @click="Add(add)">Thêm mới
-        </el-button>
-      </div>
-    </el-dialog>
-
+      </el-dialog>
+    </el-form>
   </div>
 </template>
 
 <script>
 /* eslint-disable */
 import WelfareApi from "@/service/phucLoiService";
+import format from "@/utils/format"
 let welfareApi = new WelfareApi();
 export default {
   name: "PhucLoiList",
   data() {
     return {
       value: 0,
-      isShowEdit: false,
       isShowDialog: false,
       isShowAdd: false,
       idDelete: "",
-      edit: {
-        id: "",
-        name: "",
-        text: "",
-        price: "",
-        isQuantity: false,
-      },
       add: {
         id: "",
         name: "",
@@ -190,16 +150,31 @@ export default {
         price: "",
         isQuantity: false
       },
+      formMode: '',
       list: [],
       listAllWelfare: [],
       nameWelfare: [],
       centerDialogVisible: false,
-      addText: "Thêm mới phúc lợi cá nhân hóa"
+      addText: "Thêm mới phúc lợi cá nhân hóa",
     };
+  },
+  computed: {
+    rules() {
+      return {
+        name: [{ validator: this.validateName, trigger: ['blur', 'change'] }],
+        price: [{ validator: this.validatePrice, trigger: ['blur', 'change'] }],
+        text: [{ validator: this.validateText, trigger: ['blur', 'change'] }]
+      }
+    },
+    titleFormName() {
+      return this.formMode === 'edit' ? 'Cập nhật phúc lợi' : 'Thêm mới phúc lợi';
+    },
+    buttonName() {
+      return this.formMode === 'edit' ? 'Cập nhật' : 'Thêm mới';
+    }
   },
   watch: {
     value: function (newVal) {
-      console.log(newVal);
       if (newVal === 0) {
         this.getAllWelfare();
         this.addText = "Thêm mới phúc lợi cá nhân hóa";
@@ -208,9 +183,127 @@ export default {
         this.addText = "Thêm mới phúc lợi chung";
       }
     },
-    deep: true,
+    isShowAdd(value) {
+      if (!value) {
+        this.add = {
+          id: "",
+          name: "",
+          text: "",
+          price: "",
+          isQuantity: false
+        }
+        this.resetForm('addValidateForm');
+      }
+    }
   },
   methods: {
+    isDuplicateName(value) {
+      if (this.formMode === 'edit') {
+        return this.list.filter((x) => format.removeVietnameseTones(x.name).toLowerCase() === (format.removeVietnameseTones(value).toLowerCase()) && x.id !== this.add.id).length > 0
+      } else {
+        return this.list.filter((x) => format.removeVietnameseTones(x.name).toLowerCase() === (format.removeVietnameseTones(value).toLowerCase())).length > 0
+      }
+    },
+    validateName(rule, value, callback) {
+      if (value === '') {
+        callback(new Error('Tên phúc lợi không được để trống'))
+      } else if (value.match("[0-9]")) {
+        callback(new Error('Tên phúc lợi không được chứa số'))
+      } else if (this.isDuplicateName(value)) {
+        callback(new Error('Tên phúc lợi đã tồn tại'))
+      } else {
+        callback()
+      }
+    },
+    validateText(rule, value, callback) {
+      if (value === '') {
+        callback(new Error('Mô tả không được để trống'))
+      } else {
+        callback()
+      }
+    },
+    validatePrice(rule, value, callback) {
+      if (value === '') {
+        callback(new Error('Số tiền không hợp lệ'))
+      } else if (value <= 0) {
+        callback(new Error('Số tiền phải lớn hơn 0'))
+      } else {
+        callback()
+      }
+    },
+    submitForm(formName) {
+      const self = this;
+      let isValid = true
+      self.$refs[formName].validate((valid) => {
+        if (!valid) isValid = false;
+      })
+      if (isValid) {
+        const qs = require("qs");
+        if (self.formMode === 'edit') {
+          if (this.value === 0) {
+            welfareApi.updateWelfare(self.add.id, qs.stringify(self.add)).then((res) => {
+              welfareApi.getAllWelfare().then((res) => {
+                // self.isLoaded = true;
+                this.list = res.data;
+                this.$notify({
+                  title: "Success",
+                  message: "Cập nhật phúc lợi thành công",
+                  type: "success",
+                });
+                this.list = res.data;
+              });
+            });
+          }
+          else {
+            welfareApi.updateGeneralWelfare(self.add.id, qs.stringify(self.add)).then((res) => {
+              welfareApi.getAllGeneralWelfare().then((res) => {
+                // self.isLoaded = true;
+                this.list = res.data;
+                this.$notify({
+                  title: "Success",
+                  message: "Cập nhật phúc lợi thành công",
+                  type: "success",
+                });
+                this.list = res.data;
+              });
+            });;
+          }
+        } else {
+          if (self.value === 0) {
+            welfareApi.createWelfare(qs.stringify(self.add)).then((res) => {
+              welfareApi.getAllWelfare().then((res) => {
+                // self.isLoaded = true;
+                self.list = res.data;
+                self.$notify({
+                  title: "Success",
+                  message: "Thêm mới phúc lợi thành công",
+                  type: "success",
+                });
+              });
+              self.list = res.data;
+            });
+          } else {
+            welfareApi.createGeneralWelfare(qs.stringify(self.add)).then((res) => {
+              welfareApi.getAllGeneralWelfare().then((res) => {
+                // self.isLoaded = true;
+                self.list = res.data;
+                self.$notify({
+                  title: "Success",
+                  message: "Thêm mới phúc lợi thành công",
+                  type: "success",
+                });
+                self.list = res.data;
+              });
+            });
+          }
+        }
+        self.isShowAdd = false;
+        self.resetForm(formName)
+      }
+    },
+    resetForm(formName) {
+      this.$refs[formName].resetFields();
+    },
     statusWelfare(id, status) {
       let object = {
         itemID: id,
@@ -223,7 +316,7 @@ export default {
             // self.isLoaded = true;
             this.list = res.data;
           });
-        }else{
+        } else {
           welfareApi.getAllGeneralWelfare().then((res) => {
             // self.isLoaded = true;
             this.list = res.data;
@@ -232,99 +325,18 @@ export default {
       });;
     },
     showAddForm() {
-      this.edit = {};
       this.isShowAdd = true;
-    },
-    change(event) {
-      console.log(event.target.value);
-    },
-    Add(add) {
-      let isValidate = true;
-      if (!(add.name && add.text && add.price)) {
-        this.$alert(
-          "Thông tin đầu vào không hợp lệ vui lòng nhập đủ thông tin!",
-          "Thông tin không hợp lệ",
-          {
-            confirmButtonText: "OK",
-            callback: () => { },
-          }
-        );
-        isValidate = false;
-      }
-      if (this.nameWelfare.includes(add.name)) {
-        this.$alert(
-          "Tên phúc lợi đã tồn tại",
-          "Vui lòng nhập phúc lợi khác",
-          {
-            confirmButtonText: "OK",
-            callback: () => { },
-          }
-        );
-        isValidate = false;
-      }
-      if (isValidate) {
-        //let form = document.querySelector("#form");
-        //console.log(form);
-        const qs = require("qs");
-        if (this.value === 0) {
-          welfareApi.createWelfare(qs.stringify(add)).then((res) => {
-            welfareApi.getAllWelfare().then((res) => {
-              // self.isLoaded = true;
-              this.list = res.data;
-              this.$notify({
-                title: "Success",
-                message: "Thêm mới phúc lợi thành công",
-                type: "success",
-              });
-            });
-
-
-
-            this.list = res.data;
-
-          });
-        } else {
-          welfareApi.createGeneralWelfare(qs.stringify(add)).then((res) => {
-            welfareApi.getAllGeneralWelfare().then((res) => {
-              // self.isLoaded = true;
-              this.list = res.data;
-              this.$notify({
-                title: "Success",
-                message: "Thêm mới phúc lợi thành công",
-                type: "success",
-              });
-
-
-
-              this.list = res.data;
-
-
-            });
-          });
-        }
-        this.isShowAdd = false;
-        add.name = "";
-        add.price = "";
-        add.text = "";
-      }
-    },
-    Cancel() {
-      this.isShowAdd = false;
+      this.formMode = 'add'
     },
     showEditForm(item) {
-      this.isShowEdit = false;
       setTimeout(() => {
-        this.edit = item;
+        this.add = JSON.parse(JSON.stringify(item)); //clone item object
+        this.formMode = 'edit'
         if (item.isQuantity === false) this.label = "Chọn số lượng";
         else this.label = "Chỉ 1";
-        this.isShowEdit = true;
+        this.isShowAdd = true;
       }, 100);
     },
-    // showFormDelete(id) {
-    //   this.idDelete = id;
-    //   // alert(id);
-    //   this.centerDialogVisible = true;
-    // },
     showDeleteDialog(item) {
       if (this.value === 0) {
         welfareApi.deleteWelfare(item).then((res) => {
@@ -362,62 +374,6 @@ export default {
       }
 
       this.centerDialogVisible = false;
-    },
-    editWel(edit) {
-      let isValidate = true;
-      if (!(edit.name && edit.text && edit.price)) {
-        this.$alert(
-          "Thông tin đầu vào không hợp lệ vui lòng nhập đủ thông tin!",
-          "Thông tin không hợp lệ",
-          {
-            confirmButtonText: "OK",
-            callback: () => { },
-          }
-        );
-        isValidate = false;
-      }
-      if (isValidate) {
-        const qs = require("qs");
-        if (this.value === 0) {
-          welfareApi.updateWelfare(edit.id, qs.stringify(edit)).then((res) => {
-            welfareApi.getAllWelfare().then((res) => {
-              // self.isLoaded = true;
-              this.list = res.data;
-              this.$notify({
-                title: "Success",
-                message: "Cập nhật phúc lợi thành công",
-                type: "success",
-              });
-
-
-
-              this.list = res.data;
-
-
-            });
-          });
-        }
-        else {
-          welfareApi.updateGeneralWelfare(edit.id, qs.stringify(edit)).then((res) => {
-            welfareApi.getAllGeneralWelfare().then((res) => {
-              // self.isLoaded = true;
-              this.list = res.data;
-              this.$notify({
-                title: "Success",
-                message: "Cập nhật phúc lợi thành công",
-                type: "success",
-              });
-
-
-
-              this.list = res.data;
-
-
-            });
-          });;
-        }
-
-      }
     },
     getAllWelfare() {
       welfareApi.getAllWelfare().then((res) => {

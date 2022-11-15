@@ -68,6 +68,8 @@
               <el-button class="registerWelfare-button__detail btn btn-danger" @click="showDialogRegister()">Đăng Kí
                 Phúc Lợi
               </el-button>
+              <el-button class="registerWelfare-button__detail btn btn-danger" @click="showDialogRegister()">Trạng thái đăng kí
+              </el-button>
             </template>
           </el-popover>
         </div>
