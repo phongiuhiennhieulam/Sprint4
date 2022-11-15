@@ -51,7 +51,7 @@ public interface StaffRepository extends JpaRepository<Staff,Long> {
     @Query("select sum(w.price) from WelfareStaff ws join Welfare w on ws.welfare.id = w.id where ws.welfare.id = :id GROUP BY ws.staff.id")
     Integer getMoney(@Param("id") Long id);
 
-    @Query("select s from Staff s")
+    @Query("select s from Staff s order by s.id desc")
     public Page<Staff> getPage(Pageable pageable);
 
     @Query("select s from Staff s where month(s.date) = :number ")

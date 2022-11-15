@@ -161,17 +161,15 @@
             </el-dropdown>
           </div>
         </div>
-           <div v-if="!quanly && !user && !nhansu">
-          <Strong style="color: red;">
-            Tài khoản của bạn đã bị khóa!
-          </Strong>
-        </div>
 
         <div class="header-right__item">
           <i class="el-icon-s-custom"></i>
           <el-dropdown>
             <span class="el-dropdown-link" style="cursor: pointer; font-size: 19px">
-              <span>Hello: <Strong>{{ user.userName }}</Strong><span v-if="quanly">(quản lý)</span></span>
+              <span>Hello: <Strong>{{ user.userName }}</Strong><span v-if="quanly">(quản lý)</span>
+              <Strong v-if="(!nhanvien && !quanly && !nhansu)" style="color: red;">
+            Tài khoản của bạn đã bị khóa!
+          </Strong></span>
             </span>
             <el-dropdown-menu slot="dropdown">
               <el-dropdown-item style="text-decoration: none;color:black;cursor:pointer width: 100%; font-size: 19px">

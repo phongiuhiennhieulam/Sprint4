@@ -260,7 +260,6 @@ public class StaffController {
 //    }
 
 
-
 //    @PutMapping("/update/{id}")
 //    public ResponseEntity<Void> update2(@PathVariable Long id, @ModelAttribute NhanVienForm nhanVienForm){
 //        NhanVien nhanVien = nhanVienService.findById(id).get();
@@ -286,6 +285,5 @@ public class StaffController {
     public List<String> getCode2(@PathVariable("id") Long id){
         return staffService.getCodeByUpdate(id);
     }
-
 
 }
