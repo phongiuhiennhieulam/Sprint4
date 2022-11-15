@@ -2,6 +2,7 @@ package com.example.vmg.respository;
 
 import com.example.vmg.model.Staff;
 import com.example.vmg.model.StaffInterface;
+import com.example.vmg.model.StatisticalInterface;
 import lombok.Data;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -60,9 +61,6 @@ public interface StaffRepository extends JpaRepository<Staff,Long> {
     @Query("select code from Staff")
     public List<String> getCode();
 
-
-
-
     @Query(value = "select *  from staff s\n" +
             "left join (select ws.id_staff as id_staff,  sum(ws.quantity * w.price)  as total from welfare_staff ws\n" +
             "left join welfare w on ws.id_welfare = w.id and ws.status = 0\n" +
@@ -88,6 +86,13 @@ public interface StaffRepository extends JpaRepository<Staff,Long> {
     @Transactional
     @Query(value = "select s.code from Staff s where s.id not LIKE :id", nativeQuery = true)
     public List<String> getCodeByUpdate(Long id);
+
+    @Modifying
+    @Transactional
+    @Query(value = "select s.id, s.name, s.code ,count(s.id) as quantity from staff s, welfare_staff ws\n" +
+            "where ws.id_welfare = ? and s.id = ws.id_staff\n" +
+            "group by s.id", nativeQuery = true)
+    public List<StatisticalInterface> getStaffByWelfare(Long id);
 
 
 

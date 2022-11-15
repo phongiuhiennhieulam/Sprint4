@@ -358,7 +358,12 @@ export default {
   background: rgba(255, 255, 255, 0.13);
   padding: 6px 0px;
 }
-
+.title-dialog{
+  color: red;
+  font-size: 30px;
+  display: block;
+  text-align: center;
+}
 
 router-link {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,

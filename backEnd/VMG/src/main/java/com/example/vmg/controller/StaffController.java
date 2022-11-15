@@ -37,19 +37,14 @@ import java.util.List;
 @RequestMapping("/api")
 public class StaffController {
     @Autowired private StaffService staffService;
-
     @Autowired
     private UserServiceImpl userService;
     @Autowired
     private RoleServiceImpl roleService;
     @Autowired
     private PasswordEncoder passwordEncoder;
-
-    @Autowired
-    private RegisterWelfareService registerWelfareService;
     @Autowired
     private WelfareStaffService welfareStaffService;
-    @Autowired private WelfareService welfareService;
     @Autowired private WelfareStaffEntityService welfareStaffEntityService;
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
@@ -58,11 +53,12 @@ public class StaffController {
             ,@RequestParam(defaultValue = "10") int pageSize){
         return new ResponseEntity<Page<Staff>>(staffService.getByPage(page, pageSize), HttpStatus.OK);
     }
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_MODERATOR')")
     @GetMapping("/staff-erorr")
     public List<StaffInterface> getErorr(){
         return staffService.getErorr();
     }
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_MODERATOR')")
     @GetMapping("/list")
     public List<Staff> getAlll(){
         return staffService.getList();
@@ -113,9 +109,8 @@ public class StaffController {
             return ResponseEntity.ok(new RuntimeException("Erorr!"));
         }
     }
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PutMapping("/staff-delete/{id}")
-    public ResponseEntity<Void> deleteStaff(@PathVariable Long id){
+    public ResponseEntity<Void> lookStaff(@PathVariable Long id){
         staffService.delete(id);
         Staff staff = staffService.getById(id);
         User user = userService.findByUsername(staff.getEmail()).get();
@@ -123,7 +118,6 @@ public class StaffController {
         userService.save(user);
         return new ResponseEntity<Void>(HttpStatus.OK);
     }
-    @PreAuthorize(" hasRole('ROLE_ADMIN')")
     @PutMapping("/staff-unlock/{id}")
     public ResponseEntity<Void> unLookStaff(@PathVariable Long id){
         staffService.unLock(id);
@@ -139,7 +133,7 @@ public class StaffController {
         staffService.update(id, staff);
         return new ResponseEntity<Void>(HttpStatus.OK);
     }
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+//    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PutMapping("/staff/update-money/{money}")
     public ResponseEntity<?> updateMoney(@RequestParam("ids") List<Long> ids, @PathVariable BigDecimal money){
         staffService.updateMoney(money, ids);
@@ -148,7 +142,7 @@ public class StaffController {
         return ResponseEntity.ok(new MessageResponse("update money staff successfully!"));
     }
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @PutMapping("/staffdeletes")
+    @PutMapping("/staff-deletes")
     public ResponseEntity<?> mutilpartDelete(@RequestParam("ids") List<Long> ids){
         staffService.mutipartDelete(ids);
         List<String> emails = staffService.getEmailById(ids);
@@ -205,12 +199,10 @@ public class StaffController {
             return ResponseEntity.ok(new MessageResponse("erorr!"));
         }
     }
-    @PreAuthorize("hasRole('ROLE_MODERATOR') or hasRole('ROLE_ADMIN')")
     @GetMapping("/get_all_money/{id}")
     public Integer getMoneyWelfare(@PathVariable("id") Long id){
         return staffService.getTotalMoney(id);
     }
-    @PreAuthorize("hasRole('ROLE_MODERATOR') or hasRole('ROLE_ADMIN')")
     @GetMapping("/birthdays")
     public List<Staff> getBirthday(){
         Calendar cal = Calendar.getInstance();

@@ -34,10 +34,11 @@
     </div>
     <!-- dialog lịch sử xet duyet -->
     <el-dialog
-      title="Lịch xử xét duyệt"
+      title="temp"
       :visible.sync="isHistory"
       width="53%"
       :before-close="handleClose">
+      <span slot="title" class="title-dialog"><strong>Lịch xử xét duyệt</strong> </span>
       <span>Lịch sử xét duyệt của nhân viên {{staff.name}}</span>
       <div label-width="120px" class="pl-table__content">
       <table>
@@ -80,9 +81,10 @@
       label-width="100px"
       top="5vh"
       left="150px"
-      title="Danh sách phúc lợi đăng ký"
+      title="temp"
       boder=""
     >
+    <span slot="title" class="title-dialog"><strong>Danh sách phúc lợi đăng ký</strong> </span>
     <div class="row">
       <div class="col-6">
         <strong><h5>Nhân viên: {{staff.name}}</h5></strong>

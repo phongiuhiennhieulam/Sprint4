@@ -1,31 +1,36 @@
 <template>
   <div class="row pl-body">
-    <div class="col-2">
-      <el-row>
-          <h5 style="text-align: center;" class="title-sidebar"><Strong>Danh sách phúc lợi</Strong></h5>
-          <el-menu
-            class="el-menu-vertical-demo"
-            @open="handleOpen"
-            @close="handleClose"
-            background-color="#f3f4f5"
-            text-color="#000"
-            active-text-color="#000">
-            <el-submenu index="1">
-              <template slot="title">
-                <Strong>Chọn tên phúc lợi</Strong>
-              </template>
-              <el-menu-item-group>
-                <el-menu-item index="1-1" v-for="x in x" :key="x.name">{{x.name}}</el-menu-item>
-              </el-menu-item-group>
-            </el-submenu>
-          </el-menu>
-      </el-row>
+    <div class="col-3">
+      <div class="pl-content">
+          <div class="hr-title"><strong> Chọn tên phúc lợi</strong></div>
+          <div class="pl-ele">
+            <div class="pl-table">
+              <div class="pl-table__content">
+                <form id="form" label-width="100px">
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>STT</th>
+                        <th>Tên</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <ul v-for="(item, index) in welfares" :key="item.id">
+                        <li width="7%">{{ index + 1}}</li>
+                        <li style="text-align: left;">{{ item.name }}</li>
+                      </ul>
+                    </tbody>
+                  </table>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
     </div>
-    <div class="col-1"></div>
     <div class="col-9">
       <div >
         <div class="pl-content">
-          <div class="hr-title"><strong >DANH SÁCH XÉT DUYỆT</strong></div>
+          <div class="hr-title"><strong> Các nhân viên đã đăng ký phúc lợi "{{welfare.name}}"</strong></div>
           <div class="pl-ele">
             <div class="pl-table">
               <div class="pl-table__content">
@@ -40,12 +45,12 @@
                       </tr>
                     </thead>
                     <tbody>
-                      <tr v-for="(item, index) in list" :key="index">
-                        <td width="9%">{{ index + 1}}</td>
-                        <td style="text-align: left;">{{ item.name }}</td>
-                        <td style="text-align: left;">{{ item.code }}</td>
-                        <td>
-                          <el-button @click="handShow(item.id)" type="warning"><strong>Danh sách xét duyệt</strong></el-button>
+                      <tr v-for="(item, index) in staffs" :key="item.id">
+                        <td width="7%">{{ index + 1}}</td>
+                        <td width="20%" style="text-align: left;">{{ item.name }}</td>
+                        <td width="17%" style="text-align: left;">{{ item.code }}</td>
+                        <td width="7%">
+                          {{item.quantity}}
                         </td>
                       </tr>
                     </tbody>
@@ -62,20 +67,15 @@
 </template>
 
 <script>
+import StaffService from "../service/hrService"
+import WelfareApi from "@/service/phucLoiService";
+let welfareApi = new WelfareApi();
 export default {
   data() {
     return{
-      x:[ 
-          {
-          "name": "1",
-        },
-        {
-          "name": "name2",
-        },
-        {
-          "name": "name3",
-        },
-    ]
+      welfares: [],
+      staffs: [],
+      welfare: {}
     }
   },
   methods: {
@@ -84,9 +84,31 @@ export default {
       },
       handleClose(key, keyPath) {
         console.log(key, keyPath);
+      },
+      getAll() {
+        welfareApi.getAllWelfare()
+        .then(response => {
+          this.welfares = response.data
+        })
+        .catch(e => {
+            console.log(e)
+          })
+      },
+      getStaff(id) {
+        StaffService.GetStaffByWelfare(id)
+        .then(response => {
+          this.staffs = response.data
+        })
+        welfareApi.getWelfare(id)
+        .then(response => {
+          this.welfare = response.data
+        })
       }
-    }
 
+  },
+  mounted(){
+    this.getAll();
+  }  
 }
 </script>
 
