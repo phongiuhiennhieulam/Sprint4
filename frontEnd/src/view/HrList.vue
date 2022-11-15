@@ -17,7 +17,7 @@
               <thead>
                 <tr width="90%">
                   <th >     
-                    <div>
+                    <div >
                       <el-form :inline="true" class="demo-form-inline">
                           <el-form-item>
                             <el-input style="width: 300px;"
@@ -27,13 +27,13 @@
                             </el-input>
                           </el-form-item>
                           <span>
-                            <el-button type="warning" @click="onFind">Tim kiếm </el-button>
+                            <el-button type="warning" @click="onFind">Tìm kiếm </el-button>
                           </span>
                     </el-form>
                     </div>  
                   </th>                                                  
-                  <th width="10%">
-                    <div>
+                  <th width="10%" style="margin-right: 0px;">
+                    <div v-if="selected.length !==0">
                       <el-form :inline="true" class="demo-form-inline">
                           <el-form-item>
                             <el-button class="btn btn-danger" @click="handlDeletes">
@@ -43,9 +43,8 @@
                     </el-form>
                     </div>  
                   </th>
-
-                  <th width="10%">
-                    <div>
+                  <th width="10%" style="padding-right: 14px;">
+                    <div v-if="selected.length !==0">
                       <el-form :inline="true" class="demo-form-inline">
                           <el-form-item>
                             <el-button class="btn btn-danger"
@@ -83,7 +82,7 @@
                   <th width="240px">Phòng ban</th>
                   <!-- <th wtdth="80px">Số tiền hỗ trợ</th> -->
                   <th width="170x">Trạng thái</th>
-                  <th width="50px">infor</th>
+                  <th width="80px">Chi tiết</th>
                 </tr>
               </thead>
               <tbody>
@@ -125,11 +124,12 @@
                   <!-- <td style="text-align: right;">{{formatCurrency(item.welfareMoney)}}</td> -->
                   <td style="text-align: left;">
                     <div v-if="item.status == 0">Đang làm việc</div>
-                    <div v-if="item.status == 1">Nghỉ làm</div>
+                    <div v-if="item.status == 1">Khóa</div>
                   </td>
                   <td>
                     <span class="icon-edit" @click="showInfo(item)">
                       <i class="fa fa-circle-info"></i>
+                      <i class="el-icon-caret-right"></i>
                     </span>
                   </td>
                 </tr>
@@ -233,11 +233,11 @@
               <div>
                 <div class="mb-3">
                   <label class="form-label"
-                    ><Strong>Số tiền hỗ trợ phúc lợi:   <span v-if="!moneyUpdate==''">
-                    {{formatCurrency(moneyUpdate)}}
-                  </span></Strong></label
+                    ><Strong>Số tiền hỗ trợ phúc lợi:</Strong></label
                   >
                   <input
+                    v-on:blur="keyupUpdateMoney"
+                    @keydown="keyupUpdateMoney"
                     v-model="moneyUpdate"
                     required
                     id="moneyUpdate"
@@ -250,7 +250,7 @@
               </div> 
           </div>
               <div style="text-align: center">
-                <button @click.prevent="handlUpdateMoney(moneyUpdate)" class="btn btn-danger">
+                <button @click.prevent="handlUpdateMoney()" class="btn btn-danger">
                   <strong>Cập nhật</strong>
                 </button>
               </div>
@@ -275,7 +275,7 @@
                 <div class="mb-3">
                 <label class="form-label"><strong>Mã nhân viên:</strong></label>
                 <input
-                  v-model="staff.code"
+                  v-model="staffUpdate.code"
                   type="text"
                   id="code"
                   name="code"
@@ -283,9 +283,6 @@
                   required
                   placeholder="Mã nhân viên"
                   />
-                </div>
-                <div v-show="showValidateNullCode" style="color: red">
-                  Mã nhân viên không được để trống
                 </div>
               </div>
 
@@ -295,7 +292,7 @@
                   ><Strong>Họ tên nhân viên:</Strong></label
                 >
                 <input
-                  v-model="staff.name"
+                  v-model="staffUpdate.name"
                   type="text"
                   id="name"
                   name="name"
@@ -311,15 +308,12 @@
                 <input
                   name="email"
                   id="email"
-                  v-model="staff.email"
+                  v-model="staffUpdate.email"
                   type="email"
                   required
                   class="form-control"
                   placeholder="Email nhân viên"
                 />
-                </div>
-                <div v-show="showValidateNullEmail" style="color: red">
-                 Email nhân viên không được để trống
                 </div>
               </div>
             </div>
@@ -329,7 +323,7 @@
                 <div class="mb-3">
                   <label class="form-label"><Strong>Ngày sinh(năm / tháng / ngày):</Strong></label>
                   <input
-                    v-model="staff.date"
+                    v-model="staffUpdate.date"
                     id="date"
                     name="date"
                     required
@@ -338,20 +332,17 @@
                     placeholder="YYYY/MM/DD"
                   />
                 </div>
-                <div v-show="showValidateNullDate" style="color: red">
-                  Ngày sinh nhân viên không được để trống
-                </div>
               </div>  
 
               <div>
                 <div class="mb-3">
                   <label class="form-label"
-                    ><Strong>Số tiền hỗ trợ phúc lợi:   <span v-if="!staff.welfareMoney==''">
-                    {{formatCurrency(staff.welfareMoney)}}
-                  </span></Strong></label
+                    ><Strong>Số tiền hỗ trợ phúc lợi:</Strong></label
                   >
                   <input
-                    v-model="staff.welfareMoney"
+                    @keyup="keyupStaffUpdate"
+                    v-model="staffUpdate.welfareMoney"
+                    @blur="keyupStaffUpdate"
                     required
                     id="welfareMoney"
                     name="welfareMoney" 
@@ -360,16 +351,13 @@
                     placeholder="Tiền hỗ trợ phúc lợi"
                   />
                 </div>
-                <div v-show="showValidateNullMoney" style="color: red">
-                  Tiền hỗ trợ nhân viên không được để trống
-                </div>
               </div> 
 
               <div>
                   <div class="mb-3">
                   <label class="form-label"><Strong>Phòng ban:</Strong> </label>
                   <select style="height: 55px;"
-                    v-model="staff.department"
+                    v-model="staffUpdate.department"
                     placeholder="Chọn phòng ban"
                     class="form-control"
                     name="department"
@@ -379,9 +367,6 @@
                       {{ x.name }}
                     </option>
                   </select>
-                  </div>
-                  <div v-show="showValidateNullDepartment" style="color: red">
-                    Phòng ban không được để trống
                   </div>
               </div>
             </div>
@@ -481,16 +466,16 @@
               <div>
                 <div class="mb-3">
                   <label class="form-label"
-                    ><Strong>Số tiền hỗ trợ phúc lợi:   <span v-if="!staff.welfareMoney==''">
-                    {{formatCurrency(staff.welfareMoney)}}
-                  </span></Strong></label
+                    ><Strong>Số tiền hỗ trợ phúc lợi:</Strong></label
                   >
                   <input
                     v-model="staff.welfareMoney"
                     required
+                    v-on:blur="keyupStaff"
+                    @keyup="keyupStaff"
                     id="welfareMoney"
                     name="welfareMoney" 
-                    type="number"
+                    type="text"
                     class="form-control"
                     placeholder="Tiền hỗ trợ phúc lợi"
                   />
@@ -639,6 +624,15 @@ export default {
         email: "",
         department: "",
       },
+      staffUpdate: {
+        code: "",
+        name: "",
+        welfareMoney: "",
+        date: "",
+        email: "",
+        department: "",
+      },
+      isShowselected: false,
       selected: [],
       isShowAdd: false,
       isShowUpdate: false,
@@ -653,15 +647,6 @@ export default {
       isShow: false,
       showDialogAdd: true,
       status: true,
-      showValidateCode: false,
-      showValidateEmail: false,
-      showValidateNullCode: false,
-      showValidateNullName: false,
-      showValidateNullEmail: false,
-      showValidateNullDate: false,
-      showValidateNullDate2: false,
-      showValidateNullMoney: false,
-      showValidateNullDepartment: false,
       moneyUpdate: ''
      
     };
@@ -670,6 +655,39 @@ export default {
   //   this.staff.date = this.formatDate(this.staff.date)
   // },
   methods: {
+    addCommas(nStr) {
+            var x, x1, x2;
+            nStr += '';
+            x = nStr.split('.');
+            x1 = x[0];
+            x2 = x.length > 1 ? ',' + x[1] : '';
+            var rgx = /(\d+)(\d{3})/;
+            while (rgx.test(x1)) {
+                x1 = x1.replace(rgx, '$1' + ',' + '$2');
+            }
+            return x1 + x2;
+      },
+    isNumber: function (evt) {
+            evt = (evt) ? evt : window.event;
+            var charCode = (evt.which) ? evt.which : evt.keyCode;
+            if ((charCode > 31 && (charCode < 48 || charCode > 57)) && charCode !== 46) {
+                evt.preventDefault();
+            } else {
+                return true;
+            }
+      },
+    keyupStaff() {
+            this.staff.welfareMoney = this.addCommas(this.staff.welfareMoney.replace(/,/g, ''));
+            this.$emit("input", parseInt(this.staff.welfareMoney.replace(/,/g, '')))
+    },
+    keyupStaffUpdate() {
+            this.staffUpdate.welfareMoney = this.addCommas(this.staffUpdate.welfareMoney.replace(/,/g, ''));
+            this.$emit("input", parseInt(this.staffUpdate.welfareMoney.replace(/,/g, '')))
+    },
+    keyupUpdateMoney() {
+            this.moneyUpdate = this.addCommas(this.moneyUpdate.replace(/,/g, ''));
+            this.$emit("input", parseInt(this.staff.welfareMoney.replace(/,/g, '')))
+    },
     showupdateForm() {
       this.isShowUpdate = true;
     },
@@ -817,8 +835,9 @@ export default {
           this.code2= response.data
         })
       StaffService.getStaff(id).then((response) => {
-        this.staff = response.data;
-        this.staff.date = this.formatDate(response.data.date);
+        this.staffUpdate = response.data;
+        this.staffUpdate.welfareMoney = this.addCommas( response.data.welfareMoney)
+        this.staffUpdate.date = this.formatDate(response.data.date);
       });
       
     },
@@ -834,7 +853,7 @@ export default {
       )
       .then(() => {
           StaffService.deletes(this.selected)
-          this.loading()
+          // this.loading()
           this.$message({
             type: "success",
             message: "Khóa thành công!",
@@ -845,7 +864,6 @@ export default {
             type: "info",
             message: "Đã hủy khóa!",
           });
-          this.loading()
         });
       
     },
@@ -861,12 +879,31 @@ export default {
           this.$router.go()
         }, 1200);
     },
-    handlUpdateMoney (money) {
+    handlUpdateMoney () {
+      let money = this.moneyUpdate.replace(/./g, '');
       let x = document.forms["form-updateMoney"]["moneyUpdate"].value;
       if (x == "") {
         this.$notify({
                     title: "Warning",
                     message: "Tổng tiền không được để trống!",
+                    type: "warning",
+                  });
+        document.getElementById("moneyUpdate").focus();          
+        return false;
+      }
+      if (money < 0) {
+        this.$notify({
+                    title: "Warning",
+                    message: "Tổng tiền phải là số dương!",
+                    type: "warning",
+                  });
+        document.getElementById("moneyUpdate").focus();          
+        return false;
+      }
+      if (isNaN(money)) {
+        this.$notify({
+                    title: "Warning",
+                    message: "Tổng tiền phải là số!",
                     type: "warning",
                   });
         document.getElementById("moneyUpdate").focus();          
@@ -1011,13 +1048,14 @@ export default {
         });
     },
     create() {
+      let moneyStaff = this.staff.welfareMoney.replace(/,/g, '');
       var data = {
           code: this.staff.code,
           name: this.staff.name,
           email: this.staff.email,
           date: this.staff.date,
           department: this.staff.department,
-          welfareMoney: this.staff.welfareMoney,
+          welfareMoney: moneyStaff,
         }
       let x = document.forms["myForm"]["code"].value;
       if (x == "") {
@@ -1049,6 +1087,26 @@ export default {
         document.getElementById("name").focus();       
         return false;
       }
+      if (!isNaN(name)) {
+        this.$notify({
+                    title: "Warning",
+                    message: "Họ tên nhân viên không được để số!",
+                    type: "warning",
+                  });
+        document.getElementById("name").focus();       
+        return false;
+      }
+      var re = /^[\sa-zA-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂẾưăạảấầẩẫậắằẳẵặẹẻẽềềểếỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ\\s\\W|_]+$/;
+      if(!re.test(document.forms["myForm"]["name"].value))
+       {
+        this.$notify({
+                    title: "Warning",
+                    message: "Tên không được có số và ký tự đặc biệt!",
+                    type: "warning",
+                  });
+        document.getElementById("email").focus();           
+        return false;
+       }
       let email = document.forms["myForm"]["email"].value;
       if (email == "") {
         this.$notify({
@@ -1084,6 +1142,26 @@ export default {
         this.$notify({
                     title: "Warning",
                     message: "Số tiền hỗ trợ không được để trống!",
+                    type: "warning",
+                    size: 100,
+                  });
+          document.getElementById("welfareMoney").focus(); 
+        return false;
+      }
+      if ( isNaN(moneyStaff)) {
+        this.$notify({
+                    title: "Warning",
+                    message: "Số tiền hỗ trợ phải là số!",
+                    type: "warning",
+                    size: 100,
+                  });
+          document.getElementById("welfareMoney").focus(); 
+        return false;
+      }
+      if ( moneyStaff < 0) {
+        this.$notify({
+                    title: "Warning",
+                    message: "Số tiền hỗ trợ phải là số dương!",
                     type: "warning",
                     size: 100,
                   });
@@ -1208,7 +1286,12 @@ export default {
         return false;
       }      
       else{
-        StaffService.updateStaff(id, this.staff)
+        let moneyStaff = this.staffUpdate.welfareMoney.replace(/,/g, '');
+        // if(!moneyStaff==""){
+        
+        // }
+        this.staffUpdate.welfareMoney = moneyStaff
+        StaffService.updateStaff(id, this.staffUpdate)
         .then((response) => {
           console.log(response.data);
           this.retrieveStaff();
@@ -1244,6 +1327,7 @@ export default {
     },
     selectAllCheckboxes () {
       const checkboxes = document.querySelectorAll('input[type=checkbox]');
+
       checkboxes.forEach((cb) => { 
         if(cb.checked == false ){
            cb.checked = true; 
@@ -1252,7 +1336,14 @@ export default {
           cb.checked = false;
         }
       });
-    }
+    },
+    validateName() {    
+    var re = /^[A-Za-z]+$/;
+    if(re.test(document.getElementById("textboxID").value))
+       alert('ddungs!');
+    else
+       alert('sai.');      
+}
 
   },  
   mounted() {

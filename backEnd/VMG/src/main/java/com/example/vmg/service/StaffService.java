@@ -92,7 +92,7 @@ public class StaffService {
         staffRepository.MutipartDelete(longs);
     }
 
-    public Integer getTotalMoney(Long id){return staffRepository.getMoney(id);}
+    public Long getTotalMoney(Long id){return staffRepository.getMoney(id);}
 
     public void update(Long id, Staff staff) {
         staffRepository.save(staff);

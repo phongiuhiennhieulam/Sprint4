@@ -52,14 +52,13 @@ public class StaffController {
     @Autowired private WelfareService welfareService;
     @Autowired private WelfareStaffEntityService welfareStaffEntityService;
 
-    //  @PreAuthorize("hasRole('ROLE_MODERATOR') or hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
-
-
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/staffs")
     public ResponseEntity<Page<Staff>> getList(@RequestParam(defaultValue = "0") int page
             ,@RequestParam(defaultValue = "10") int pageSize){
         return new ResponseEntity<Page<Staff>>(staffService.getByPage(page, pageSize), HttpStatus.OK);
     }
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/staff-erorr")
     public List<StaffInterface> getErorr(){
         return staffService.getErorr();
@@ -68,36 +67,28 @@ public class StaffController {
     public List<Staff> getAlll(){
         return staffService.getList();
     }
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/list-department/{id}")
     public List<Staff> getByDepartment(@PathVariable Long id){
-
         return staffService.getListByDepartMent(id);
     }
+    @PreAuthorize("hasRole('ROLE_MODERATOR') or hasRole('ROLE_ADMIN')")
     @GetMapping("/staffs/find")
     public ResponseEntity<Page<Staff>> getListText(@RequestParam(name="text") String text,
                                                    @RequestParam(defaultValue = "0") int page
             ,@RequestParam(defaultValue = "10") int pageSize) {
-
         return new ResponseEntity<Page<Staff>>(staffService.findText(text, page, pageSize), HttpStatus.OK);
     }
+    @PreAuthorize(" hasRole('ROLE_ADMIN')")
     @GetMapping("/staff/{id}")
     public ResponseEntity<?> getStaff(@PathVariable Long id){
         return new ResponseEntity<Optional<Staff>>(staffService.findById(id), HttpStatus.OK);
     }
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping("/staffs")
     public ResponseEntity<?> createStaff(@Valid @RequestBody Staff staff){
         try {
-            DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-
-            Staff _staff = new Staff();
-            staff.setCode(staff.getCode());
-            staff.setName(staff.getName());
-            staff.setDate(staff.getDate());
-            staff.setEmail(staff.getEmail());
-            staff.setWelfareMoney(staff.getWelfareMoney());
-            staff.setDepartment(staff.getDepartment());
             staff.setStatus(0);
-
             //lấy thông tin user
             if (userService.existsByUsername(staff.getEmail())) {
                 return ResponseEntity
@@ -113,12 +104,7 @@ public class StaffController {
             roles.add(userRole);
             user.setRoles(roles);
             user.setStatus(0);
-
-            Staff add = staffService.saveOrUpDate(staff);
-
 //            user.setStaff(add);
-            user.setStatus(add.getStatus());
-            user.setName(add.getName());
             staffService.saveOrUpDate(staff);
             userService.save(user);
             return ResponseEntity.ok(new MessageResponse("create staff successfully!"));
@@ -127,44 +113,7 @@ public class StaffController {
             return ResponseEntity.ok(new RuntimeException("Erorr!"));
         }
     }
-    @PostMapping("/staff")
-    public ResponseEntity<?> addNhanVien(@Valid @ModelAttribute StaffForm staffForm){
-        try {
-            DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-
-            Staff staff = new Staff();
-            staff.setCode(staffForm.getCode());
-            staff.setName(staffForm.getName());
-            staff.setDate(staffForm.getDate());
-            staff.setEmail(staffForm.getEmail());
-            staff.setWelfareMoney(staffForm.getWelfareMoney());
-            staff.setDepartment(staffForm.getDepartment());
-            staff.setStatus(0);
-
-            //lấy thông tin user
-            if (userService.existsByUsername(staffForm.getEmail())) {
-                return ResponseEntity
-                        .badRequest()
-                        .body(new MessageResponse("Error: Email is already taken!"));
-            }
-            String pass = "123456";
-            User user = new User(staffForm.getEmail(),
-                    passwordEncoder.encode(pass));
-            Set<Role> roles = new HashSet<>();
-            Role userRole = roleService.findByName(ERole.ROLE_USER)
-                    .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-            roles.add(userRole);
-            user.setRoles(roles);
-            //user.setName(staff.getName());
-            staffService.saveOrUpDate(staff);
-            userService.save(user);
-            return ResponseEntity.ok(new MessageResponse("create staff successfully!"));
-        }catch (Exception e){
-            e.printStackTrace();
-            return ResponseEntity.ok(new RuntimeException("Erorr!"));
-        }
-    }
-
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PutMapping("/staff-delete/{id}")
     public ResponseEntity<Void> deleteStaff(@PathVariable Long id){
         staffService.delete(id);
@@ -174,6 +123,7 @@ public class StaffController {
         userService.save(user);
         return new ResponseEntity<Void>(HttpStatus.OK);
     }
+    @PreAuthorize(" hasRole('ROLE_ADMIN')")
     @PutMapping("/staff-unlock/{id}")
     public ResponseEntity<Void> unLookStaff(@PathVariable Long id){
         staffService.unLock(id);
@@ -183,19 +133,13 @@ public class StaffController {
         userService.save(user);
         return new ResponseEntity<Void>(HttpStatus.OK);
     }
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PutMapping("/staffs/{id}")
     public ResponseEntity<Void> update(@PathVariable Long id, @RequestBody Staff staff){
-        Staff _staff = staffService.findById(id).get();
-        staff.setName(staff.getName());
-        staff.setCode(staff.getCode());
-        staff.setEmail(staff.getEmail());
-        staff.setDepartment(staff.getDepartment());
-        staff.setWelfareMoney(staff.getWelfareMoney());
-        staff.setDate(staff.getDate());
         staffService.update(id, staff);
         return new ResponseEntity<Void>(HttpStatus.OK);
     }
-
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PutMapping("/staff/update-money/{money}")
     public ResponseEntity<?> updateMoney(@RequestParam("ids") List<Long> ids, @PathVariable BigDecimal money){
         staffService.updateMoney(money, ids);
@@ -203,13 +147,12 @@ public class StaffController {
                 .map(value ->  Long.toString(value)).collect(Collectors.toList()));
         return ResponseEntity.ok(new MessageResponse("update money staff successfully!"));
     }
-    @PutMapping("/staff/deletes")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PutMapping("/staffdeletes")
     public ResponseEntity<?> mutilpartDelete(@RequestParam("ids") List<Long> ids){
         staffService.mutipartDelete(ids);
-
         List<String> emails = staffService.getEmailById(ids);
         userService.looks(emails);
-
         String.join(",", ids.stream()
                 .map(value ->  Long.toString(value)).collect(Collectors.toList()));
         return ResponseEntity.ok(new MessageResponse("delete staff successfully!"));
@@ -223,18 +166,22 @@ public class StaffController {
     public List<String> getEmail(){
         return staffService.getEmail();
     }
+    @PreAuthorize("hasRole('ROLE_MODERATOR') or hasRole('ROLE_ADMIN')")
     @GetMapping("/staff-show/{id}")
     public ResponseEntity <List<WelfareStaff>> showWelfare(@PathVariable("id") Long id){
         return new ResponseEntity<List<WelfareStaff>>(welfareStaffService.getbystaff(id), HttpStatus.OK);
     }
+    @PreAuthorize("hasRole('ROLE_MODERATOR') or hasRole('ROLE_ADMIN')")
     @GetMapping("/staff-show-register/{id}")
     public ResponseEntity <List<WelfareStaffEntity>> showWelfareRegister(@PathVariable("id") Long id){
         return new ResponseEntity<List<WelfareStaffEntity>>(welfareStaffService.getStaffRegister(id), HttpStatus.OK);
     }
+    @PreAuthorize("hasRole('ROLE_MODERATOR') or hasRole('ROLE_ADMIN')")
     @GetMapping("/staff-show-all/{id}")
     public ResponseEntity <List<WelfareStaff>> showAllWelfare(@PathVariable("id") Long id){
         return new ResponseEntity<List<WelfareStaff>>(welfareStaffService.getByAllStaff(id), HttpStatus.OK);
     }
+    @PreAuthorize("hasRole('ROLE_MODERATOR') or hasRole('ROLE_ADMIN')")
     @GetMapping("/registers")
     public ResponseEntity <List<StaffInterface>> getByRegister(){
         return new ResponseEntity<List<StaffInterface>>(welfareStaffEntityService.getStaffRegister(), HttpStatus.OK);
@@ -248,17 +195,22 @@ public class StaffController {
     }
     @PutMapping("/register-delete/{id}")
     public ResponseEntity <?> DeleteRegisters(@PathVariable Long id){
-        WelfareStaffEntity welfareStaff = welfareStaffEntityService.getById(id);
-        welfareStaff.setStatus(1);
-        welfareStaffEntityService.update(id, welfareStaff);
-        return ResponseEntity.ok(new MessageResponse("successfully!"));
+        try {
+            WelfareStaffEntity welfareStaff = welfareStaffEntityService.getById(id);
+            welfareStaff.setStatus(1);
+            welfareStaffEntityService.update(id, welfareStaff);
+            return ResponseEntity.ok(new MessageResponse("successfully!"));
+        }catch (Exception e){
+            e.printStackTrace();
+            return ResponseEntity.ok(new MessageResponse("erorr!"));
+        }
     }
-
+    @PreAuthorize("hasRole('ROLE_MODERATOR') or hasRole('ROLE_ADMIN')")
     @GetMapping("/get_all_money/{id}")
-    public Integer getMoneyWelfare(@PathVariable("id") Long id){
+    public Long getMoneyWelfare(@PathVariable("id") Long id){
         return staffService.getTotalMoney(id);
     }
-
+    @PreAuthorize("hasRole('ROLE_MODERATOR') or hasRole('ROLE_ADMIN')")
     @GetMapping("/birthdays")
     public List<Staff> getBirthday(){
         Calendar cal = Calendar.getInstance();

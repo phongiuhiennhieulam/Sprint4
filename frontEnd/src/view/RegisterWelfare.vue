@@ -1,9 +1,9 @@
 <template>
-  <div class="pl-body">
-    <div class="pl-content">
-      <div class="pl-title">ĐĂNG KÍ PHÚC LỢI CÁ NHÂN</div>
-      <div class="pl-ele">
-        <div class="pl-table">
+  <div class="registerWelfare-body">
+    <div class="registerWelfare-content">
+      <div class="registerWelfare-title"><strong>ĐĂNG KÍ PHÚC LỢI CÁ NHÂN</strong></div>
+      <div class="registerWelfare-ele">
+        <div class="registerWelfare-table">
           <div class="money">
             <div>
               Tiền đã đăng kí:&nbsp;<span style="color: green">{{
@@ -21,7 +21,7 @@
               }}&nbsp;<span style="color: red" v-show="sum > total">(Lỗi)</span></span>
             </div>
           </div>
-          <div class="pl-table__content">
+          <div class="registerWelfare-table__content">
             <form id="form" label-width="120px" class="scroll-table">
               <table>
                 <thead>
@@ -48,7 +48,9 @@
                     <td>{{ formatCurrency(item.price) }}</td>
                     <td>
                       <el-input-number v-model="listQuantity[item.id]" :disabled="isDisableNumberic(item)"
-                        :max="preventAdd(item)" :min="1" v-show="!item.isQuantity"></el-input-number>
+                        :max="preventAdd(item)" :min="1" v-show="!item.isQuantity" @change="handleChange"
+                        @blur="handleBlur(item.id)">
+                      </el-input-number>
                       <span v-show="item.isQuantity">Chỉ chọn 1</span>
                     </td>
                     <td style="text-align: right">
@@ -60,30 +62,47 @@
             </form>
           </div>
         </div>
-
-        <div class="pl-button">
+        <div class="registerWelfare-button">
           <el-popover placement="right" :width="220" trigger="hover" content="Đăng kí các phúc lợi đã tích ở trên">
             <template #reference>
-              <el-button class="pl-button__detail btn btn-danger" @click="centerDialogVisible = true">Đăng Kí Phúc Lợi
+              <el-button class="registerWelfare-button__detail btn btn-danger" @click="showDialogRegister()">Đăng Kí
+                Phúc Lợi
+              </el-button>
+              <el-button class="registerWelfare-button__detail btn btn-danger" @click="showDialogRegister()">Trạng thái đăng kí
               </el-button>
             </template>
           </el-popover>
         </div>
-        <el-dialog title="Xác nhận" :visible.sync="centerDialogVisible" width="30%" center>
-          <div style="text-align: center; margin-top: 10px">
-            Bạn có chắc chắn muốn chọn các phúc lợi trên?
-          </div>
-          <div style="text-align: center; margin-top: 10px; color: red">
-            Phúc lợi chỉ được đăng kí 1 lần 1 năm
-          </div>
-          <span slot="footer" class="dialog-footer">
-            <el-button @click="centerDialogVisible = false">Hủy</el-button>
-            <el-button type="primary" @click.prevent="registerWelfares" style="background-color: red; border: none">Xác nhận
-            </el-button>
-          </span>
-        </el-dialog>
       </div>
     </div>
+    <el-dialog title="Xác nhận" :visible.sync="centerDialogVisible" width="30%" center>
+      <div style="text-align: center; margin-top: 10px">
+        Bạn có chắc chắn muốn chọn các phúc lợi trên?
+      </div>
+      <div style="text-align: center; margin-top: 10px; color: red">
+        Phúc lợi chỉ được đăng kí 1 lần 1 năm
+      </div>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="centerDialogVisible = false">Hủy</el-button>
+        <el-button type="primary" @click.prevent="registerWelfares" style="background-color: red; border: none">Xác
+          nhận
+        </el-button>
+      </span>
+    </el-dialog>
+    <el-dialog title="Xác nhận" :visible.sync="dialogVisibleCheckNull" width="25%" center>
+      <div style="text-align: center; margin-top: 5px">
+        Bạn chưa chọn bất kì phúc lợi nào!!!
+      </div>
+      <div style="text-align: center; margin-top: 10px; color: red">
+        Hãy đăng kí phúc lợi trước
+      </div>
+      <span slot="footer" class="dialog-footer">
+        <!-- <el-button @click="centerDialogVisible = false">Hủy</el-button> -->
+        <el-button type="primary" @click.prevent="dialogVisibleCheckNull = false"
+          style="background-color: red; border: none">OK
+        </el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
   
@@ -101,10 +120,13 @@ export default {
       sum: 0,
       userId: 0,
       centerDialogVisible: false,
+      dialogVisibleCheckNull: false,
       total: 0,
       listQuantity: [],
-      nameStaff:"",
-      listOnlyOne:[]
+      nameStaff: "",
+      listOnlyOne: [],
+      newVal: '',
+      oldVal: ''
     };
   },
   computed: {
@@ -122,9 +144,27 @@ export default {
   },
 
   methods: {
+    handleChange(newVal, oldVal) {
+      this.newVal = newVal
+      this.oldVal = oldVal
+    },
+    handleBlur(itemId) {
+      const self = this;
+      if (this.newVal === undefined) {
+        self.listQuantity[itemId] = this.oldVal;
+        self.$forceUpdate();
+      }
+    },
     preventAdd(item) {
       if (this.total - this.totalMoney < 0) {
-        return this.listQuantity[item.id] -1;
+        return this.listQuantity[item.id] - 1;
+      }
+    },
+    showDialogRegister() {
+      if (this.selected.length === 0) {
+        this.dialogVisibleCheckNull = true;
+      } else {
+        this.centerDialogVisible = true;
       }
     },
     isDisableNumberic(item) {
@@ -135,7 +175,7 @@ export default {
     disableHandler(item, quantity) {
       return (
         (this.totalMoney + item.price * quantity > this.total &&
-        !this.selected.includes(item)) || this.listOnlyOne.includes(item.id)
+          !this.selected.includes(item)) || this.listOnlyOne.includes(item.id)
       );
     },
     formatCurrency(value) {
@@ -183,10 +223,10 @@ export default {
         const myTimeout1 = setTimeout(myGreeting1, 100);
 
         function myGreeting1() {
-            window.location.reload();
+          window.location.reload();
         }
       }
-      if(res.status == 200){
+      if (res.status == 200) {
         this.sum = this.totalMoney;
         this.selected = [];
         this.totalMoney = 0;
@@ -197,8 +237,8 @@ export default {
         const myTimeout = setTimeout(myGreeting, 100);
 
         function myGreeting() {
-            window.location.reload();
-        }   
+          window.location.reload();
+        }
       }
       this.centerDialogVisible = false;
     },
@@ -209,9 +249,9 @@ export default {
     // }
     if (localStorage.getItem("user")) {
       this.userName = JSON.parse(localStorage.getItem("user")).userName;
-      
+
     }
-    welfareApi.getAllWelfare().then((res) => {
+    welfareApi.getAllWelfareByStatus().then((res) => {
       this.list = res.data;
       // console.log(this.list[0].id)
       // console.log(this.list[this.list.length - 1].id)
@@ -252,195 +292,7 @@ export default {
 };
 </script>
   
-<style>
-#colorful {
-  border-bottom: none;
-  height: 8% !important;
-  width: 15% !important;
-}
-
-.btn {
-  border-radius: 0%;
-}
-
-.pl-title {
-  text-align: center;
-  font-size: 34px;
-  font-weight: 600;
-  font-family: "Poppins", sans-serif;
-  background: rgba(255, 255, 255, 0.13);
-  padding: 6px 0px;
-}
-
-.pl-body {
-  background: linear-gradient(90deg, #e4c9ac 0%, rgba(255, 255, 255, 0) 100%),
-    #e3c1d3;
-  width: 100%;
-  height: 100%;
-}
-
-.money {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 20px;
-  margin-bottom: 15px;
-}
-
-.money div {
-  font-family: "Poppins", sans-serif;
-  font-style: normal;
-  font-weight: 600;
-  font-size: 20px;
-  line-height: 139%;
-}
-
-.pl-table {
-  text-align: center;
-  margin-left: 200px;
-  margin-right: 200px;
-  z-index: 2;
-}
-
-.pl-table__content {
-  height: 600px;
-  overflow-y: auto;
-}
-
-.pl-table__content table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-.pl-table__content table tr {
-  background: #f2e7ddf8;
-}
-
-.pl-table__content table tr th {
-  border-right: 1px solid #e4c9ac;
-  padding: 14px;
-}
-
-.pl-table__content table tr td {
-  padding: 20px;
-  line-height: 30px;
-  height: 30px;
-}
-
-.pl-table__content table thead tr {
-  background-color: #fdf9f8;
-  position: sticky;
-  top: 0;
-}
-
-.pl-table__content table thead th {
-  font-size: 14px;
-  font-weight: 600;
-}
-
-.pl-table__content table tbody tr {
-  border-bottom: 1px solid #e4c9ac;
-}
-
-.pl-table__content table tr td {
-  border-right: 1px solid #e4c9ac;
-}
-
-.pl-table__content table tbody tr:hover {
-  background-color: pink;
-}
-
-.icon-delete {
-  font-size: 20px;
-  color: coral;
-  cursor: pointer;
-}
-
-.icon-edit {
-  font-size: 20px;
-  color: greenyellow;
-  cursor: pointer;
-}
-
-/* input, */
-textarea {
-  outline: none;
-  padding: 20px;
-  width: 60%;
-  background: transparent;
-  border: none;
-  border-bottom: 1px solid #000;
-}
-
-/* input::-webkit-outer-spin-button,
-  input::-webkit-inner-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
-  } */
-/* [placeholder]:focus::-webkit-input-placeholder {
-    transition: text-indent 0.4s 0.4s ease;
-    text-indent: -100%;
-    opacity: 1;
-  } */
-.pl-button {
-  margin-left: 200px;
-  margin-top: 30px;
-}
-
-.pl-button__detail {
-  color: white !important;
-  font-size: 14px !important;
-  font-weight: 600 !important;
-}
-
-.pl-button__detail:hover {
-  background-color: rgba(255, 0, 0, 0.1) !important;
-  border-color: rgba(255, 0, 0, 0.1) !important;
-}
-
-.pl-button__detail:focus {
-  background-color: rgba(255, 0, 0, 0.2) !important;
-  border-color: rgba(255, 0, 0, 0.2) !important;
-}
-
-.pl-button__detail:active {
-  background-color: rgba(255, 0, 0, 0.3) !important;
-  border-color: rgba(255, 0, 0, 0.3) !important;
-}
-
-table {
-  overflow: scroll;
-}
-
-.el-form-item__label {
-  color: #f00 !important;
-  font-size: 22px;
-  font-weight: 600;
-  line-height: 31px;
-  letter-spacing: 0em;
-  text-align: left;
-  line-height: 0px;
-  margin-bottom: 6px;
-}
-
-.el-form-item__content input {
-  border-radius: 8px !important;
-  box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.15);
-  border: 1px solid #23282b8f;
-}
-
-.el-dialog__title {
-  margin-left: 56px;
-  font-size: 25px;
-  font-weight: 700;
-  line-height: 35px;
-  letter-spacing: 0em;
-  text-align: left;
-}
-
-.el-dialog__headerbtn i {
-  font-size: 24px;
-  font-weight: 700;
-  color: #f00 !important;
-}
+<style scoped>
+@import "@/assets/css/welfare/register.css";
 </style>
   

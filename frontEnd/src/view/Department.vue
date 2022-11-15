@@ -6,54 +6,6 @@
       
       <div class="de-info">
         <div class="de-table">
-          <div class="de-selected"></div>
-          <div class="de-table_content">
-            <table>
-              <thead>
-                <tr width="90%">
-                  <th>
-                    <div>
-                      <el-form :inline="true" class="input-find">
-                        <el-form-item>
-                          <el-input
-                            v-model="keyWord"
-                            placeholder="Nhập tên phòng ban"
-                            style="width: 400px"
-                          >
-                            <i
-                              slot="prefix"
-                              class="el-input__icon el-icon-search"
-                            ></i>
-                          </el-input>
-                        </el-form-item>
-                        <el-form-item>
-                          <el-button type="warning" @click="onFind()"
-                            >Tìm kiếm</el-button
-                          >
-                        </el-form-item>
-                      </el-form>
-                    </div>
-                  </th>
-
-                  <th width="10%">
-                    <div>
-                      <el-form :inline="true" class="demo-form-inline">
-                        <el-form-item>
-                          <el-button
-                            type="erorr"
-                            class="btn btn-danger"
-                            @click="showAddForm"
-                          >
-                            <i class="el-icon-plus"></i> Thêm mới
-                          </el-button>
-                        </el-form-item>
-                      </el-form>
-                    </div>
-                  </th>
-                </tr>
-              </thead>
-            </table>
-          </div>
 
           <div class="de-table__content">
             <table>
@@ -94,6 +46,7 @@
           >
           </el-pagination>
         </div>
+        <div class="department-image"></div>
       </div>
     </div>
 
@@ -160,6 +113,7 @@
         </el-row>
       </el-form>
       <div slot="footer" class="dialog-footer" style="text-align: center">
+
         <el-button
           class="de-detail__button"
           round
@@ -170,7 +124,8 @@
     </el-dialog>
   </div>
 </template>
-      <script>
+
+    <script>
 import DepartmentApi from "@/service/departmentService";
 export default {
   name: "DepartmentList",

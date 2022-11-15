@@ -1,8 +1,9 @@
 <template>
     <div class="static-container">
+        <h3 class="text-center">Biểu đồ mức độ sử dụng phúc lợi</h3>
         <div class="bar">
             <Bar :chart-options="chartOptions" :chart-data="chartData" :chart-id="chartId"
-                :dataset-id-key="datasetIdKey" :plugins="plugins" :css-classes="cssClasses" :styles="styles" />
+                :dataset-id-key="datasetIdKey" :css-classes="cssClasses" :styles="styles" />
         </div>
     </div>
 </template>
@@ -31,22 +32,6 @@ export default {
 
 
     },
-    data() {
-        return {
-            data: [],
-            chartOptions: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        display: false
-                        
-                    }
-                }
-            },
-
-        }
-    },
     computed: {
         styles() {
             return {
@@ -63,11 +48,41 @@ export default {
                         data: this.data.map(x => x.quantity)
                     },
                 ],
-
-
             }
         }
     },
+    data() {
+        return {
+            data: [],
+            chartOptions: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                },
+                scales: {
+                    x: {
+                        title: {
+                            display: true,
+                            text: "Tên phúc lợi",
+                            align: 'align'
+                        }
+                    },
+                    y: {
+                        title: {
+                            display: true,
+                            text: "Số lượt đăng ký",
+                        }
+
+                    }
+                }
+            },
+
+        }
+    },
+
     async created() {
         const res = await axios.get('http://localhost:8083/api/getStatisticWelfare')
         if (res.status == 200) {
@@ -89,6 +104,7 @@ export default {
 <style scoped>
 .static-container {
     display: flex;
+    flex-direction: column;
     height: 100%;
 }
 
