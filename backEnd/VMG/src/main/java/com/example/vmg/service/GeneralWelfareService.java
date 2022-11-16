@@ -16,6 +16,9 @@ public class GeneralWelfareService {
     public List<GeneralWelfare> getList() {
         return generalWelfareRepository.findAll();
     }
+    public List<GeneralWelfare> getListOrder() {
+        return generalWelfareRepository.findAllByOrderByIdDesc();
+    }
 
     public GeneralWelfare getById(Long id) {
         return generalWelfareRepository.findById(id).get();

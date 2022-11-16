@@ -35,7 +35,7 @@ public class DepartmentService {
 
     public Page<Department> getByPage(int pageNumber, int maxNumber, String keyWord) {
         Pageable pageable = PageRequest.of(pageNumber, maxNumber);
-        keyWord = "%" + keyWord + "%";
+        keyWord = "%" + keyWord.trim() + "%";
         return departmentRepository.getPage(pageable,keyWord);
     }
 

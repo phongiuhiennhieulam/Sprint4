@@ -2,7 +2,7 @@
   <div class="pl-main">
     <div class="pl-container">
       <div class="pl-content">
-        <div id="title">Danh Sách Phúc Lợi Của {{staff.name}}</div>
+        <div id="title">Danh Sách Phúc Lợi Của {{ staff.name }}</div>
         <div label-width="120px" class="pl-table__content">
           <table>
             <thead>
@@ -22,11 +22,11 @@
                 <td style="font-weight: bold">Phúc Lợi Chung</td>
                 <td></td>
                 <td></td>
-                <td><strong>{{listGeneral.length}}</strong></td>
+                <td><strong>{{ listGeneral.length }}</strong></td>
                 <!-- <td  style="font-weight: bold"><el-button slot="reference" class="btn btn-success"
                       >Được Duyệt</el-button
                     ></td> -->
-                <td style="font-weight: bold">Tổng:&nbsp;{{formatCurrency(sumListGeneral)}}</td>
+                <td style="font-weight: bold">Tổng:&nbsp;{{ formatCurrency(sumListGeneral) }}</td>
                 <td></td>
               </tr>
               <tr v-for="(item, index) in listGeneral" :key="index">
@@ -37,15 +37,8 @@
                 <td>1</td>
                 <td>{{ formatCurrency(item.price) }}</td>
                 <td>
-                  <el-popover
-                    placement="right"
-                    width="250"
-                    trigger="hover"
-                    :content="item.text"
-                  >
-                    <el-button slot="reference" class="btn btn-warning"
-                      >Xem mô tả</el-button
-                    >
+                  <el-popover placement="right" width="250" trigger="hover" :content="item.text">
+                    <el-button slot="reference" class="btn btn-warning">Xem mô tả</el-button>
                   </el-popover>
                 </td>
               </tr>
@@ -54,8 +47,8 @@
                 <td style="font-weight: bold">Phúc Lợi Cá Nhân Hóa</td>
                 <td></td>
                 <td></td>
-                <td><strong>{{listRegister.length}}</strong></td>
-                <td style="font-weight: bold">Tổng:&nbsp;{{formatCurrency(sumListRegister)}}</td>
+                <td><strong>{{ listRegister.length }}</strong></td>
+                <td style="font-weight: bold">Tổng:&nbsp;{{ formatCurrency(sumListRegister) }}</td>
                 <td></td>
               </tr>
               <tr v-for="(item, index) in listRegister" :key="index">
@@ -63,7 +56,7 @@
                 <td></td>
                 <td>{{ item.name }}</td>
                 <td>{{ formatCurrency(item.price) }}</td>
-                <td>{{item.quantity}}</td>
+                <td>{{ item.quantity }}</td>
                 <td>
                   <!-- <div v-if="item.status==2">
                     <el-button class="btn btn-info">Đang Chờ</el-button>
@@ -71,18 +64,11 @@
                   <div v-if="item.status==1 || item.status == 0">
                     <el-button :class="item.status==1?'btn btn-danger':'btn btn-success'">{{item.status == 1 ? 'Hủy Duyệt':'Đã Duyệt'}}</el-button>
                   </div> -->
-                {{formatCurrency(item.quantity*item.price)}}
+                  {{ formatCurrency(item.quantity * item.price) }}
                 </td>
                 <td>
-                  <el-popover
-                    placement="right"
-                    width="250"
-                    trigger="hover"
-                    :content="item.text"
-                  >
-                    <el-button slot="reference" class="btn btn-warning"
-                      >Xem mô tả</el-button
-                    >
+                  <el-popover placement="right" width="250" trigger="hover" :content="item.text">
+                    <el-button slot="reference" class="btn btn-warning">Xem mô tả</el-button>
                   </el-popover>
                 </td>
               </tr>
@@ -99,7 +85,7 @@
   </div>
 </template>
   
-  <script>
+<script>
 /* eslint-disable */
 import WelfareApi from "@/service/phucLoiService";
 import StaffService from '../service/hrService'
@@ -168,12 +154,12 @@ export default {
         console.log(this.sumListGeneral);
       });
     },
-    getStaff(email){
+    getStaff(email) {
       StaffService.getStaffByEmail(email)
-      .then(Response => {
-        this.staff = Response.data
-        console.log(this.staff);
-      })
+        .then(Response => {
+          this.staff = Response.data
+          console.log(this.staff);
+        })
     }
   },
 
@@ -195,82 +181,6 @@ export default {
 </script>
   
 <style scoped>
-.pl-main {
-  display: flex;
-  max-height: calc(100vh - 110px);
-}
-.pl-container {
-  justify-content: center;
-  display: flex;
-  flex: 1;
-}
-.pl-content {
-  overflow: auto;
-  width: 1400px;
-  border-radius: 20px;
-  margin-top: 65px;
-  margin-bottom: 20px;
-  background: linear-gradient(90deg, white 100%, #e4c9ac 0%), #e3c1d3;
-  display: flex;
-  flex-direction: column;
-  justify-content: start;
-}
-
-.pl-table__content {
-  text-align: center;
-  padding: 0 50px;
-  overflow: auto;
-  height: 100%;
-  margin: 20px 0px;
-}
-::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
-}
-::-webkit-scrollbar-thumb {
-  background: #bdbdbd;
-}
-.pl-table__content table {
-  width: 100%;
-  border-collapse: collapse;
-}
-.pl-table__content table tr {
-  background: rgba(217, 217, 217, 0.13);
-}
-.pl-table__content table tr th {
-  border-right: 1px solid #c7c7c7;
-  padding: 14px;
-}
-.pl-table__content table tr td {
-  padding: 20px;
-  line-height: 30px;
-  height: 30px;
-}
-.pl-table__content table thead tr {
-  background-color: #d9d9d9;
-  position: sticky;
-  top: 0;
-}
-.pl-table__content table thead th {
-  font-size: 14px;
-  font-weight: 600;
-}
-.pl-table__content table tr td {
-  border-right: 1px solid #c7c7c7;
-}
-.pl-table__content table tbody tr {
-  border-bottom: 1px solid #c7c7c7;
-}
-.pl-table__content table tbody tr:hover {
-  background-color: pink;
-}
-#title {
-  text-align: center;
-  font-size: 20px;
-  font-weight: 600;
-  font-family: "Poppins", sans-serif;
-  color: red;
-  margin-top: 20px;
-}
+@import "@/assets/css/phucloi/home.css";
 </style>
   

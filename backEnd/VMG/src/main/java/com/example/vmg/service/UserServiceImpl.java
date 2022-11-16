@@ -7,10 +7,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 public class UserServiceImpl implements IUserService {
@@ -58,7 +61,7 @@ public User update(Long id, User user) {
 
     public Page<User> getByPage(int pageNumber, int maxNumber, String keyWord){
         Pageable pageable = PageRequest.of(pageNumber, maxNumber);
-        keyWord = "%" + keyWord + "%";
+        keyWord = "%" + keyWord.trim() + "%";
         return userRepository.getPage(pageable,keyWord);
     }
 
@@ -66,4 +69,6 @@ public User update(Long id, User user) {
     public void looks(List<String> emails) {
         userRepository.looks(emails);
     }
+
+
 }

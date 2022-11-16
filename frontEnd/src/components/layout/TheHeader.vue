@@ -21,7 +21,8 @@
           <div class="header-right__item">
             <i class="el-icon-s-home"></i>
             <button class="btn nav-link">
-              <router-link to="/home_welfare" style="text-decoration: none; color: black; cursor: pointer">Phúc lợi của tôi</router-link>
+              <router-link to="/home_welfare" style="text-decoration: none; color: black; cursor: pointer">Phúc lợi của
+                tôi</router-link>
             </button>
           </div>
         </div>
@@ -76,8 +77,7 @@
         <div class="header-right__item" v-if="quanly || nhansu">
           <el-badge :value="list.length" :max="99" class="item" style="margin-right: 10px; margin-left: 5px">
             <i class="el-icon-s-claim"></i>
-            <router-link style="
-              text-decoration: none;
+            <router-link style="text-decoration: none;
               color: black;
               cursor: pointer;
               font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
@@ -90,8 +90,10 @@
         <el-dropdown v-if="quanly">
           <el-badge :value="listbirthdays.length" :max="10" class="item" style="margin-right: 10px; margin-left: 5px">
             <span class="el-dropdown-link" style="cursor: pointer; font-size: 19px; color: black">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-gift-fill" viewBox="0 0 16 16">
-                <path d="M3 2.5a2.5 2.5 0 0 1 5 0 2.5 2.5 0 0 1 5 0v.006c0 .07 0 .27-.038.494H15a1 1 0 0 1 1 1v1a1 1 0 0 1-1 1H1a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h2.038A2.968 2.968 0 0 1 3 2.506V2.5zm1.068.5H7v-.5a1.5 1.5 0 1 0-3 0c0 .085.002.274.045.43a.522.522 0 0 0 .023.07zM9 3h2.932a.56.56 0 0 0 .023-.07c.043-.156.045-.345.045-.43a1.5 1.5 0 0 0-3 0V3zm6 4v7.5a1.5 1.5 0 0 1-1.5 1.5H9V7h6zM2.5 16A1.5 1.5 0 0 1 1 14.5V7h6v9H2.5z"/>
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-gift-fill"
+                viewBox="0 0 16 16">
+                <path
+                  d="M3 2.5a2.5 2.5 0 0 1 5 0 2.5 2.5 0 0 1 5 0v.006c0 .07 0 .27-.038.494H15a1 1 0 0 1 1 1v1a1 1 0 0 1-1 1H1a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h2.038A2.968 2.968 0 0 1 3 2.506V2.5zm1.068.5H7v-.5a1.5 1.5 0 1 0-3 0c0 .085.002.274.045.43a.522.522 0 0 0 .023.07zM9 3h2.932a.56.56 0 0 0 .023-.07c.043-.156.045-.345.045-.43a1.5 1.5 0 0 0-3 0V3zm6 4v7.5a1.5 1.5 0 0 1-1.5 1.5H9V7h6zM2.5 16A1.5 1.5 0 0 1 1 14.5V7h6v9H2.5z" />
               </svg>
             </span>
           </el-badge>
@@ -102,27 +104,27 @@
                 Có {{ listbirthdays.length }} nhân viên sinh nhật trong tháng này
               </strong>
               <hr>
-              <div>
+              <div class="birthday-scroll">
                 <table>
-                        <tr v-for="x in listbirthdays" :key="x.id" style="border: 1px solid;" class="itemTbale"
-                        >
-                            <td class="item">
-                                <div class="d-flex">
-                                    <div class="pl-2">
-                                        Nhân viên: <strong> {{x.name}}</strong>
-                                        <div class=""><span class="fas fa-gift">_{{formatDate(x.date)}}</span></div>
-                                        <div class="d-flex flex-column justify-content-center">
-                                            <div class="text-muted">{{x.department.name}}</div>
-                                        </div>
-                                    </div>
-                                </div>  
-                            </td>
-                            <td>Mã nhân viên: {{x.code}}</td>
-                            <td>
-                              <hr>
-                            </td>
-                        </tr>
-              </table>
+                  <tr v-for="x in listbirthdays" :key="x.id" style="border: 1px solid; " class="itemTbale">
+                    <td class="item">
+                      <div class="d-flex">
+                        <div class="pl-2">
+                          Nhân viên: <strong> {{ x.name }}</strong>
+                          <div class=""><span class="fas fa-gift">_{{ formatDate(x.date) }}</span></div>
+                          <div class="d-flex flex-column justify-content-center">
+                            <div class="text-muted">{{ x.department.name }}</div>
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                    <td>Mã nhân viên: {{ x.code }}</td>
+                    <td>
+                      <hr>
+                    </td>
+                  </tr>
+
+                </table>
               </div>
             </el-dropdown-item>
           </el-dropdown-menu>
@@ -138,24 +140,28 @@
                 style="margin-right: 10px; margin-left: 5px ;">
                 <span class="el-dropdown-link" style="cursor: pointer; font-size: 19px; color: black;">
                   <div>
+
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bell-fill" viewBox="0 0 16 16">
                       <path style="color: crimson;" d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2zm.995-14.901a1 1 0 1 0-1.99 0A5.002 5.002 0 0 0 3 6c0 1.098-.5 6-2 7h14c-1.5-1-2-5.902-2-7 0-2.42-1.72-4.44-4.005-4.901z"/>
                     </svg>  <span style="color: red;">Thông báo lỗi!</span>                  
+
                   </div>
                 </span>
               </el-badge>
               <el-dropdown-menu slot="dropdown">
                 <el-dropdown-item style="text-decoration: none;color:black;cursor:pointer width: 60%; font-size: 15px">
-                  <strong>  
+                  <strong>
                     <H4>
                       Có {{ staffErorr.length }} nhân viên đang sử dụng quá số tiền trợ cấp phúc lợi
                     </H4>
                   </strong>
-                  <ul v-for="x in staffErorr" :key="x.id" style="border: 1px solid;" class="itemTbale">
-                    <li> Họ tên:<strong> {{ x.name }}</strong> <br>
-                    Mã Nhân viên:<strong>{{ x.code }}</strong> 
-                    </li>
-                  </ul>
+                  <div class="error-scroll">
+                    <ul v-for="x in staffErorr" :key="x.id" style="border: 1px solid;" class="itemTbale">
+                      <li> Họ tên:<strong> {{ x.name }}</strong> <br>
+                        Mã Nhân viên:<strong>{{ x.code }}</strong>
+                      </li>
+                    </ul>
+                  </div>
                 </el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
@@ -272,7 +278,7 @@ export default {
       this.getBD();
       this.getErorr();
     },
-    getErorr(){
+    getErorr() {
       StaffService.getErorr()
         .then(response => {
           this.staffErorr = response.data
@@ -287,7 +293,19 @@ export default {
 };
 </script>
   
-<style>
+<style scoped>
+.birthday-scroll {
+  max-height: 348px;
+  overflow: auto;
+  padding: 0 12px;
+}
+
+.error-scroll {
+  max-height: 224px;
+  overflow: auto;
+  padding: 0 12px;
+}
+
 .fade-enter-active,
 .fade-leave-active {
   transition: opacity 0.5s ease;
@@ -345,7 +363,8 @@ export default {
 .header-right__item--text {
   margin-right: 6px;
 }
-.itemTbale:hover{
+
+.itemTbale:hover {
   background-color: rgba(255, 0, 0, 0.1) !important;
   border-color: rgba(255, 0, 0, 0.1) !important;
 }

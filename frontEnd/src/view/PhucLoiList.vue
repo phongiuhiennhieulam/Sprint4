@@ -1,89 +1,66 @@
 <template>
-  <div class="pl-main">
-    <div class="pl-content">
-      <div class="pl-title"><strong>DANH SÁCH PHÚC LỢI</strong></div>
-      <div class="pl-ele">
-        <div class="pl-button">
-          <el-button class="pl-button__detail btn btn-danger" @click="showAddForm">{{ addText }}</el-button>
-          <el-select v-model="value" placeholder="Loại phúc lợi" style="width: auto">
-            <el-option label="Phúc Lợi Cá Nhân Hóa" :value="0"> </el-option>
-            <el-option label="Phúc Lợi Chung" :value="1"> </el-option>
-          </el-select>
-        </div>
-        <div class="pl-table">
-          <div class="pl-table__content">
-            <!-- <form id="form" label-width="120px"> -->
-            <table>
-              <thead>
-                <tr>
-                  <th>STT</th>
-                  <th>Tên phúc lợi</th>
-                  <th>Mô tả</th>
-                  <th>Thành Tiền(VNĐ)</th>
-                  <th>Thao tác</th>
-                </tr>
-              </thead>
-              <tbody>
-                <!-- <tr v-if="isShowAdd">
-                    <td></td>
-                    <td>
-                      <input
-                        type="text"
-                        v-model="edit.name"
-                        id="name"
-                        name="name"
-                        placeholder="Nhập tên phúc lợi"
-                      />
-                    </td>
-                    <td>
-                      <input
-                        type="text"
-                        v-model="edit.text"
-                        id="text"
-                        name="text"
-                        placeholder="Nhập mô tả"
-                      />
-                    </td>
-                    <td>
-                      <input
-                        type="text"
-                        v-model="edit.price"
-                        id="price"
-                        name="price"
-                        placeholder="Nhập tổng tiền"
-                      />
-                    </td>
-                    <td>
-                      <el-button round class="pl-button__detail" @click="Add()"
-                        >Xác nhận</el-button
-                      >
-                      <el-button
-                        round
-                        class="pl-button__detail"
-                        @click="Cancel()"
-                        >Hủy</el-button
-                      >
-                    </td>
-                  </tr> -->
-                <tr v-for="(item, index) in list" :key="index">
-                  <td>{{ index + 1 }}</td>
-                  <td style="text-align: left">{{ item.name }}</td>
-                  <td style="text-align: left">{{ item.text }}</td>
-                  <td style="text-align: right">
-                    {{ formatCurrency(item.price) }}
-                  </td>
-                  <td>
-                    <span class="icon-edit" @click="showEditForm(item)">
-                      <i class="fa fa-edit"></i> </span>&nbsp;<span class="icon-delete"
-                      @click="showFormDelete(item.id)">
-                      <i class="fa fa-trash"></i>
-                    </span>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-            <!-- </form> -->
-          </div>
+  <div class="plList-main">
+    <!-- Khu vực hiển thị thông tin phúc lợi -->
+    <div class="plList-content">
+      <div class="plList-title"><strong>DANH SÁCH PHÚC LỢI</strong></div>
+      <div class="plList-button">
+        <el-button class="plList-button__detail btn btn-danger" @click="showAddForm">{{ addText }}</el-button>
+        <el-select v-model="value" placeholder="Loại phúc lợi" style="width: auto">
+          <el-option label="Phúc Lợi Cá Nhân Hóa" :value="0"> </el-option>
+          <el-option label="Phúc Lợi Chung" :value="1"> </el-option>
+        </el-select>
+      </div>
+      <div class="plList-table">
+        <div class="plList-table__content">
+          <!-- <form id="form" label-width="120px"> -->
+          <table>
+            <thead>
+              <tr>
+                <th>STT</th>
+                <th>Tên phúc lợi</th>
+                <th>Mô tả</th>
+                <th>Thành Tiền(VNĐ)</th>
+                <th>Trạng thái</th>
+                <th>Thao tác</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="(item, index) in list" :key="index">
+                <td>{{ index + 1 }}</td>
+                <td style="text-align: left">{{ item.name }}</td>
+                <td style="text-align: left">{{ item.text }}</td>
+                <td style="text-align: right">
+                  {{ formatCurrency(item.price) }}
+                </td>
+                <td>
+                  <span v-if="item.status == 1">
+                    <el-button type="danger">Vô hiệu lực</el-button>
+                  </span>
+                  <span v-if="item.status == 0">
+                    <el-button type="success">Có hiệu lực</el-button>
+                  </span>
+                </td>
+                <td>
+                  <span class="icon-edit" @click="showEditForm(item)">
+                    <i class="fa fa-edit"></i> </span>&nbsp;
+                  <span v-if="item.status == 1">
+                    <el-popover placement="right" width="160" trigger="hover" content="Mở khóa phúc lợi">
+                      <el-button @click="statusWelfare(item.id, 0)" type="success" icon="el-icon-unlock"
+                        slot="reference" style="padding:3px 3px 3px 3px"></el-button>
+                    </el-popover>
+
+                  </span>
+                  <span v-if="item.status == 0">
+                    <el-popover placement="right" width="160" trigger="hover" content="Khóa phúc lợi">
+                      <el-button @click="statusWelfare(item.id, 1)" type="danger" icon="el-icon-lock" slot="reference"
+                        style="padding:3px 3px 3px 3px"></el-button>
+                    </el-popover>
+                  </span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <!-- </form> -->
         </div>
       </div>
     </div>
@@ -94,105 +71,78 @@
         <el-button type="primary" @click="showDeleteDialog(idDelete)">Xác nhận</el-button>
       </span>
     </el-dialog>
-    <el-dialog :visible.sync="isShowEdit" width="600px" label-width="100px" top="5vh" left="150px"
-      title="Thông tin phúc lợi">
-      <el-form :model="edit" ref="edit" label-width="120px" label-position="top">
-        <el-row :gutter="24">
-
-          <el-col :span="24">
-            <el-form-item label="Tên phúc lợi">
-              <el-input v-model="edit.name" type="text"></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item :label="'Thành tiền: ' + formatCurrency(edit.price)">
-              <el-input type="number" v-model="edit.price"></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item prop="code" v-if="value == 0" label="Loại phúc lợi">
-              <el-select v-model="edit.isQuantity">
-                <el-option type="text" :value="true" label="Chỉ 1"></el-option>
-                <el-option type="text" :value="false" label="Chọn số lượng"></el-option>
-              </el-select>
-
-            </el-form-item>
-          </el-col>
-
-          <el-col>
-            <el-form-item prop="code" label="Mô tả">
-              <el-input type="textarea" v-model="edit.text"></el-input>
-            </el-form-item>
-          </el-col>
-        </el-row>
-      </el-form>
-      <div slot="footer" class="dialog-footer" style="text-align: center">
-        <el-button class="btn btn-danger" round @click="editWel(edit)">Cập nhật
-        </el-button>
-      </div>
-    </el-dialog>
-    <el-dialog :visible.sync="isShowAdd" width="600px" label-width="100px" top="5vh" left="150px"
-      title="Thêm mới phúc lợi">
-
-      <el-form :model="add" ref="add" label-width="120px" label-position="top">
-        <el-row :gutter="24">
-
-          <el-col :span="24">
-            <el-form-item label="Tên phúc lợi">
-              <el-input v-model="add.name" type="text"></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item :label="'Thành tiền: ' + formatCurrency(add.price)">
-              <el-input type="number" v-model="add.price"></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item prop="code" v-if="value == 0" label="Loại phúc lợi">
-              <el-select v-model="add.isQuantity">
-                <el-option type="text" :value="true" label="Chỉ 1"></el-option>
-                <el-option type="text" :value="false" label="Chọn số lượng"></el-option>
-              </el-select>
-
-            </el-form-item>
-          </el-col>
-
-          <el-col>
-            <el-form-item prop="code" label="Mô tả">
+    <!-- Khu vực hiển thị thêm mới phúc lợi -->
+    <el-form :model="add" ref="addValidateForm" label-width="120px" class="demo-dynamic" :rules="rules">
+      <el-dialog :visible.sync="isShowAdd" width="600px" label-width="100px" top="5vh" left="150px"
+        :title="titleFormName">
+        <div class="row">
+          <div class="col-12">
+            <div class="mb-3">
+              <label class="form-label">
+                <strong>Tên phúc lợi<span style="color:red;">&nbsp;
+                    (*)</span></strong>
+              </label>
+              <el-form-item prop="name" label-width="0px">
+                <el-input v-model="add.name" type="text"></el-input>
+              </el-form-item>
+            </div>
+          </div>
+          <div class="col-12">
+            <div class="row">
+              <div class="mb-3 col-6">
+                <label class="form-label">
+                  <strong>Thành tiền:&nbsp;{{ formatCurrency(add.price) }}<span style="color:red;">&nbsp;
+                      (*)</span></strong>
+                </label>
+                <el-form-item prop="price" label-width="0px">
+                  <el-input type="number" :min="0" v-model.number="add.price"></el-input>
+                </el-form-item>
+              </div>
+              <div class="mb-3 col-6" v-if="value == 0">
+                <label class="form-label">
+                  <strong>Loại phúc lượng<span style="color:red;">&nbsp;
+                      (*)</span></strong>
+                </label>
+                <el-select v-model="add.isQuantity">
+                  <el-option type="text" :value="true" label="Chỉ 1"></el-option>
+                  <el-option type="text" :value="false" label="Chọn số lượng"></el-option>
+                </el-select>
+              </div>
+            </div>
+          </div>
+          <div class="col-12">
+            <label class="form-label">
+              <strong>Mô tả<span style="color:red;">&nbsp;
+                  (*)</span></strong>
+            </label>
+            <el-form-item prop="text" label-width="0px">
               <el-input type="textarea" v-model="add.text"></el-input>
             </el-form-item>
-          </el-col>
-        </el-row>
-      </el-form>
-      <div slot="footer" class="dialog-footer" style="text-align: center">
-        <el-button class="btn btn-danger" round @click="Add(add)">Thêm mới
-        </el-button>
-      </div>
-    </el-dialog>
 
+          </div>
+        </div>
+        <div slot="footer" class="dialog-footer" style="text-align: center">
+          <el-button class="btn btn-danger" round @click="submitForm('addValidateForm')">{{ buttonName }}
+          </el-button>
+        </div>
+      </el-dialog>
+    </el-form>
   </div>
 </template>
 
 <script>
 /* eslint-disable */
 import WelfareApi from "@/service/phucLoiService";
+import format from "@/utils/format"
 let welfareApi = new WelfareApi();
 export default {
   name: "PhucLoiList",
   data() {
     return {
       value: 0,
-      isShowEdit: false,
       isShowDialog: false,
       isShowAdd: false,
       idDelete: "",
-      edit: {
-        id: "",
-        name: "",
-        text: "",
-        price: "",
-        isQuantity: false,
-      },
       add: {
         id: "",
         name: "",
@@ -200,16 +150,31 @@ export default {
         price: "",
         isQuantity: false
       },
+      formMode: '',
       list: [],
-      listAllWelfare:[],
+      listAllWelfare: [],
       nameWelfare: [],
       centerDialogVisible: false,
-      addText: "Thêm mới phúc lợi cá nhân hóa"
+      addText: "Thêm mới phúc lợi cá nhân hóa",
     };
+  },
+  computed: {
+    rules() {
+      return {
+        name: [{ validator: this.validateName, trigger: ['blur', 'change'] }],
+        price: [{ validator: this.validatePrice, trigger: ['blur', 'change'] }],
+        text: [{ validator: this.validateText, trigger: ['blur', 'change'] }]
+      }
+    },
+    titleFormName() {
+      return this.formMode === 'edit' ? 'Cập nhật phúc lợi' : 'Thêm mới phúc lợi';
+    },
+    buttonName() {
+      return this.formMode === 'edit' ? 'Cập nhật' : 'Thêm mới';
+    }
   },
   watch: {
     value: function (newVal) {
-      console.log(newVal);
       if (newVal === 0) {
         this.getAllWelfare();
         this.addText = "Thêm mới phúc lợi cá nhân hóa";
@@ -218,101 +183,159 @@ export default {
         this.addText = "Thêm mới phúc lợi chung";
       }
     },
-    deep: true,
+    isShowAdd(value) {
+      if (!value) {
+        this.add = {
+          id: "",
+          name: "",
+          text: "",
+          price: "",
+          isQuantity: false
+        }
+        this.resetForm('addValidateForm');
+      }
+    }
   },
   methods: {
-    showAddForm() {
-      this.edit = {};
-      this.isShowAdd = true;
-    },
-    change(event) {
-      console.log(event.target.value);
-    },
-    Add(add) {
-      let isValidate = true;
-      if (!(add.name && add.text && add.price)) {
-        this.$alert(
-          "Thông tin đầu vào không hợp lệ vui lòng nhập đủ thông tin!",
-          "Thông tin không hợp lệ",
-          {
-            confirmButtonText: "OK",
-            callback: () => { },
-          }
-        );
-        isValidate = false;
+    isDuplicateName(value) {
+      if (this.formMode === 'edit') {
+        return this.list.filter((x) => format.removeVietnameseTones(x.name).toLowerCase() === (format.removeVietnameseTones(value).toLowerCase()) && x.id !== this.add.id).length > 0
+      } else {
+        return this.list.filter((x) => format.removeVietnameseTones(x.name).toLowerCase() === (format.removeVietnameseTones(value).toLowerCase())).length > 0
       }
-      if (this.nameWelfare.includes(add.name)) {
-        this.$alert(
-          "Tên phúc lợi đã tồn tại",
-          "Vui lòng nhập phúc lợi khác",
-          {
-            confirmButtonText: "OK",
-            callback: () => { },
-          }
-        );
-        isValidate = false;
+    },
+    validateName(rule, value, callback) {
+      if (value === '') {
+        callback(new Error('Tên phúc lợi không được để trống'))
+      } else if (value.match("[0-9]")) {
+        callback(new Error('Tên phúc lợi không được chứa số'))
+      } else if (this.isDuplicateName(value)) {
+        callback(new Error('Tên phúc lợi đã tồn tại'))
+      } else {
+        callback()
       }
-      if (isValidate) {
-        //let form = document.querySelector("#form");
-        //console.log(form);
+    },
+    validateText(rule, value, callback) {
+      if (value === '') {
+        callback(new Error('Mô tả không được để trống'))
+      } else {
+        callback()
+      }
+    },
+    validatePrice(rule, value, callback) {
+      if (value === '') {
+        callback(new Error('Số tiền không hợp lệ'))
+      } else if (value <= 0) {
+        callback(new Error('Số tiền phải lớn hơn 0'))
+      } else {
+        callback()
+      }
+    },
+    submitForm(formName) {
+      const self = this;
+      let isValid = true
+      self.$refs[formName].validate((valid) => {
+        if (!valid) isValid = false;
+      })
+      if (isValid) {
         const qs = require("qs");
-        if (this.value === 0) {
-          welfareApi.createWelfare(qs.stringify(add)).then((res) => {
-            welfareApi.getAllWelfare().then((res) => {
-              // self.isLoaded = true;
-              this.list = res.data;
-              this.$notify({
-                title: "Success",
-                message: "Thêm mới phúc lợi thành công",
-                type: "success",
+        if (self.formMode === 'edit') {
+          if (this.value === 0) {
+            welfareApi.updateWelfare(self.add.id, qs.stringify(self.add)).then((res) => {
+              welfareApi.getAllWelfare().then((res) => {
+                // self.isLoaded = true;
+                this.list = res.data;
+                this.$notify({
+                  title: "Success",
+                  message: "Cập nhật phúc lợi thành công",
+                  type: "success",
+                });
+                this.list = res.data;
               });
             });
-            const myTimeout = setTimeout(myGreeting, 100);
-
-            function myGreeting() {
-              window.location.reload();
-            }
+          }
+          else {
+            welfareApi.updateGeneralWelfare(self.add.id, qs.stringify(self.add)).then((res) => {
+              welfareApi.getAllGeneralWelfare().then((res) => {
+                // self.isLoaded = true;
+                this.list = res.data;
+                this.$notify({
+                  title: "Success",
+                  message: "Cập nhật phúc lợi thành công",
+                  type: "success",
+                });
+                this.list = res.data;
+              });
+            });;
+          }
+        } else {
+          if (self.value === 0) {
+            welfareApi.createWelfare(qs.stringify(self.add)).then((res) => {
+              welfareApi.getAllWelfare().then((res) => {
+                // self.isLoaded = true;
+                self.list = res.data;
+                self.$notify({
+                  title: "Success",
+                  message: "Thêm mới phúc lợi thành công",
+                  type: "success",
+                });
+              });
+              self.list = res.data;
+            });
+          } else {
+            welfareApi.createGeneralWelfare(qs.stringify(self.add)).then((res) => {
+              welfareApi.getAllGeneralWelfare().then((res) => {
+                // self.isLoaded = true;
+                self.list = res.data;
+                self.$notify({
+                  title: "Success",
+                  message: "Thêm mới phúc lợi thành công",
+                  type: "success",
+                });
+                self.list = res.data;
+              });
+            });
+          }
+        }
+        self.isShowAdd = false;
+        self.resetForm(formName)
+      }
+    },
+    resetForm(formName) {
+      this.$refs[formName].resetFields();
+    },
+    statusWelfare(id, status) {
+      let object = {
+        itemID: id,
+        status: status,
+        kindOfWelfare: this.value
+      }
+      welfareApi.changeStatusWelfare(object).then((res) => {
+        if (this.value === 0) {
+          welfareApi.getAllWelfare().then((res) => {
+            // self.isLoaded = true;
+            this.list = res.data;
           });
         } else {
-          welfareApi.createGeneralWelfare(qs.stringify(add)).then((res) => {
-            welfareApi.getAllGeneralWelfare().then((res) => {
-              // self.isLoaded = true;
-              this.list = res.data;
-              this.$notify({
-                title: "Success",
-                message: "Thêm mới phúc lợi thành công",
-                type: "success",
-              });
-              const myTimeout = setTimeout(myGreeting, 100);
-
-              function myGreeting() {
-                window.location.reload();
-              }
-            });
+          welfareApi.getAllGeneralWelfare().then((res) => {
+            // self.isLoaded = true;
+            this.list = res.data;
           });
         }
-        this.isShowAdd = false;
-        add.name = "";
-        add.price = "";
-        add.text = "";
-      }
+      });;
     },
-    Cancel() {
-      this.isShowAdd = false;
+    showAddForm() {
+      this.isShowAdd = true;
+      this.formMode = 'add'
     },
     showEditForm(item) {
-      this.isShowEdit = false;
       setTimeout(() => {
-        this.edit = item;
+        this.add = JSON.parse(JSON.stringify(item)); //clone item object
+        this.formMode = 'edit'
         if (item.isQuantity === false) this.label = "Chọn số lượng";
         else this.label = "Chỉ 1";
-        this.isShowEdit = true;
+        this.isShowAdd = true;
       }, 100);
-    },
-    showFormDelete(id) {
-      this.idDelete = id;
-      // alert(id);
-      this.centerDialogVisible = true;
     },
     showDeleteDialog(item) {
       if (this.value === 0) {
@@ -351,37 +374,6 @@ export default {
       }
 
       this.centerDialogVisible = false;
-    },
-    editWel(edit) {
-      let isValidate = true;
-      if (!(edit.name && edit.text && edit.price)) {
-        this.$alert(
-          "Thông tin đầu vào không hợp lệ vui lòng nhập đủ thông tin!",
-          "Thông tin không hợp lệ",
-          {
-            confirmButtonText: "OK",
-            callback: () => { },
-          }
-        );
-        isValidate = false;
-      }
-      if (isValidate) {
-        const qs = require("qs");
-        if (this.value === 0)
-          welfareApi.updateWelfare(edit.id, qs.stringify(edit));
-        else welfareApi.updateGeneralWelfare(edit.id, qs.stringify(edit));
-        this.isShowEdit = false;
-        this.$notify({
-          title: "Success",
-          message: "Sửa thông tin phúc lợi thành công",
-          type: "success",
-        });
-        const myTimeout1 = setTimeout(myGreeting1, 200);
-
-        function myGreeting1() {
-          window.location.reload();
-        }
-      }
     },
     getAllWelfare() {
       welfareApi.getAllWelfare().then((res) => {
@@ -425,191 +417,6 @@ export default {
 };
 </script>
 
-<style >
-.el-select {
-  width: 100%;
-}
-
-textarea {
-  border: 1px solid #23282b8f !important;
-  border-radius: 8px !important;
-}
-
-.pl-form__title {
-  font-weight: 600;
-  font-size: 28px;
-}
-
-.el-item {
-
-  font-size: 22px;
-  font-weight: 600;
-  line-height: 31px;
-  letter-spacing: 0em;
-
-  line-height: 0px;
-  margin-bottom: 6px;
-}
-
-.pl-title {
-  text-align: center;
-  font-size: 34px;
-  font-weight: 600;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
-    Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
-  background: rgba(255, 255, 255, 0.13);
-  padding: 6px 0px;
-}
-
-.pl-table {
-  text-align: center;
-  margin-left: 200px;
-  margin-right: 200px;
-  z-index: 2;
-}
-
-.pl-table__content {
-  height: 600px;
-  overflow: scroll;
-}
-
-
-.pl-table__content table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-.pl-table__content table tr {
-  background: #f2e7ddf8;
-}
-
-.pl-table__content table tr th {
-  border-right: 1px solid #e4c9ac;
-  padding: 14px;
-}
-
-.pl-table__content table tr td {
-  padding: 20px;
-  line-height: 30px;
-  height: 30px;
-}
-
-.pl-table__content table thead tr {
-  background-color: #fdf9f8;
-  position: sticky;
-  top: 0;
-}
-
-.pl-table__content table thead th {
-  font-size: 14px;
-  font-weight: 600;
-}
-
-.pl-table__content table tbody tr {
-  border-bottom: 1px solid #e4c9ac;
-}
-
-.pl-table__content table tr td {
-  border-right: 1px solid #e4c9ac;
-}
-
-.pl-table__content table tbody tr:hover {
-  background-color: pink;
-}
-
-.icon-delete {
-  font-size: 20px;
-  color: coral;
-  cursor: pointer;
-}
-
-.icon-edit {
-  font-size: 20px;
-  color: greenyellow;
-  cursor: pointer;
-}
-
-input,
-textarea {
-  outline: none;
-  padding: 20px;
-  width: 60%;
-  background: transparent;
-  border: none;
-  border-bottom: 1px solid #000;
-}
-
-input::-webkit-outer-spin-button,
-input::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
-}
-
-[placeholder]:focus::-webkit-input-placeholder {
-  transition: text-indent 0.4s 0.4s ease;
-  text-indent: -100%;
-  opacity: 1;
-}
-
-.pl-button {
-  margin-left: 200px;
-  margin-top: 30px;
-  margin-bottom: 10px;
-}
-
-.pl-button__detail {
-  color: white !important;
-  font-size: 14px !important;
-  font-weight: 600 !important;
-  text-align: center;
-  margin-right: 10px;
-}
-
-.pl-button__detail:hover {
-  background-color: rgba(255, 0, 0, 0.1) !important;
-  border-color: rgba(255, 0, 0, 0.1) !important;
-}
-
-.pl-button__detail:focus {
-  background-color: rgba(255, 0, 0, 0.2) !important;
-  border-color: rgba(255, 0, 0, 0.2) !important;
-}
-
-.pl-button__detail:active {
-  background-color: rgba(255, 0, 0, 0.3) !important;
-  border-color: rgba(255, 0, 0, 0.3) !important;
-}
-
-.el-form-item__label {
-  font-weight: 600;
-  margin-bottom: 6px;
-  padding: 0 !important;
-  margin-bottom: 0px !important;
-}
-
-.el-form-item__content input {
-  border-radius: 8px !important;
-  box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.15);
-  border: 1px solid #23282b8f;
-}
-
-.el-dialog__title {
-  font-size: 25px;
-  font-weight: 600 !important;
-  line-height: 35px;
-  letter-spacing: 0em;
-  text-align: left;
-}
-
-.el-dialog__headerbtn i {
-  font-size: 24px;
-  font-weight: 700;
-  color: #f00 !important;
-}
-
-.hr-detail__title {
-  color: #000;
-  border-bottom: 2px solid #f004;
-  margin: auto;
-}
+<style scoped>
+@import "@/assets/css/phucloi/list.css";
 </style>

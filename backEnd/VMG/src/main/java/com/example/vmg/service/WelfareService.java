@@ -19,6 +19,9 @@ public class WelfareService {
     public List<Welfare> getList() {
         return welfareRepository.findAll();
     }
+    public List<Welfare> getListOrder() {
+        return welfareRepository.findAllByOrderByIdDesc();
+    }
 
     public Welfare getById(Long id) {
         return welfareRepository.findById(id).get();
@@ -42,6 +45,10 @@ public class WelfareService {
         return welfareRepository.getAllMoney(id);
     }
     public List<WelfareSatistic> getAllStatistic(){return welfareRepository.getAllStatistic();}
+
+    public List<Welfare> getListByStatus(){
+        return welfareRepository.getListWelfareByStatus();
+    }
 
 
 

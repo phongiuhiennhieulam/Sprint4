@@ -102,6 +102,17 @@ input[type="checkbox"] {
     border-radius: 0;
 }
 
+
+.router-link-active {
+
+    text-decoration: underline !important;
+}
+
+textarea {
+    border: 1px solid #DCDFE6 !important;
+}
+
+
 ::-webkit-scrollbar {
     width: 8px;
     height: 8px;
@@ -110,3 +121,4 @@ input[type="checkbox"] {
 ::-webkit-scrollbar-thumb {
     background: #bdbdbd;
 }
+

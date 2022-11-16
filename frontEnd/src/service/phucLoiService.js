@@ -8,6 +8,9 @@ class WelfareApi {
     async getAllWelfare() {
         return await axios.get('http://localhost:8083/api/welfares');
     }
+    async getAllWelfareByStatus() {
+        return await axios.get('http://localhost:8083/api/welfares-user');
+    }
 
     async deleteWelfare(id) {
         return await axios.delete('http://localhost:8083/api/welfare/' + id)
@@ -62,8 +65,13 @@ class WelfareApi {
     async getHistoryAcceptWelfareOfUser(id) {
         return await axios.get('http://localhost:8083/api/get-history-accept-welfare/'+id);
     }
+
     async getWelfare(id) {
         return await axios.get(`http://localhost:8083/api/getWelfare/${id}`);
+
+    async changeStatusWelfare(object){
+        return await axios.put('http://localhost:8083/api/status-welfare', object);
+
     }
     
 

@@ -27,13 +27,6 @@ public class DepartmentController {
         return departmentRepository.findAll();
     }
 
-//    @PostMapping("/department")
-//    public ResponseEntity<Void> addNhanVien(@ModelAttribute DepartmentForm departmentForm) {
-//        Department department = new Department();
-//
-//        department.setName(departmentForm.getName());
-//        department.setStatus(0);
-//    }
     @GetMapping("/department")
     public ResponseEntity<Void> addNhanVien(@ModelAttribute DepartmentForm departmentForm){
         Department department = new Department();
