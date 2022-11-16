@@ -17,8 +17,8 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr v-for="(item, index) in list" :key="index">
-                    <td width="9%">{{ index + 1 }}</td>
+                  <tr v-for="(item, index) in list" :key="item.id">
+                    <td width="9%">{{ index + 1}}</td>
                     <td style="text-align: left;">{{ item.name }}</td>
                     <td style="text-align: left;">{{ item.code }}</td>
                     <td>
@@ -34,8 +34,13 @@
       </div>
     </div>
     <!-- dialog lịch sử xet duyet -->
-    <el-dialog title="Lịch xử xét duyệt" :visible.sync="isHistory" width="53%" :before-close="handleClose">
-      <span>Lịch sử xét duyệt của nhân viên {{ staff.name }}</span>
+    <el-dialog
+      title="temp"
+      :visible.sync="isHistory"
+      width="53%"
+      :before-close="handleClose">
+      <span slot="title" class="title-dialog"><strong>Lịch xử xét duyệt</strong> </span>
+      <span>Lịch sử xét duyệt của nhân viên {{staff.name}}</span>
       <div label-width="120px" class="pl-table__content">
         <table>
           <thead>
@@ -49,6 +54,44 @@
               <th width="13%">Hoàn tác</th>
             </tr>
           </thead>
+          <tr v-for="(item, index) in listHistory" :key="item.name">
+              <td>{{ index + 1}}</td>
+              <td style="text-align: left;">{{ item.name }}</td>
+              <td style="text-align: right;">{{ formatCurrency(item.price) }} </td>
+              <td>{{item.quantity}}</td>
+              <td style="text-align: right;">{{ formatCurrency(item.price*item.quantity) }} </td>
+              <td>
+                <span v-show="item.status == 0">
+                  <Strong style="color: seagreen;">Đã xét duyệt</Strong>
+                </span>
+                <span  v-show="item.status == 1">
+                  <Strong style="color: red">Đã hủy</Strong>
+                </span>
+              </td>
+              <td>
+                <el-button @click="handleReturn(item.id, index)" type="warning" icon="el-icon-refresh-left" circle></el-button>
+              </td>
+          </tr> 
+      </table>    
+    </div>
+    </el-dialog>
+    <!-- dialog xet duyet -->
+    <el-dialog
+      :visible.sync="isWelfare"
+      width="1000px"
+      label-width="100px"
+      top="5vh"
+      left="150px"
+      title="temp"
+      boder=""
+    >
+    <span slot="title" class="title-dialog"><strong>Danh sách phúc lợi đăng ký</strong> </span>
+    <div class="row">
+      <div class="col-6">
+        <strong><h5>Nhân viên: {{staff.name}}</h5></strong>
+      </div>
+      <div class="col-6" style="text-align: right; margin-bottom: 5px;">
+        <el-button @click="handShowHistory(staff.id)" type="warning"><strong><i class="el-icon-s-order"></i> Lịch sử</strong></el-button>
           <tr v-for="(item, index) in listHistory" :key="index">
             <td>{{ index + 1 }}</td>
             <td style="text-align: left;">{{ item.name }}</td>
@@ -97,19 +140,19 @@
               <th width="15%">Thao tác</th>
             </tr>
           </thead>
-          <tr v-for="(item, index) in listRegister" :key="index">
-            <td>{{ index + 1 }}</td>
-            <td style="text-align: left;">{{ item.name }}</td>
-            <td style="text-align: right;">{{ formatCurrency(item.price) }} </td>
-            <td>{{ item.quantity }}</td>
-            <td>{{ formatCurrency(item.price * item.quantity) }} </td>
-            <td>
-              <el-button @click="handleSuccess(item.id, index)" type="success" icon="el-icon-check" circle></el-button>
-              <el-button @click="handleDelete(item.id, index)" type="danger" icon="el-icon-close" circle></el-button>
-            </td>
-          </tr>
-        </table>
-      </div>
+          <tr v-for="(item, index) in listRegister" :key="item.id">
+              <td>{{ index + 1}}</td>
+              <td style="text-align: left;">{{ item.name }}</td>
+              <td style="text-align: right;">{{ formatCurrency(item.price) }} </td>
+              <td>{{item.quantity}}</td>
+              <td>{{ formatCurrency(item.price*item.quantity) }} </td>
+              <td>
+                <el-button @click="handleSuccess(item.id, index)" type="success" icon="el-icon-check" circle></el-button>
+                <el-button @click="handleDelete(item.id, index)" type="danger" icon="el-icon-close" circle></el-button>
+              </td>
+          </tr> 
+      </table>    
+    </div>  
     </el-dialog>
   </div>
 </template>
@@ -198,6 +241,7 @@ export default {
         }
         
     },
+
     handleReturn(id, index) {
       try {
         StaffService.ReturnRegisterWelfare(id)

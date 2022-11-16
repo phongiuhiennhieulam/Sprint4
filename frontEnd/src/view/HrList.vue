@@ -1,5 +1,5 @@
-<template>
-  <div class="hr-list">
+<template >
+  <div class="hr-list" >
     <div class="hr-content">
       <div class="hr-title"><strong> QUẢN LÝ NHÂN VIÊN</strong></div>
       <br/>
@@ -33,7 +33,7 @@
                     </div>  
                   </th>                                                  
                   <th width="10%" style="margin-right: 0px;">
-                    <div v-if="selected.length !==0">
+                    <div v-if="selected.length > 0">
                       <el-form :inline="true" class="demo-form-inline">
                           <el-form-item>
                             <el-button class="btn btn-danger" @click="handlDeletes">
@@ -124,7 +124,7 @@
                   <!-- <td style="text-align: right;">{{formatCurrency(item.welfareMoney)}}</td> -->
                   <td style="text-align: left;">
                     <div v-if="item.status == 0">Đang làm việc</div>
-                    <div v-if="item.status == 1">Khóa</div>
+                    <div v-if="item.status == 1">Tạm ngưng</div>
                   </td>
                   <td>
                     <span class="icon-edit" @click="showInfo(item)">
@@ -225,8 +225,9 @@
       label-width="100px"
       top="5vh"
       left="150px"
-      title="Cập nhật số tiền hỗ trợ"
+      title="temp"
     >
+    <span slot="title" class="title-dialog"> <Strong>Cập nhật số tiền hỗ trợ</Strong></span>
       <div class="row">
         <form name="form-updateMoney">
           <div class="row">            
@@ -249,12 +250,12 @@
                 </div>
               </div> 
           </div>
-              <div style="text-align: center">
+          <div style="text-align: center">
                 <button @click.prevent="handlUpdateMoney()" class="btn btn-danger">
                   <strong>Cập nhật</strong>
                 </button>
-              </div>
-            </form>
+          </div>
+          </form>
 
       </div>
     </el-dialog>
@@ -265,8 +266,9 @@
       label-width="100px"
       top="5vh"
       left="150px"
-      title="Sửa thông tin nhân viên"
+      title="temp"
     >
+    <span class="title-dialog" slot="title"><strong>Sửa thông tin nhân viên</strong></span>
       <div class="row">
         <form name="form-update">
           <div class="row">
@@ -388,8 +390,9 @@
       label-width="100px"
       top="5vh"
       left="150px"
-      title="Thêm mới nhân viên"
+      title="temp"
     >    
+    <span slot="title" style="color: red; font-size: 30px; text-align: center; display: block;"><Strong>Thêm mới nhân viên</Strong></span>
       <div class="row">
         <form name="myForm">
           <div class="row">
@@ -397,7 +400,7 @@
               <div>
                 <div class="mb-3">
                 <label class="form-label">
-                  <strong>Mã nhân viên:</strong>
+                  <strong>Mã nhân viên <span style="color: red;">(*)</span>:</strong>
                 </label>
                 <input
                   v-model="staff.code"
@@ -414,7 +417,7 @@
               <div>
                 <div class="mb-3">
                 <label class="form-label"
-                  ><Strong>Họ tên nhân viên:</Strong></label
+                  ><Strong>Họ tên nhân viên <span style="color: red;">(*)</span>:</Strong></label
                 >
                 <input
                   v-model="staff.name"
@@ -431,7 +434,7 @@
                 <div class="mb-3">
                 <label class="form-label">
             
-                  <Strong>Email: </Strong>
+                  <Strong>Email <span style="color: red;">(*)</span>: </Strong>
                 </label>
                 <input
                   id="email"
@@ -449,7 +452,7 @@
             <div class="col-6">
               <div>
                 <div class="mb-3">
-                  <label class="form-label"><Strong>Ngày sinh:</Strong></label>
+                  <label class="form-label"><Strong>Ngày sinh <span style="color: red;">(*)</span>:</Strong></label>
                   <input
                     v-model="staff.date"
                     id="date"
@@ -466,7 +469,7 @@
               <div>
                 <div class="mb-3">
                   <label class="form-label"
-                    ><Strong>Số tiền hỗ trợ phúc lợi:</Strong></label
+                    ><Strong>Số tiền hỗ trợ phúc lợi <span style="color: red;">(*)</span>:</Strong></label
                   >
                   <input
                     v-model="staff.welfareMoney"
@@ -484,7 +487,7 @@
 
               <div>
                   <div class="mb-3">
-                  <label class="form-label"><Strong>Chọn phòng ban:</Strong> </label>
+                  <label class="form-label"><Strong>Chọn phòng ban <span style="color: red;">(*)</span>:</Strong> </label>
                   <select style="height: 55px;"
                     v-model="staff.department"
                     placeholder="Chọn phòng ban"
@@ -517,9 +520,10 @@
       label-width="100px"
       top="5vh"
       left="150px"
-      title="Phúc lợi đang hưởng"
+      title="temp"
       boder=""
     >
+    <span slot="title" class="title-dialog"><strong>Phúc lợi đang hưởng</strong> </span>
     <div label-width="120px" class="pl-table__content">
       <h6>Nhân viên: {{staff.name}} / Tổng tiền hỗ trợ phúc lợi: <strong>{{formatCurrency(staff.welfareMoney)}}</strong>
          / Số tiền đang sử dụng: <strong>{{formatCurrency(Money1 + Money2)}}</strong> 
@@ -601,6 +605,7 @@ export default {
     },  
   data() {
     return {
+      componentKey: 0,
       fullscreenLoading: false,
       staffs: [],
       welfares: [],
@@ -846,14 +851,14 @@ export default {
         "Bạn có chắc sẽ khóa những nhân viên này không. Continue?",
         "Warning",
         {
-          confirmButtonText: "OK",
-          cancelButtonText: "Cancel",
+          confirmButtonText: "Có",
+          cancelButtonText: "Hủy",
           type: "warning",
         }
       )
       .then(() => {
           StaffService.deletes(this.selected)
-          // this.loading()
+          this.loading()
           this.$message({
             type: "success",
             message: "Khóa thành công!",
@@ -869,18 +874,18 @@ export default {
     },
     loading(){
       const loading = this.$loading({
-          lock: true,
-          text: 'Loading',
-          spinner: 'el-icon-loading',
-          background: 'rgba(0, 0, 0, 0.7)'
-        });
-        setTimeout(() => {
-          loading.close();
-          this.$router.go()
-        }, 1200);
+        lock: true,
+        text: 'Loading',
+        spinner: 'el-icon-loading',
+        background: 'rgba(0, 0, 0, 0.7)'
+      });
+      setTimeout(() => {
+        loading.close();
+        this.$router.go()
+      }, 1200);
     },
     handlUpdateMoney () {
-      let money = this.moneyUpdate.replace(/./g, '');
+      let money = this.moneyUpdate.replace(/,/g, '');
       let x = document.forms["form-updateMoney"]["moneyUpdate"].value;
       if (x == "") {
         this.$notify({
@@ -913,8 +918,8 @@ export default {
         "Bạn có chắc sẽ cập nhật tiền cho những nhân viên này không?",
         "Warning",
         {
-          confirmButtonText: "OK",
-          cancelButtonText: "Cancel",
+          confirmButtonText: "Có",
+          cancelButtonText: "Hủy",
           type: "warning",
         }
       )
@@ -952,8 +957,8 @@ export default {
         "Bạn có chắc sẽ khóa nhân viên này không. Continue?",
         "Warning",
         {
-          confirmButtonText: "OK",
-          cancelButtonText: "Cancel",
+          confirmButtonText: "Có",
+          cancelButtonText: "Hủy",
           type: "warning",
         }
       )

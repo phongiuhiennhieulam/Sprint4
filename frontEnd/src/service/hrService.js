@@ -1,10 +1,10 @@
 import axios from 'axios';
 import authHeader from './auth-hreader'
-/**
- * Api lấy ra danh sách toàn bộ nhân viên
- * */
-class StaffService {
 
+class StaffService {
+    async updateMoney (money,ids) {
+        return await axios.put('http://localhost:8083/api/staff/update-money/' + money + '?ids=' + ids, {headers: authHeader()})
+    }
     async getAll(params) {
         return await axios.get('http://localhost:8083/api/staffs', {params, headers: authHeader()})
     }
@@ -12,22 +12,22 @@ class StaffService {
         return await axios.get(`http://localhost:8083/api/staff/${id}`, { headers: authHeader()})
     }
     async getStaffByEmail(email) {
-        return await axios.get(`http://localhost:8083/api/staff-name/${email}`, { headers: authHeader()})
+        return await axios.get(`http://localhost:8083/api/staff-name/${email}`)
     }
     async getCode() {
-        return await axios.get('http://localhost:8083/api/getcode', { headers: authHeader()})
+        return await axios.get('http://localhost:8083/api/getcode')
     }
     async getBirthdays() {
-        return await axios.get('http://localhost:8083/api/birthdays', { headers: authHeader()})
+        return await axios.get('http://localhost:8083/api/birthdays')
     }
     async getEmail() {
-        return await axios.get('http://localhost:8083/api/getemail', { headers: authHeader()})
+        return await axios.get('http://localhost:8083/api/getemail')
     }
     async getEmail2(id) {
-        return await axios.get(`http://localhost:8083/api/getemail2/${id}`, { headers: authHeader()})
+        return await axios.get(`http://localhost:8083/api/getemail2/${id}`)
     }
     async getCode2(id) {
-        return await axios.get(`http://localhost:8083/api/getcode2/${id}`, { headers: authHeader()})
+        return await axios.get(`http://localhost:8083/api/getcode2/${id}`)
     }
     async getUser() {
         return await axios.get('http://localhost:8083/api/get-user', { headers: authHeader()})
@@ -42,10 +42,10 @@ class StaffService {
         return await axios.get(`http://localhost:8083/api/staff-show-register/${id}`, { headers: authHeader()});
     }
     async getGeneralWelfare() {
-        return await axios.get('http://localhost:8083/api/general-welfanes', { headers: authHeader()});
+        return await axios.get('http://localhost:8083/api/general-welfanes');
     }
     async getDepartments() {
-        return await axios.get('http://localhost:8083/api/departments', { headers: authHeader()});
+        return await axios.get('http://localhost:8083/api/departments', );
     }
     async deleteStaff(id) {
         return await axios.put(`http://localhost:8083/api/staff-delete/${id}`, { headers: authHeader()})
@@ -55,9 +55,6 @@ class StaffService {
     }
     async updateStaff(id, staff) {
         return await axios.put(`http://localhost:8083/api/staffs/${id}`, staff,  { headers: authHeader()})
-    }
-    async createStaff(staff) {
-        return await axios.post('http://localhost:8083/api/staff', staff, { headers: authHeader()})
     }
     async createStaff2(staff) {
         return await axios.post('http://localhost:8083/api/staffs', staff, { headers: authHeader()})
@@ -70,7 +67,7 @@ class StaffService {
         return await axios.put(`http://localhost:8083/api/register-delete/${id}`, { headers: authHeader()})
     }
     async deletes (ids) {
-        return await axios.put(`http://localhost:8083/api/staffdeletes?ids=${ids}`, { headers: authHeader()})
+        return await axios.put(`http://localhost:8083/api/staff-deletes?ids=${ids}`, { headers: authHeader()})
     }
     async getErorr () {
         return await axios.get('http://localhost:8083/api/staff-erorr', { headers: authHeader()})
@@ -87,9 +84,13 @@ class StaffService {
     async ReturnRegisterWelfare(id) {
         return await axios.put(`http://localhost:8083/api/return/${id}`, { headers: authHeader()})
     }
-    async updateMoney (money,ids) {
-        return await axios.put(`http://localhost:8083/api/staff/update-money/${money}?ids=${ids}`, { headers: authHeader()})
-    }
+    async GetStaffByWelfare(id) {
+        return await axios.get(`http://localhost:8083/api/staffs-by-welfare/${id}`)
+    }   
+    async GetCost() {
+        return await axios.get('http://localhost:8083/api/costs')
+    } 
+   
    
 }
 export default new StaffService()

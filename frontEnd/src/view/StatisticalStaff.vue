@@ -1,31 +1,29 @@
 <template>
   <div class="row pl-body">
-    <div class="col-2">
-      <el-row>
-          <h5 style="text-align: center;" class="title-sidebar"><Strong>Danh sách phúc lợi</Strong></h5>
-          <el-menu
-            class="el-menu-vertical-demo"
-            @open="handleOpen"
-            @close="handleClose"
-            background-color="#f3f4f5"
-            text-color="#000"
-            active-text-color="#000">
-            <el-submenu index="1">
-              <template slot="title">
-                <Strong>Chọn tên phúc lợi</Strong>
-              </template>
-              <el-menu-item-group>
-                <el-menu-item index="1-1" v-for="x in x" :key="x.name">{{x.name}}</el-menu-item>
-              </el-menu-item-group>
-            </el-submenu>
-          </el-menu>
-      </el-row>
+    <div class="col-3 sidebar">
+      <div class="pl-content">
+          <div class="st-title" style=""><strong > <i class="el-icon-document"></i> Chọn phúc lợi</strong></div>
+          <div class="pl-ele">
+            <div class="pl-table">
+              <div class="pl-table__content">
+                <form id="form" label-width="100px">
+                  <table>
+                    <tbody>
+                      <tr  v-for="(item, index) in welfares" :key="item.id" @click="getStaff(item.id)">
+                        <td style="text-align: left;"><strong>{{ index + 1}}. </strong><strong>{{ item.name }}</strong> </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
     </div>
-    <div class="col-1"></div>
     <div class="col-9">
       <div >
         <div class="pl-content">
-          <div class="hr-title"><strong >DANH SÁCH XÉT DUYỆT</strong></div>
+          <div class="st-title" ><strong> Danh sách nhân viên đã đăng ký phúc lợi <span v-show="staffs.length >0">"{{welfare.name}}"</span> </strong></div>
           <div class="pl-ele">
             <div class="pl-table">
               <div class="pl-table__content">
@@ -36,20 +34,24 @@
                         <th>STT</th>
                         <th>Họ tên </th>
                         <th>Mã nhân viên</th>
-                        <th>Số lượng đăng ký </th>
+                        <th>Số lượng </th>
                       </tr>
                     </thead>
                     <tbody>
-                      <tr v-for="(item, index) in list" :key="index">
-                        <td width="9%">{{ index + 1}}</td>
-                        <td style="text-align: left;">{{ item.name }}</td>
-                        <td style="text-align: left;">{{ item.code }}</td>
-                        <td>
-                          <el-button @click="handShow(item.id)" type="warning"><strong>Danh sách xét duyệt</strong></el-button>
+                      <tr v-for="(item, index) in staffs" :key="item.id">
+                        <td width="7%">{{ index + 1}}</td>
+                        <td  style="text-align: left;">{{ item.name }}</td>
+                        <td  style="text-align: left;">{{ item.code }}</td>
+                        <td width="20%">
+                          {{item.quantity}}
                         </td>
                       </tr>
                     </tbody>
                   </table>
+                  <br>
+                  <h5 v-show="staffs.length < 1">
+                        Chọn phúc lợi cần kiểm trả để xem danh sách nhân viên đăng ký!
+                  </h5>
                 </form>
               </div>
             </div>
@@ -62,20 +64,15 @@
 </template>
 
 <script>
+import StaffService from "../service/hrService"
+import WelfareApi from "@/service/phucLoiService";
+let welfareApi = new WelfareApi();
 export default {
   data() {
     return{
-      x:[ 
-          {
-          "name": "1",
-        },
-        {
-          "name": "name2",
-        },
-        {
-          "name": "name3",
-        },
-    ]
+      welfares: [],
+      staffs: [],
+      welfare: {}
     }
   },
   methods: {
@@ -84,9 +81,31 @@ export default {
       },
       handleClose(key, keyPath) {
         console.log(key, keyPath);
+      },
+      getAll() {
+        welfareApi.getAllWelfare()
+        .then(response => {
+          this.welfares = response.data
+        })
+        .catch(e => {
+            console.log(e)
+          })
+      },
+      getStaff(id) {
+        StaffService.GetStaffByWelfare(id)
+        .then(response => {
+          this.staffs = response.data
+        })
+        welfareApi.getWelfare(id)
+        .then(response => {
+          this.welfare = response.data
+        })
       }
-    }
 
+  },
+  mounted(){
+    this.getAll();
+  }  
 }
 </script>
 
@@ -104,8 +123,10 @@ export default {
   
 }
 .sidebar{
-  background: #692530;
-  text-align: center;
+            height:750px;
+            overflow-x:hidden;
+            overflow-y:auto;
+
 }
 .pl-title {
   text-align: center;
@@ -135,6 +156,7 @@ export default {
 .pl-table__content table tr th {
   border-right: 1px solid #e4c9ac;
   padding: 14px;
+
 }
 .pl-table__content table tr td {
   padding: 20px;
@@ -147,6 +169,7 @@ export default {
 .pl-table__content table thead th {
   font-size: 14px;
   font-weight: 600;
+  font-size: 20px;
 }
 .pl-table__content table tbody tr {
   border-bottom: 1px solid #e4c9ac;
@@ -237,5 +260,14 @@ input::-webkit-inner-spin-button {
   font-size: 24px;
   font-weight: 700;
   color: #f00 !important;
+}
+.st-title{
+  text-align: center;
+  font-size: 20px;
+  font-weight: 500;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+    Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+  background: rgba(255, 255, 255, 0.13);
+  padding: 6px 0px;
 }
 </style>
