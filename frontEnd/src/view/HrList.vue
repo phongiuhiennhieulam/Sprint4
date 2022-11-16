@@ -124,7 +124,7 @@
                   <!-- <td style="text-align: right;">{{formatCurrency(item.welfareMoney)}}</td> -->
                   <td style="text-align: left;">
                     <div v-if="item.status == 0">Đang làm việc</div>
-                    <div v-if="item.status == 1">Khóa</div>
+                    <div v-if="item.status == 1">Tạm ngưng</div>
                   </td>
                   <td>
                     <span class="icon-edit" @click="showInfo(item)">
@@ -417,7 +417,7 @@
               <div>
                 <div class="mb-3">
                 <label class="form-label"
-                  ><Strong>Họ tên nhân viên:</Strong></label
+                  ><Strong>Họ tên nhân viên <span style="color: red;">(*)</span>:</Strong></label
                 >
                 <input
                   v-model="staff.name"
@@ -434,7 +434,7 @@
                 <div class="mb-3">
                 <label class="form-label">
             
-                  <Strong>Email: </Strong>
+                  <Strong>Email <span style="color: red;">(*)</span>: </Strong>
                 </label>
                 <input
                   id="email"
@@ -452,7 +452,7 @@
             <div class="col-6">
               <div>
                 <div class="mb-3">
-                  <label class="form-label"><Strong>Ngày sinh:</Strong></label>
+                  <label class="form-label"><Strong>Ngày sinh <span style="color: red;">(*)</span>:</Strong></label>
                   <input
                     v-model="staff.date"
                     id="date"
@@ -469,7 +469,7 @@
               <div>
                 <div class="mb-3">
                   <label class="form-label"
-                    ><Strong>Số tiền hỗ trợ phúc lợi:</Strong></label
+                    ><Strong>Số tiền hỗ trợ phúc lợi <span style="color: red;">(*)</span>:</Strong></label
                   >
                   <input
                     v-model="staff.welfareMoney"
@@ -487,7 +487,7 @@
 
               <div>
                   <div class="mb-3">
-                  <label class="form-label"><Strong>Chọn phòng ban:</Strong> </label>
+                  <label class="form-label"><Strong>Chọn phòng ban <span style="color: red;">(*)</span>:</Strong> </label>
                   <select style="height: 55px;"
                     v-model="staff.department"
                     placeholder="Chọn phòng ban"
@@ -851,8 +851,8 @@ export default {
         "Bạn có chắc sẽ khóa những nhân viên này không. Continue?",
         "Warning",
         {
-          confirmButtonText: "OK",
-          cancelButtonText: "Cancel",
+          confirmButtonText: "Có",
+          cancelButtonText: "Hủy",
           type: "warning",
         }
       )
@@ -918,8 +918,8 @@ export default {
         "Bạn có chắc sẽ cập nhật tiền cho những nhân viên này không?",
         "Warning",
         {
-          confirmButtonText: "OK",
-          cancelButtonText: "Cancel",
+          confirmButtonText: "Có",
+          cancelButtonText: "Hủy",
           type: "warning",
         }
       )
@@ -957,8 +957,8 @@ export default {
         "Bạn có chắc sẽ khóa nhân viên này không. Continue?",
         "Warning",
         {
-          confirmButtonText: "OK",
-          cancelButtonText: "Cancel",
+          confirmButtonText: "Có",
+          cancelButtonText: "Hủy",
           type: "warning",
         }
       )

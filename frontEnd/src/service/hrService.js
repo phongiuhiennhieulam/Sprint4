@@ -87,6 +87,9 @@ class StaffService {
     async GetStaffByWelfare(id) {
         return await axios.get(`http://localhost:8083/api/staffs-by-welfare/${id}`)
     }   
+    async GetCost() {
+        return await axios.get('http://localhost:8083/api/costs')
+    } 
    
    
 }

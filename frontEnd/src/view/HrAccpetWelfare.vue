@@ -17,7 +17,7 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr v-for="(item, index) in list" :key="index">
+                  <tr v-for="(item, index) in list" :key="item.id">
                     <td width="9%">{{ index + 1}}</td>
                     <td style="text-align: left;">{{ item.name }}</td>
                     <td style="text-align: left;">{{ item.code }}</td>
@@ -53,7 +53,7 @@
                     <th width="13%">Hoàn tác</th>
                   </tr>
           </thead>
-          <tr v-for="(item, index) in listHistory" :key="index">
+          <tr v-for="(item, index) in listHistory" :key="item.name">
               <td>{{ index + 1}}</td>
               <td style="text-align: left;">{{ item.name }}</td>
               <td style="text-align: right;">{{ formatCurrency(item.price) }} </td>
@@ -105,7 +105,7 @@
                     <th width="15%">Thao tác</th>
                   </tr>
           </thead>
-          <tr v-for="(item, index) in listRegister" :key="index">
+          <tr v-for="(item, index) in listRegister" :key="item.id">
               <td>{{ index + 1}}</td>
               <td style="text-align: left;">{{ item.name }}</td>
               <td style="text-align: right;">{{ formatCurrency(item.price) }} </td>
@@ -210,7 +210,7 @@ export default {
         try {
           StaffService.ReturnRegisterWelfare(id)
           this.listHistory.splice(index,1);
-          this.loading()
+          // this.loading()
           this.$notify({  
           title: 'Success',
           message: 'Hoàn tác thành công',

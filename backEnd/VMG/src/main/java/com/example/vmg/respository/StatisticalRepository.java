@@ -1,12 +1,16 @@
 package com.example.vmg.respository;
 
+import com.example.vmg.model.CostInterface;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
+@Repository
 public interface StatisticalRepository {
-    @Modifying
-    @Transactional
-    @Query("update Staff p set p.status = 0 where p.id =:id")
-    void unlock(Long id);
+
+
+
 }

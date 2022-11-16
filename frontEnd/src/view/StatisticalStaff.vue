@@ -1,24 +1,17 @@
 <template>
   <div class="row pl-body">
-    <div class="col-3">
+    <div class="col-3 sidebar">
       <div class="pl-content">
-          <div class="hr-title"><strong> Chọn tên phúc lợi</strong></div>
+          <div class="st-title" style=""><strong > <i class="el-icon-document"></i> Chọn phúc lợi</strong></div>
           <div class="pl-ele">
             <div class="pl-table">
               <div class="pl-table__content">
                 <form id="form" label-width="100px">
                   <table>
-                    <thead>
-                      <tr>
-                        <th>STT</th>
-                        <th>Tên</th>
-                      </tr>
-                    </thead>
                     <tbody>
-                      <ul v-for="(item, index) in welfares" :key="item.id">
-                        <li width="7%">{{ index + 1}}</li>
-                        <li style="text-align: left;">{{ item.name }}</li>
-                      </ul>
+                      <tr  v-for="(item, index) in welfares" :key="item.id" @click="getStaff(item.id)">
+                        <td style="text-align: left;"><strong>{{ index + 1}}. </strong><strong>{{ item.name }}</strong> </td>
+                      </tr>
                     </tbody>
                   </table>
                 </form>
@@ -30,7 +23,7 @@
     <div class="col-9">
       <div >
         <div class="pl-content">
-          <div class="hr-title"><strong> Các nhân viên đã đăng ký phúc lợi "{{welfare.name}}"</strong></div>
+          <div class="st-title" ><strong> Danh sách nhân viên đã đăng ký phúc lợi <span v-show="staffs.length >0">"{{welfare.name}}"</span> </strong></div>
           <div class="pl-ele">
             <div class="pl-table">
               <div class="pl-table__content">
@@ -41,20 +34,24 @@
                         <th>STT</th>
                         <th>Họ tên </th>
                         <th>Mã nhân viên</th>
-                        <th>Số lượng đăng ký </th>
+                        <th>Số lượng </th>
                       </tr>
                     </thead>
                     <tbody>
                       <tr v-for="(item, index) in staffs" :key="item.id">
                         <td width="7%">{{ index + 1}}</td>
-                        <td width="20%" style="text-align: left;">{{ item.name }}</td>
-                        <td width="17%" style="text-align: left;">{{ item.code }}</td>
-                        <td width="7%">
+                        <td  style="text-align: left;">{{ item.name }}</td>
+                        <td  style="text-align: left;">{{ item.code }}</td>
+                        <td width="20%">
                           {{item.quantity}}
                         </td>
                       </tr>
                     </tbody>
                   </table>
+                  <br>
+                  <h5 v-show="staffs.length < 1">
+                        Chọn phúc lợi cần kiểm trả để xem danh sách nhân viên đăng ký!
+                  </h5>
                 </form>
               </div>
             </div>
@@ -126,8 +123,10 @@ export default {
   
 }
 .sidebar{
-  background: #692530;
-  text-align: center;
+            height:750px;
+            overflow-x:hidden;
+            overflow-y:auto;
+
 }
 .pl-title {
   text-align: center;
@@ -157,6 +156,7 @@ export default {
 .pl-table__content table tr th {
   border-right: 1px solid #e4c9ac;
   padding: 14px;
+
 }
 .pl-table__content table tr td {
   padding: 20px;
@@ -169,6 +169,7 @@ export default {
 .pl-table__content table thead th {
   font-size: 14px;
   font-weight: 600;
+  font-size: 20px;
 }
 .pl-table__content table tbody tr {
   border-bottom: 1px solid #e4c9ac;
@@ -259,5 +260,14 @@ input::-webkit-inner-spin-button {
   font-size: 24px;
   font-weight: 700;
   color: #f00 !important;
+}
+.st-title{
+  text-align: center;
+  font-size: 20px;
+  font-weight: 500;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+    Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+  background: rgba(255, 255, 255, 0.13);
+  padding: 6px 0px;
 }
 </style>

@@ -1,7 +1,9 @@
 package com.example.vmg.controller;
 
+import com.example.vmg.model.CostInterface;
 import com.example.vmg.model.Staff;
 import com.example.vmg.model.StatisticalInterface;
+import com.example.vmg.respository.StatisticalRepository;
 import com.example.vmg.service.StaffService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -17,8 +19,16 @@ import java.util.List;
 public class StatisticalController {
     @Autowired
     private StaffService staffService;
+
+
     @GetMapping("/staffs-by-welfare/{id}")
     public ResponseEntity<List<StatisticalInterface>> getList(@PathVariable Long id){
         return new ResponseEntity<List<StatisticalInterface>>(staffService.getStaffByWelfare(id), HttpStatus.OK);
     }
+
+    @GetMapping("/costs")
+    public ResponseEntity<List<CostInterface>> getCost(){
+        return new ResponseEntity<List<CostInterface>>(staffService.getCost(), HttpStatus.OK);
+    }
+
 }

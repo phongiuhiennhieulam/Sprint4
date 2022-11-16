@@ -1,5 +1,6 @@
 package com.example.vmg.respository;
 
+import com.example.vmg.model.CostInterface;
 import com.example.vmg.model.Staff;
 import com.example.vmg.model.StaffInterface;
 import com.example.vmg.model.StatisticalInterface;
@@ -94,6 +95,12 @@ public interface StaffRepository extends JpaRepository<Staff,Long> {
             "group by s.id", nativeQuery = true)
     public List<StatisticalInterface> getStaffByWelfare(Long id);
 
-
+    @Modifying
+    @Transactional
+    @Query( value = "select d.name as name, sum(s.welfare_money) as total, count(s.id) as quantity\n" +
+            "from department d, staff s\n" +
+            "where d.id = s.id_department and s.status = 0\n" +
+            "group by s.id_department ", nativeQuery = true)
+    public List<CostInterface> getCost();
 
 }
