@@ -7,14 +7,14 @@ extend('required', {
 })
 extend('ext', {
   ...ext,
-  message: 'Mật khẩu phải chứa chữ hoa và số'
+  message: ' phải chứa chữ hoa và số'
 })
 extend('regex', {
   ...regex,
-  message: 'Mật khẩu phải chứa chữ hoa và số'
+  message: ' phải chứa chữ hoa và số'
 })
 extend('max', {
-  
+
   validate(value, args) {
     return value.toString().length <= args.length
   },

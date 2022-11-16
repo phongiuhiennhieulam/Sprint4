@@ -1,6 +1,6 @@
 <template>
     <div class="static-container">
-        <h3 class="text-center">Biểu đồ mức độ sử dụng phúc lợi</h3>
+        <h3 class="text-center fw-bold">Biểu đồ mức độ sử dụng phúc lợi</h3>
         <div class="bar">
             <Bar :chart-options="chartOptions" :chart-data="chartData" :chart-id="chartId"
                 :dataset-id-key="datasetIdKey" :css-classes="cssClasses" :styles="styles" />
@@ -59,7 +59,8 @@ export default {
                 maintainAspectRatio: false,
                 plugins: {
                     legend: {
-                        display: false
+                        display: false,
+
                     },
                 },
                 scales: {
@@ -67,13 +68,27 @@ export default {
                         title: {
                             display: true,
                             text: "Tên phúc lợi",
-                            align: 'align'
+                            align: 'align',
+                            font: {
+                                weight: 'bold',
+                                size: 20,
+                            },
+                            color: 'red',
+                            padding: 10
+
                         }
                     },
                     y: {
                         title: {
                             display: true,
                             text: "Số lượt đăng ký",
+                            font: {
+                                weight: 'bold',
+                                size: 20
+                            },
+                            color: 'red',
+                            padding: 10
+
                         }
 
                     }

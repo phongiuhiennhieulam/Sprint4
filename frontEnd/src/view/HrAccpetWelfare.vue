@@ -1,10 +1,10 @@
 <template>
-  <div class="pl-body">
-    <div class="pl-content">
-      <div class="hr-title"><strong >DANH SÁCH XÉT DUYỆT</strong></div>
-      <div class="pl-ele">
-        <div class="pl-table">
-          <div class="pl-table__content">
+  <div class="hrAc-body">
+    <div class="hrAc-content">
+      <div class="hrAc-title"><strong>DANH SÁCH XÉT DUYỆT</strong></div>
+      <div class="hrAc-ele">
+        <div class="hrAc-table">
+          <div class="hrAc-table__content">
             <form id="form" label-width="100px">
               <table>
                 <thead>
@@ -35,17 +35,17 @@
     </div>
     <!-- dialog lịch sử xet duyet -->
     <el-dialog title="Lịch xử xét duyệt" :visible.sync="isHistory" width="53%" :before-close="handleClose">
-      <span>Lịch sử xét duyệt của nhân viên {{ staff.name }}</span>
-      <div label-width="120px" class="pl-table__content">
+      <span>Lịch sử xét duyệt của nhân viên : <strong> {{ staff.name }}</strong></span>
+      <div label-width="120px" class="hrAc-table__content">
         <table>
           <thead>
             <tr>
               <th width="9%">STT</th>
               <th width="20%">Tên phúc lợi</th>
-              <th width="12%">Đơn giá</th>
-              <th width="10%">Số lượng</th>
-              <th width="12%">Tổng tiền</th>
-              <th wtdth="10%">Trạng thái</th>
+              <th width="20%">Đơn giá</th>
+              <th width="5%">Số lượng</th>
+              <th width="18%">Tổng tiền</th>
+              <th wtdth="30%">Trạng thái</th>
               <th width="13%">Hoàn tác</th>
             </tr>
           </thead>
@@ -85,7 +85,7 @@
               sử</strong></el-button>
         </div>
       </div>
-      <div label-width="120px" class="pl-table__content">
+      <div label-width="120px" class="hrAc-table__content">
         <table>
           <thead>
             <tr>
@@ -104,8 +104,11 @@
             <td>{{ item.quantity }}</td>
             <td>{{ formatCurrency(item.price * item.quantity) }} </td>
             <td>
-              <el-button @click="handleSuccess(item.id, index)" type="success" icon="el-icon-check" circle></el-button>
-              <el-button @click="handleDelete(item.id, index)" type="danger" icon="el-icon-close" circle></el-button>
+              <div class="d-flex">
+                <el-button @click="handleSuccess(item.id, index)" type="success" icon="el-icon-check" circle>
+                </el-button>
+                <el-button @click="handleDelete(item.id, index)" type="danger" icon="el-icon-close" circle></el-button>
+              </div>
             </td>
           </tr>
         </table>
@@ -141,7 +144,7 @@ export default {
   },
   methods: {
     showAddForm() {
-      
+
       this.edit = {};
       this.isShowAdd = true;
     },
@@ -153,50 +156,50 @@ export default {
           title: 'notification',
           message: 'Từ chối thành công'
         });
-        if(this.listRegister.length < 1){
+        if (this.listRegister.length < 1) {
           this.$confirm(
             "Bạn có chắc sẽ chốt danh sách này không. Continue?",
             "Warning!",
-          {
-            confirmButtonText: "OK",
-            cancelButtonText: "Cancel",
-            type: "warning",
-        }
-      ).then(() => {
-        this.loading()
-      })
-        }
-        } catch (error) {
-          this.errorMessage = error
-        }
-    },
-    handleSuccess (id,index) {
-
-        try {
-          StaffService.SuccessRegisterWelfare(id)
-          this.listRegister.splice(index,1);
-          this.$notify({  
-          title: 'Success',
-          message: 'Xét duyệt',
-          type: 'success'
-        });
-        if(this.listRegister.length < 1){
-          this.$confirm(
-            "Bạn có chắc sẽ chốt danh sách này không. Continue?",
-            "Warning!",
-          {
-            confirmButtonText: "OK",
-            cancelButtonText: "Cancel",
-            type: "warning",
-        }
+            {
+              confirmButtonText: "OK",
+              cancelButtonText: "Cancel",
+              type: "warning",
+            }
           ).then(() => {
             this.loading()
           })
         }
-        } catch (error) {
-          this.errorMessage = error
+      } catch (error) {
+        this.errorMessage = error
+      }
+    },
+    handleSuccess(id, index) {
+
+      try {
+        StaffService.SuccessRegisterWelfare(id)
+        this.listRegister.splice(index, 1);
+        this.$notify({
+          title: 'Success',
+          message: 'Xét duyệt',
+          type: 'success'
+        });
+        if (this.listRegister.length < 1) {
+          this.$confirm(
+            "Bạn có chắc sẽ chốt danh sách này không. Continue?",
+            "Warning!",
+            {
+              confirmButtonText: "OK",
+              cancelButtonText: "Cancel",
+              type: "warning",
+            }
+          ).then(() => {
+            this.loading()
+          })
         }
-        
+      } catch (error) {
+        this.errorMessage = error
+      }
+
     },
     handleReturn(id, index) {
       try {

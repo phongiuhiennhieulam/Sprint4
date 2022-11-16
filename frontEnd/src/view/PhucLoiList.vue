@@ -5,7 +5,7 @@
       <div class="plList-title"><strong>DANH SÁCH PHÚC LỢI</strong></div>
       <div class="plList-button">
         <el-button class="plList-button__detail btn btn-danger" @click="showAddForm">{{ addText }}</el-button>
-        <el-select v-model="value" placeholder="Loại phúc lợi" style="width: auto">
+        <el-select v-model="value" placeholder="Loại phúc lợi" style="width: auto;">
           <el-option label="Phúc Lợi Cá Nhân Hóa" :value="0"> </el-option>
           <el-option label="Phúc Lợi Chung" :value="1"> </el-option>
         </el-select>

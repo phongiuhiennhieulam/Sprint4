@@ -1,5 +1,5 @@
 
-<template>  
+<template>
   <div class="header">
     <div class="header-logo">
       <svg width="97" height="92" viewBox="0 0 97 92" fill="none" xmlns="http://www.w3.org/2000/svg"
@@ -42,35 +42,35 @@
             </span>
             <el-dropdown-menu slot="dropdown">
               <router-link to="/hr" style="text-decoration: none;">
-              <el-dropdown-item>
-                Quản lý nhân
+                <el-dropdown-item>
+                  Quản lý nhân
                   viên
-              </el-dropdown-item>
-            </router-link>
-            <router-link to="/phucloi" style="text-decoration: none;color:black;cursor:pointer width: 100%;">
-              <el-dropdown-item>
-              Quản lý phúc lợi
-              </el-dropdown-item>
-            </router-link>
+                </el-dropdown-item>
+              </router-link>
+              <router-link to="/phucloi" style="text-decoration: none;color:black;cursor:pointer width: 100%;">
+                <el-dropdown-item>
+                  Quản lý phúc lợi
+                </el-dropdown-item>
+              </router-link>
 
-            <router-link to="/user" style="text-decoration: none;color:black;cursor:pointer width: 100%;">
-              <el-dropdown-item>
+              <router-link to="/user" style="text-decoration: none;color:black;cursor:pointer width: 100%;">
+                <el-dropdown-item>
                   Quản lý tài khoản
-              </el-dropdown-item>
-            </router-link>
+                </el-dropdown-item>
+              </router-link>
 
-            <router-link to="/department" style="text-decoration: none;color:black;cursor:pointer width: 100%;">
-              <el-dropdown-item>
-                  Quản lý phòng ban 
-              </el-dropdown-item>
-            </router-link>
+              <router-link to="/department" style="text-decoration: none;color:black;cursor:pointer width: 100%;">
+                <el-dropdown-item>
+                  Quản lý phòng ban
+                </el-dropdown-item>
+              </router-link>
 
-            <router-link to="/statistical" style="text-decoration: none;color:black;cursor:pointer width: 100%;"> 
-            <el-dropdown-item>
-                  Thống kê 
-            </el-dropdown-item>
-          </router-link>
-          
+              <router-link to="/statistical" style="text-decoration: none;color:black;cursor:pointer width: 100%;">
+                <el-dropdown-item>
+                  Thống kê
+                </el-dropdown-item>
+              </router-link>
+
             </el-dropdown-menu>
           </el-dropdown>
         </div>
@@ -105,31 +105,25 @@
               </strong>
               <hr>
               <div class="birthday-scroll">
-                <table>
-                  <tr v-for="x in listbirthdays" :key="x.id" style="border: 1px solid; " class="itemTbale">
-                    <td class="item">
-                      <div class="d-flex">
-                        <div class="pl-2">
-                          Nhân viên: <strong> {{ x.name }}</strong>
-                          <div class=""><span class="fas fa-gift">_{{ formatDate(x.date) }}</span></div>
-                          <div class="d-flex flex-column justify-content-center">
-                            <div class="text-muted">{{ x.department.name }}</div>
-                          </div>
-                        </div>
-                      </div>
-                    </td>
-                    <td>Mã nhân viên: {{ x.code }}</td>
-                    <td>
-                      <hr>
-                    </td>
-                  </tr>
 
-                </table>
+                <div v-for="x in listbirthdays" :key="x.id" style="border: 1px solid; " class="itemTbale">
+                  <div class="item">
+                    <div class="d-flex flex-column">
+                      <div> Nhân viên: <strong> {{ x.name }}</strong></div>
+                      <div> Mã nhân viên: <strong>{{ x.code }}</strong></div>
+                      <div class=""><span class="fas fa-gift">_{{ formatDate(x.date) }}</span></div>
+                      <div class="d-flex flex-column justify-content-center">
+                        <div class="text-muted">{{ x.department.name }}</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
               </div>
             </el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
-     
+
 
         <div>
           <div v-if="staffErorr == ''">
@@ -167,7 +161,7 @@
             </el-dropdown>
           </div>
         </div>
-           <div v-if="!quanly && !user && !nhansu">
+        <div v-if="!quanly && !user && !nhansu">
           <Strong style="color: red;">
             Tài khoản của bạn đã bị khóa!
           </Strong>
@@ -370,6 +364,7 @@ export default {
   background-color: rgba(255, 0, 0, 0.1) !important;
   border-color: rgba(255, 0, 0, 0.1) !important;
 }
+
 .hr-title {
   text-align: center;
   font-size: 34px;

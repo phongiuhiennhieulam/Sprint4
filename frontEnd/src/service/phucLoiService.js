@@ -68,6 +68,9 @@ class WelfareApi {
     async changeStatusWelfare(object){
         return await axios.put('http://localhost:8083/api/status-welfare', object);
     }
+    async getStatusAcceptWelfareOfUser(id) {
+        return await axios.get('http://localhost:8083/api/get-welfare-status/'+id);
+    }
     
 
     

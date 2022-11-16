@@ -12,8 +12,10 @@
     color: #f00 !important;
 }
 
-.el-select {
-    width: 100%;
+.el-dropdown-menu__item:focus,
+.el-dropdown-menu__item:not(.is-disabled):hover {
+    background-color: #fff;
+    
 }
 
 .el-item {
@@ -48,10 +50,10 @@
 
 .pl-table__content {
     text-align: center;
-   
+
     overflow: auto;
     height: 100%;
-  
+
 }
 
 .pl-table__content table {

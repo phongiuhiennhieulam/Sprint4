@@ -68,7 +68,9 @@
               <el-button class="registerWelfare-button__detail btn btn-danger" @click="showDialogRegister()">Đăng Kí
                 Phúc Lợi
               </el-button>
-              <el-button class="registerWelfare-button__detail btn btn-danger" @click="showDialogRegister()">Trạng thái đăng kí
+              <el-button class="registerWelfare-button__detail btn btn-danger" @click="toggleRegisterStatus()">Trạng
+                thái
+                đăng kí
               </el-button>
             </template>
           </el-popover>
@@ -103,6 +105,55 @@
         </el-button>
       </span>
     </el-dialog>
+    <el-dialog :visible.sync="isShowRegisterStatus" width="900px" label-width="100px" top="5vh" left="150px"
+      title="Trạng thái các phúc lợi đăng kí" boder="">
+      <div label-width="120px" class="registerStatus-table__content">
+        <table>
+          <thead>
+            <tr>
+              <!-- <th colspan="1">STT</th> -->
+              <th>Tên phúc lợi</th>
+              <th>Đơn giá</th>
+              <th>Số lượng</th>
+              <th>Thành tiền</th>
+              <th>Trạng Thái</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- <tr>
+              <td style="font-weight: bold">I</td>
+              <td colspan="3" style="font-weight: bold; text-align: center;">Phúc Lợi Chung</td>
+              <td><strong>2</strong></td>
+            </tr> -->
+            <!-- <tr>
+              <td style="font-weight: bold">1.</td>
+              <td>test</td>
+              <td>1212</td>
+              <td>1</td>
+              <td>
+                12
+              </td>
+            </tr> -->
+            <!-- <tr>
+             <td style="font-weight: bold">I</td> 
+               <td></td>
+              <td colspan="3" style="font-weight: bold;  text-align: center;">Phúc Lợi Cá Nhân Hóa</td>
+              <td><strong>2</strong></td> -->
+            <!-- </tr> --> 
+            <tr v-for="item in statusRegister" :key="item.id">
+              <!-- <td style="font-weight: bold">1.</td> -->
+              <td>{{item.name}}</td>
+              <td>{{item.price}}</td>
+              <td>{{item.quantity}}</td>
+              <td>
+                {{formatCurrency(item.price * item.quantity)}}
+              </td>
+              <td>{{item.status}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </el-dialog>
   </div>
 </template>
   
@@ -126,7 +177,9 @@ export default {
       nameStaff: "",
       listOnlyOne: [],
       newVal: '',
-      oldVal: ''
+      oldVal: '',
+      isShowRegisterStatus: false,
+      statusRegister:[]
     };
   },
   computed: {
@@ -144,20 +197,25 @@ export default {
   },
 
   methods: {
+    toggleRegisterStatus() {
+      this.isShowRegisterStatus = !this.isShowRegisterStatus;
+    },
     handleChange(newVal, oldVal) {
       this.newVal = newVal
       this.oldVal = oldVal
     },
     handleBlur(itemId) {
       const self = this;
-      if (this.newVal === undefined) {
-        self.listQuantity[itemId] = this.oldVal;
+      if (self.newVal === undefined || self.total - self.totalMoney < 0) {
+        self.listQuantity[itemId] = self.oldVal;
         self.$forceUpdate();
       }
     },
     preventAdd(item) {
       if (this.total - this.totalMoney < 0) {
         return this.listQuantity[item.id] - 1;
+      } else {
+        return this.listQuantity[item.id] + 1;
       }
     },
     showDialogRegister() {
@@ -276,6 +334,9 @@ export default {
         this.listOnlyOne = x.data;
         console.log(this.listOnlyOne);
       });
+      welfareApi.getStatusAcceptWelfareOfUser(this.userId).then((x) => {
+        this.statusRegister = x.data;
+      });
     });
     welfareApi.getTotalMoney(this.userName).then((x) => {
       this.total = x.data;
@@ -294,5 +355,49 @@ export default {
   
 <style scoped>
 @import "@/assets/css/welfare/register.css";
+
+.registerStatus-table__content table {
+  width: 100%;
+  border-collapse: collapse;
+  max-height: 600px;
+}
+
+.registerStatus-table__content table tr {
+  background: rgba(217, 217, 217, 0.13);
+}
+
+.registerStatus-table__content table tr th {
+  border-right: 1px solid #c7c7c7;
+  padding: 14px;
+}
+
+.registerStatus-table__content table tr td {
+  padding: 20px;
+  line-height: 30px;
+  height: 30px;
+}
+
+.registerStatus-table__content table thead tr {
+  background-color: #d9d9d9;
+  position: sticky;
+  top: 0;
+}
+
+.registerStatus-table__content table thead th {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.registerStatus-table__content table tr td {
+  border-right: 1px solid #c7c7c7;
+}
+
+.registerStatus-table__content table tbody tr {
+  border-bottom: 1px solid #c7c7c7;
+}
+
+.registerStatus-table__content table tbody tr:hover {
+  background-color: pink;
+}
 </style>
   
