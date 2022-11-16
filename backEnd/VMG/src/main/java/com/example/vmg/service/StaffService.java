@@ -1,8 +1,6 @@
 package com.example.vmg.service;
 
-import com.example.vmg.model.Staff;
-import com.example.vmg.model.StaffInterface;
-import com.example.vmg.model.Welfare;
+import com.example.vmg.model.*;
 import com.example.vmg.respository.StaffRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -36,12 +34,19 @@ public class StaffService {
         Pageable pageable = PageRequest.of(pageNumber, maxNumber);
         return staffRepository.getPage(pageable);
     }
+    public List<StatisticalInterface> getStaffByWelfare(Long id){
+        return staffRepository.getStaffByWelfare(id);
+    }
+
     public Staff getById(Long id){
         return staffRepository.findById(id).get();
     }
 
     public List<String> getEmailByUpdate(Long id){
         return staffRepository.getEmailByUpdate(id);
+    }
+    public List<CostInterface> getCost(){
+        return staffRepository.getCost();
     }
 
     public List<String> getCodeByUpdate(Long id){

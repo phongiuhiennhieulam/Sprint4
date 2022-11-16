@@ -20,7 +20,7 @@
                 <th>Tên phúc lợi</th>
                 <th>Mô tả</th>
                 <th>Thành Tiền(VNĐ)</th>
-                <th>Trạng thái</th>
+                <!-- <th>Trạng thái</th> -->
                 <th>Thao tác</th>
               </tr>
             </thead>
@@ -32,30 +32,35 @@
                 <td style="text-align: right">
                   {{ formatCurrency(item.price) }}
                 </td>
-                <td>
+                <!-- <td>
                   <span v-if="item.status == 1">
                     <el-button type="danger">Vô hiệu lực</el-button>
                   </span>
                   <span v-if="item.status == 0">
                     <el-button type="success">Có hiệu lực</el-button>
                   </span>
-                </td>
+                </td> -->
                 <td>
-                  <span class="icon-edit" @click="showEditForm(item)">
-                    <i class="fa fa-edit"></i> </span>&nbsp;
-                  <span v-if="item.status == 1">
-                    <el-popover placement="right" width="160" trigger="hover" content="Mở khóa phúc lợi">
-                      <el-button @click="statusWelfare(item.id, 0)" type="success" icon="el-icon-unlock"
-                        slot="reference" style="padding:3px 3px 3px 3px"></el-button>
-                    </el-popover>
-
-                  </span>
-                  <span v-if="item.status == 0">
+                  <el-popover placement="left" width="160" trigger="hover" content="Sửa phúc lợi">
+                    <el-button @click="showEditForm(item)"  icon="fa fa-edit" slot="reference"
+                      style="padding:3px 3px 3px 3px; margin-right: 3px;"></el-button>
+                  </el-popover>
+                  <el-popover placement="right" width="160" trigger="hover" content="Xóa phúc lợi">
+                    <el-button @click="confirmDeleteDialog(item.id)" type="danger" icon="fa fa-trash" slot="reference"
+                      style="padding:3px 3px 3px 3px"></el-button>
+                  </el-popover>
+                  <!-- <span v-if="item.status == 0">
                     <el-popover placement="right" width="160" trigger="hover" content="Khóa phúc lợi">
                       <el-button @click="statusWelfare(item.id, 1)" type="danger" icon="el-icon-lock" slot="reference"
                         style="padding:3px 3px 3px 3px"></el-button>
                     </el-popover>
-                  </span>
+                  </span> -->
+                  <!-- <span v-if="item.status == 1">
+                    <el-popover placement="right" width="160" trigger="hover" content="Mở khóa phúc lợi">
+                      <el-button @click="statusWelfare(item.id, 0)" type="success" icon="el-icon-unlock"
+                        slot="reference" style="padding:3px 3px 3px 3px"></el-button>
+                    </el-popover>
+                  </span> -->
                 </td>
               </tr>
             </tbody>
@@ -337,6 +342,10 @@ export default {
         this.isShowAdd = true;
       }, 100);
     },
+    confirmDeleteDialog(itemId) {
+      this.centerDialogVisible = true;
+      this.idDelete = itemId;
+    },
     showDeleteDialog(item) {
       if (this.value === 0) {
         welfareApi.deleteWelfare(item).then((res) => {
@@ -349,11 +358,6 @@ export default {
               message: "Xóa phúc lợi thành công",
               type: "success",
             });
-            const myTimeout = setTimeout(myGreeting, 100);
-
-            function myGreeting() {
-              window.location.reload();
-            }
           }
         });
       } else {

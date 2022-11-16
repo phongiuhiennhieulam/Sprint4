@@ -148,7 +148,8 @@
               <td>
                 {{formatCurrency(item.price * item.quantity)}}
               </td>
-              <td>{{item.status}}</td>
+              <td v-if="item.status == 2">Chờ duyệt</td>
+              <td v-if="item.status == 1">Hủy bỏ</td>
             </tr>
           </tbody>
         </table>
@@ -381,6 +382,7 @@ export default {
   background-color: #d9d9d9;
   position: sticky;
   top: 0;
+  z-index: 10;
 }
 
 .registerStatus-table__content table thead th {

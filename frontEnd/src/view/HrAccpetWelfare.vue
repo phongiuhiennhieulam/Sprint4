@@ -1,10 +1,10 @@
 <template>
-  <div class="hrAc-body">
-    <div class="hrAc-content">
-      <div class="hrAc-title"><strong>DANH SÁCH XÉT DUYỆT</strong></div>
-      <div class="hrAc-ele">
-        <div class="hrAc-table">
-          <div class="hrAc-table__content">
+  <div class="pl-body">
+    <div class="pl-content">
+      <div class="hr-title"><strong>DANH SÁCH XÉT DUYỆT</strong></div>
+      <div class="pl-ele">
+        <div class="pl-table">
+          <div class="pl-table__content">
             <form id="form" label-width="100px">
               <table>
                 <thead>
@@ -17,7 +17,7 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr v-for="(item, index) in list" :key="index">
+                  <tr v-for="(item, index) in list" :key="item.id">
                     <td width="9%">{{ index + 1 }}</td>
                     <td style="text-align: left;">{{ item.name }}</td>
                     <td style="text-align: left;">{{ item.code }}</td>
@@ -34,22 +34,23 @@
       </div>
     </div>
     <!-- dialog lịch sử xet duyet -->
-    <el-dialog title="Lịch xử xét duyệt" :visible.sync="isHistory" width="53%" :before-close="handleClose">
-      <span>Lịch sử xét duyệt của nhân viên : <strong> {{ staff.name }}</strong></span>
-      <div label-width="120px" class="hrAc-table__content">
+    <el-dialog title="temp" :visible.sync="isHistory" width="53%" :before-close="handleClose">
+      <span slot="title" class="title-dialog"><strong>Lịch xử xét duyệt</strong> </span>
+      <span>Lịch sử xét duyệt của nhân viên: <strong>{{staff.name}}</strong></span>
+      <div label-width="120px" class="hrAccW-table__content">
         <table>
           <thead>
             <tr>
               <th width="9%">STT</th>
               <th width="20%">Tên phúc lợi</th>
-              <th width="20%">Đơn giá</th>
-              <th width="5%">Số lượng</th>
-              <th width="18%">Tổng tiền</th>
-              <th wtdth="30%">Trạng thái</th>
+              <th width="12%">Đơn giá</th>
+              <th width="10%">Số lượng</th>
+              <th width="12%">Tổng tiền</th>
+              <th wtdth="10%">Trạng thái</th>
               <th width="13%">Hoàn tác</th>
             </tr>
           </thead>
-          <tr v-for="(item, index) in listHistory" :key="index">
+          <tr v-for="(item, index) in listHistory" :key="item.name">
             <td>{{ index + 1 }}</td>
             <td style="text-align: left;">{{ item.name }}</td>
             <td style="text-align: right;">{{ formatCurrency(item.price) }} </td>
@@ -72,8 +73,9 @@
       </div>
     </el-dialog>
     <!-- dialog xet duyet -->
-    <el-dialog :visible.sync="isWelfare" width="1000px" label-width="100px" top="5vh" left="150px"
-      title="Danh sách phúc lợi đăng ký" boder="">
+    <el-dialog :visible.sync="isWelfare" width="1000px" label-width="100px" top="5vh" left="150px" title="temp"
+      boder="">
+      <span slot="title" class="title-dialog"><strong>Danh sách phúc lợi đăng ký</strong> </span>
       <div class="row">
         <div class="col-6">
           <strong>
@@ -85,7 +87,7 @@
               sử</strong></el-button>
         </div>
       </div>
-      <div label-width="120px" class="hrAc-table__content">
+      <div label-width="120px" class="hrAccW-table__content">
         <table>
           <thead>
             <tr>
@@ -97,7 +99,7 @@
               <th width="15%">Thao tác</th>
             </tr>
           </thead>
-          <tr v-for="(item, index) in listRegister" :key="index">
+          <tr v-for="(item, index) in listRegister" :key="item.id">
             <td>{{ index + 1 }}</td>
             <td style="text-align: left;">{{ item.name }}</td>
             <td style="text-align: right;">{{ formatCurrency(item.price) }} </td>
@@ -205,7 +207,7 @@ export default {
       try {
         StaffService.ReturnRegisterWelfare(id)
         this.listHistory.splice(index, 1);
-        this.loading()
+        // this.loading()
         this.$notify({
           title: 'Success',
           message: 'Hoàn tác thành công',
@@ -283,7 +285,52 @@ export default {
 
 };
 </script>
-
 <style scoped>
 @import "@/assets/css/hr/accept.css";
+.hrAccW-table__content table {
+  width: 100%;
+  border-collapse: collapse;
+  max-height: 600px;
+}
+
+.hrAccW-table__content table tr {
+  background: rgba(217, 217, 217, 0.13);
+}
+
+.hrAccW-table__content table tr th {
+  border-right: 1px solid #c7c7c7;
+  padding: 14px;
+  white-space: nowrap;
+}
+
+.hrAccW-table__content table tr td {
+  padding: 20px;
+  line-height: 30px;
+  height: 30px;
+  white-space: nowrap;
+}
+
+.hrAccW-table__content table thead tr {
+  background-color: #d9d9d9;
+  position: sticky;
+  top: 0;
+}
+
+.hrAccW-table__content table thead th {
+  font-size: 14px;
+  font-weight: 600;
+  
+}
+
+.hrAccW-table__content table tr td {
+  border-right: 1px solid #c7c7c7;
+}
+
+.hrAccW-table__content table tbody tr {
+  border-bottom: 1px solid #c7c7c7;
+}
+
+.hrAccW-table__content table tbody tr:hover {
+  background-color: pink;
+}
 </style>

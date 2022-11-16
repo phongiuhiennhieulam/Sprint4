@@ -12,6 +12,8 @@
 import { Bar } from 'vue-chartjs/legacy'
 import { Chart as ChartJS, Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale } from 'chart.js'
 ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale)
+// ChartJS.defaults.font.family = 'Times New Roman'
+ChartJS.defaults.font.size = 10
 import axios from 'axios'
 export default {
     components: { Bar },
@@ -62,6 +64,7 @@ export default {
                         display: false,
 
                     },
+
                 },
                 scales: {
                     x: {
@@ -126,5 +129,6 @@ export default {
 .bar {
     width: 100%;
     height: 100%;
+
 }
 </style>

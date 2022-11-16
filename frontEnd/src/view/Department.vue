@@ -6,6 +6,51 @@
 
       <div class="de-info">
         <div class="de-table">
+          <table>
+                <tr width="90%">
+                  <th>
+                    <div>
+                      <el-form :inline="true" class="input-find">
+                        <el-form-item>
+                          <el-input
+                            v-model="keyWord"
+                            placeholder="Nhập tên phòng ban"
+                            style="width: 400px"
+                          >
+                            <i
+                              slot="prefix"
+                              class="el-input__icon el-icon-search"
+                            ></i>
+                          </el-input>
+                        </el-form-item>
+                        <el-form-item>
+                          <el-button type="warning" @click="onFind()"
+                            >Tìm kiếm</el-button
+                          >
+                        </el-form-item>
+                      </el-form>
+                    </div>
+                  </th>
+
+                  <th width="10%">
+                    <div>
+                      <el-form :inline="true" class="demo-form-inline">
+                        <el-form-item>
+                          <el-button
+                            type="erorr"
+                            class="btn btn-danger"
+                            @click="showAddForm"
+                          >
+                            <i class="el-icon-plus"></i> Thêm mới
+                          </el-button>
+                        </el-form-item>
+                      </el-form>
+                    </div>
+                  </th>
+                </tr>
+            </table>
+
+            
 
           <div class="de-table__content">
             <table>

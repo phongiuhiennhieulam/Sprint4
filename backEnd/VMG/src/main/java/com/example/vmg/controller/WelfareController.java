@@ -167,4 +167,8 @@ public class WelfareController {
         }
         return new ResponseEntity<Void>(HttpStatus.OK);
     }
+    @GetMapping("/get-welfare-status/{id}")
+    public List<WelfareStaffInterface> getStatusWelfareOfUser(@PathVariable Long id){
+        return welfareStaffEntityService.getStatusWelfareOfUser(id);
+    }
 }

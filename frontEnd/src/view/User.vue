@@ -346,6 +346,7 @@ export default {
       this.editRole.editRoleAdmin = false;
       this.editRole.editRoleModer = false;
       this.editRole.editRolePersonnel = false;
+      this.editRole.editRoleUser = false;
       // console.log(item)
       for (let i = 0; i < item.roles.length; i++) {
         if (item.roles[i].id == 4) {
@@ -354,6 +355,8 @@ export default {
           this.editRole.editRoleModer = true;
         } else if (item.roles[i].id == 3) {
           this.editRole.editRoleAdmin = true;
+        }else if(item.roles[i].id == 1){
+          this.editIdRoleUser = true
         }
       }
       this.edit = item;
@@ -480,6 +483,11 @@ export default {
         };
         list.push(object2);
       }
+      let object5 = {
+          id: 1,
+          name: "ROLE_USER",
+    };
+    list.push(object5);
 
       this.$confirm(
         "Bạn chắc chắn chắn muốn phân quyền cho tài khoản này?",

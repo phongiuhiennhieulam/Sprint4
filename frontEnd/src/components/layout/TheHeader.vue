@@ -65,7 +65,7 @@
                 </el-dropdown-item>
               </router-link>
 
-              <router-link to="/statistical" style="text-decoration: none;color:black;cursor:pointer width: 100%;">
+              <router-link to="/thongke" style="text-decoration: none;color:black;cursor:pointer width: 100%;">
                 <el-dropdown-item>
                   Thống kê
                 </el-dropdown-item>
@@ -134,11 +134,11 @@
                 style="margin-right: 10px; margin-left: 5px ;">
                 <span class="el-dropdown-link" style="cursor: pointer; font-size: 19px; color: black;">
                   <div>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                      class="bi bi-bell-fill" viewBox="0 0 16 16">
-                      <path style="color: crimson;"
-                        d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2zm.995-14.901a1 1 0 1 0-1.99 0A5.002 5.002 0 0 0 3 6c0 1.098-.5 6-2 7h14c-1.5-1-2-5.902-2-7 0-2.42-1.72-4.44-4.005-4.901z" />
-                    </svg> <span style="color: red;">Erorr!</span>
+
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bell-fill" viewBox="0 0 16 16">
+                      <path style="color: crimson;" d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2zm.995-14.901a1 1 0 1 0-1.99 0A5.002 5.002 0 0 0 3 6c0 1.098-.5 6-2 7h14c-1.5-1-2-5.902-2-7 0-2.42-1.72-4.44-4.005-4.901z"/>
+                    </svg>  <span style="color: red;">Thông báo lỗi!</span>                  
+
                   </div>
                 </span>
               </el-badge>
@@ -167,11 +167,15 @@
           </Strong>
         </div>
 
+
         <div class="header-right__item">
           <i class="el-icon-s-custom"></i>
           <el-dropdown>
             <span class="el-dropdown-link" style="cursor: pointer; font-size: 19px">
-              <span>Hello: <Strong>{{ user.userName }}</Strong><span v-if="quanly">(quản lý)</span></span>
+              <span>Hello: <Strong>{{ user.userName }}</Strong><span v-if="quanly">(quản lý)</span>
+              <Strong v-if="(!nhanvien && !quanly && !nhansu)" style="color: red;">
+            Tài khoản của bạn đã bị khóa!
+          </Strong></span>
             </span>
             <el-dropdown-menu slot="dropdown">
               <el-dropdown-item style="text-decoration: none;color:black;cursor:pointer width: 100%; font-size: 19px">
@@ -282,14 +286,13 @@ export default {
     }
   },
   created() {
-
     this.getDataHeader();
   },
 
 };
 </script>
   
-<style scoped>
+<style>
 .birthday-scroll {
   max-height: 348px;
   overflow: auto;
@@ -374,7 +377,12 @@ export default {
   background: rgba(255, 255, 255, 0.13);
   padding: 6px 0px;
 }
-
+.title-dialog{
+  color: red;
+  font-size: 30px;
+  display: block;
+  text-align: center;
+}
 
 router-link {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,

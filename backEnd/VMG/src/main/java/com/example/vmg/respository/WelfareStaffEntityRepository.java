@@ -34,4 +34,6 @@ public interface WelfareStaffEntityRepository extends JpaRepository<WelfareStaff
     List<StaffInterface> getStaffRegister();
     @Query(value = "select ws.id,ws.id_welfare as idWelfare,ws.id_staff as idUser,ws.status,w.price,w.name,w.text,ws.quantity as quantity from welfare_staff ws,welfare w where w.id = ws.id_welfare and (ws.status = 0 or ws.status = 1 ) and ws.id_staff = ?",nativeQuery = true)
     List<WelfareStaffInterface> getHistoryAcceptWelfareOfUser(@Param("id") Long id);
+ @Query(value = "select ws.id,ws.id_welfare as idWelfare,ws.id_staff as idUser,ws.status,w.price,w.name,w.text,ws.quantity as quantity from welfare_staff ws,welfare w where w.id = ws.id_welfare and (ws.status = 2 or ws.status = 1 ) and ws.id_staff = ?",nativeQuery = true)
+ List<WelfareStaffInterface> getStatusWelfareOfUser(@Param("id") Long id);
 }
