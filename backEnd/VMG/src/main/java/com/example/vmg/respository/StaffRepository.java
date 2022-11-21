@@ -50,7 +50,8 @@ public interface StaffRepository extends JpaRepository<Staff,Long> {
 
     @Modifying
     @Transactional
-    @Query("select sum(w.price) from WelfareStaff ws join Welfare w on ws.welfare.id = w.id and w.status = 0 where ws.welfare.id = :id GROUP BY ws.staff.id")
+    @Query("select sum(w.price) from WelfareStaff ws join Welfare w on ws.welfare.id = w.id and w.status = 0 " +
+            "where ws.welfare.id = :id GROUP BY ws.staff.id")
     Long getMoney(@Param("id") Long id);
 
     @Query("select s from Staff s order by s.id desc")

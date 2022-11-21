@@ -151,6 +151,23 @@ public class StaffController {
                 .map(value ->  Long.toString(value)).collect(Collectors.toList()));
         return ResponseEntity.ok(new MessageResponse("delete staff successfully!"));
     }
+    @PutMapping("/update-money2")
+    public ResponseEntity<?> updatemoney(@RequestParam("ids") List<String> ids,
+                                         @RequestParam("money") BigDecimal money){
+
+        List<MoneyUpdate> moneyUpdates = new ArrayList<>();
+        int index = 0;
+        MoneyUpdate moneyUpdate = new MoneyUpdate();
+        while (index<ids.size()){
+            moneyUpdate.setMaNV(ids.get(index));
+            moneyUpdate.setMoneyUpdate(money);
+            moneyUpdates.add(moneyUpdate);
+            index++;
+        }
+        System.out.println(moneyUpdates);
+
+        return ResponseEntity.ok(new MessageResponse("update money staff successfully!"));
+    }
 
     @GetMapping("/getcode")
     public List<String> getCode(){

@@ -58,13 +58,23 @@
                     Không có nhân viên nào đăng ký phúc lợi này!
                   </h5>
                 </form>
+                <el-pagination
+                  background
+                  layout="prev, pager, next"
+                  :page-count="count"
+                  :total="this.array.length"
+                  :total-index="pageIndex"
+                  :page-size="pageSize"
+                  :page-sizes="pageSizes"
+                  @current-change="getPage(pageIndex)"
+                  hide-on-single-page >
+                </el-pagination>
               </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-
   </div>
 </template>
 
@@ -77,10 +87,41 @@ export default {
     return {
       welfares: [],
       staffs: [],
-      welfare: {}
+      welfare: {},
+      array: [
+                {id: "1"}, {id: "2"}, {id: "3"}, {id: "4"}, {id: "5"}, {id: "6"}, {id: "7"}, {id: "8"}, {id: "9"}, {id: "10"},{id: "11"},
+                {id: "11"}, {id: "21"}, {id: "31"}, {id: "41"}, {id: "51"}, {id: "16"}, {id: "17"}, {id: "18"}, {id: "19"}, {id: "110"},{id: "111"}
+              ],
+      page: [],
+      count: 1,
+      pageSize: 10,
+      pageSizes: [2, 4, 6],     
+      pageIndex: ''   
+      
     }
   },
+
   methods: {
+
+
+   paginate(array, index, size) {
+        // transform values
+        index = Math.abs(parseInt(index));
+        index = index > 0 ? index - 1 : index;
+        size = parseInt(size);
+        size = size < 1 ? 1 : size;
+        // filter
+        return [...(array.filter((value, n) => {
+            return (n >= (index * size)) && (n < ((index+1) * size))
+        }))]
+    },
+    getPage(page){
+      // number = this.pageIndex
+      // number = this.count;
+      // this.page =  this.paginate(this.array, number, 3)
+      console.log(page)
+
+    },
     handleOpen(key, keyPath) {
       console.log(key, keyPath);
     },
@@ -112,6 +153,8 @@ export default {
   },
   mounted() {
     this.getAll();
+    this.getPage();
+    
   }
 }
 </script>

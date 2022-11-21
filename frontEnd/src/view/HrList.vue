@@ -69,7 +69,7 @@
                   </th>
                 </tr>
               </thead>
-            </table>
+          </table>
           <div class="hr-table__content">
             <table>
               <thead>
@@ -323,7 +323,7 @@
             <div class="col-6">
               <div>
                 <div class="mb-3">
-                  <label class="form-label"><Strong>Ngày sinh(năm / tháng / ngày):</Strong></label>
+                  <label class="form-label"><Strong>Ngày sinh:</Strong></label>
                   <input
                     v-model="staffUpdate.date"
                     id="date"
@@ -402,7 +402,8 @@
                 <label class="form-label">
                   <strong>Mã nhân viên <span style="color: red;">(*)</span>:</strong>
                 </label>
-                <input
+                <input 
+                  :style=" !ischeckcode ? 'border-color: red' : ''"
                   v-model="staff.code"
                   type="text"
                   id="code"
@@ -420,6 +421,7 @@
                   ><Strong>Họ tên nhân viên <span style="color: red;">(*)</span>:</Strong></label
                 >
                 <input
+                :style=" !ischeckName ? 'border-color: red' : ''"
                   v-model="staff.name"
                   type="text"
                   id="name"
@@ -437,6 +439,7 @@
                   <Strong>Email <span style="color: red;">(*)</span>: </Strong>
                 </label>
                 <input
+                :style=" !ischeckEmail ? 'border-color: red' : ''"
                   id="email"
                   name="email"
                   v-model="staff.email"
@@ -454,6 +457,7 @@
                 <div class="mb-3">
                   <label class="form-label"><Strong>Ngày sinh <span style="color: red;">(*)</span>:</Strong></label>
                   <input
+                    :style=" !ischeckDate ? 'border-color: red' : ''"
                     v-model="staff.date"
                     id="date"
                     name="date"
@@ -472,6 +476,7 @@
                     ><Strong>Số tiền hỗ trợ phúc lợi <span style="color: red;">(*)</span>:</Strong></label
                   >
                   <input
+                    :style=" !ischeckMoney ? 'border-color: red' : ''"
                     v-model="staff.welfareMoney"
                     required
                     v-on:blur="keyupStaff"
@@ -489,6 +494,7 @@
                   <div class="mb-3">
                   <label class="form-label"><Strong>Chọn phòng ban <span style="color: red;">(*)</span>:</Strong> </label>
                   <select style="height: 55px;"
+                  :style=" !ischeckDepartment ? 'border-color: red' : ''"
                     v-model="staff.department"
                     placeholder="Chọn phòng ban"
                     class="form-control"
@@ -643,17 +649,22 @@ export default {
       isShowUpdate: false,
       isWelfare: false,
       isUpdateMoney: false,
-      code: [],
-      email: [],
-      code2: [],
-      email2: [],
+      codeCheck: [],
+      emailCheck: [],
+      code2Check: [],
+      email2Check: [],
       price: [],
       value: "",
       isShow: false,
       showDialogAdd: true,
       status: true,
-      moneyUpdate: ''
-     
+      moneyUpdate: '',
+      ischeckcode: true,
+      ischeckName: true,
+      ischeckEmail: true,
+      ischeckDate: true,
+      ischeckMoney: true,
+      ischeckDepartment: true,
     };
   },
   // created(){
@@ -715,6 +726,7 @@ export default {
     handlePageChange(value) {
       this.page = value;
       this.retrieveStaff();
+      console.log(this.page)
     },
     handleSelectionChange(val) {
       let ids = [];
@@ -722,7 +734,6 @@ export default {
         ids.push(v.id);
       });
       this.multipleSelection = [...ids];
-  
     },
     showDialog() {
       this.showDialogAdd = true;
@@ -815,7 +826,6 @@ export default {
         for(let item of this.welfares){
           this.Money2 += item.price * item.quantity
         }
-
       });
       StaffService.getGeneralWelfare().then((response) => {
         this.gerenalWelfares = response.data;
@@ -833,11 +843,11 @@ export default {
       this.showupdateForm()
       StaffService.getEmail2(id)
         .then( response =>{
-          this.email2= response.data
+          this.email2Check= response.data
         })
         StaffService.getCode2(id)
         .then( response =>{
-          this.code2= response.data
+          this.code2Check= response.data
         })
       StaffService.getStaff(id).then((response) => {
         this.staffUpdate = response.data;
@@ -984,60 +994,10 @@ export default {
       });
     },
 
-    checkCode() {
-      console.log(this.staff.code);
-      if (this.code.includes(this.staff.code)) {
-        this.showValidateCode = true;
-      } else {
-        this.showValidateCode = false;
-      }
-      if (this.email.includes(this.staff.email)) {
-        this.showValidateEmail = true;
-      } else {
-        this.showValidateEmail = false;
-      }
-      if (this.staff.code === "") {
-        this.showValidateNullCode = true;
-      } else {
-        this.showValidateNullCode = false;
-      }
-      if (this.staff.name === "") {
-        this.showValidateNullName = true;
-      } else {
-        this.showValidateNullName = false;
-      }
-      if (this.staff.email === "") {
-        this.showValidateNullEmail = true;
-      } else {
-        this.showValidateNullEmail = false;
-      }
-      if (this.staff.date === "") {
-        this.showValidateNullDate = true;
-      } else {
-        this.showValidateNullDate = false;
-      }
-      if (!this.staff.date.match(/^\d{4}\/\d{2}\/\d{2}$/)) {
-        this.showValidateNullDate2 = true;
-      } else {
-        this.showValidateNullDate2 = false;
-      }
-      if (this.staff.department === "") {
-        this.showValidateNullDepartment = true;
-      } else {
-        this.showValidateNullDepartment = false;
-      }
-      if (this.staff.welfareMoney === "") {
-        this.showValidateNullMoney = true;
-      } else {
-        this.showValidateNullMoney = false;
-      }
-      
-    },
-
     listCode() {
       StaffService.getCode()
         .then((response) => {
-          this.code = response.data;
+          this.codeCheck = response.data;
         })
         .catch((e) => {
           console.log(e);
@@ -1046,7 +1006,7 @@ export default {
     listEmail() {
       StaffService.getEmail()
         .then((response) => {
-          this.email = response.data;
+          this.emailCheck = response.data;
         })
         .catch((e) => {
           console.log(e);
@@ -1069,17 +1029,29 @@ export default {
                     message: "Mã nhân viên không được để trống!",
                     type: "warning",
                   });
-        document.getElementById("code").focus();          
+        document.getElementById("code").focus();  
+        this.ischeckName = true
+        this.ischeckEmail = true
+        this.ischeckDate = true
+        this.ischeckDepartment = true
+        this.ischeckMoney = true
+        this.ischeckcode = false;        
         return false;
       }
       let code2 = document.forms["myForm"]["code"].value;
-      if (this.code.includes(code2)) {
+      if (this.codeCheck.includes(code2)) {
         this.$notify({
                     title: "Warning",
                     message: "Mã nhân viên đã tồn tại!",
                     type: "warning",
                   });
-        document.getElementById("code").focus();          
+        document.getElementById("code").focus();  
+        this.ischeckName = true
+        this.ischeckEmail = true
+        this.ischeckDate = true
+        this.ischeckDepartment = true
+        this.ischeckMoney = true  
+        this.ischeckcode = false;     
         return false;
       }
       let name = document.forms["myForm"]["name"].value;
@@ -1089,7 +1061,13 @@ export default {
                     message: "Họ tên nhân viên không được để trống!",
                     type: "warning",
                   });
-        document.getElementById("name").focus();       
+        document.getElementById("name").focus();    
+        this.ischeckcode = true
+        this.ischeckEmail = true
+        this.ischeckDate = true
+        this.ischeckDepartment = true
+        this.ischeckMoney = true
+        this.ischeckName = false;        
         return false;
       }
       if (!isNaN(name)) {
@@ -1098,7 +1076,12 @@ export default {
                     message: "Họ tên nhân viên không được để số!",
                     type: "warning",
                   });
-        document.getElementById("name").focus();       
+        document.getElementById("name").focus();   
+        this.ischeckEmail = true
+        this.ischeckDate = true
+        this.ischeckDepartment = true
+        this.ischeckMoney = true
+        this.ischeckName = false;         
         return false;
       }
       var re = /^[\sa-zA-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂẾưăạảấầẩẫậắằẳẵặẹẻẽềềểếỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ\\s\\W|_]+$/;
@@ -1109,7 +1092,13 @@ export default {
                     message: "Tên không được có số và ký tự đặc biệt!",
                     type: "warning",
                   });
-        document.getElementById("email").focus();           
+        document.getElementById("name").focus();
+        this.ischeckcode = true
+        this.ischeckEmail = true
+        this.ischeckDate = true
+        this.ischeckDepartment = true
+        this.ischeckMoney = true
+        this.ischeckName = false;                   
         return false;
        }
       let email = document.forms["myForm"]["email"].value;
@@ -1119,17 +1108,28 @@ export default {
                     message: "Email không được để trống!",
                     type: "warning",
                   });
-        document.getElementById("email").focus();           
+        document.getElementById("email").focus();  
+        this.ischeckcode = true
+        this.ischeckName = true
+        this.ischeckDate = true
+        this.ischeckDepartment = true
+        this.ischeckMoney = true
+        this.ischeckEmail = false;                 
         return false;
       }
-      let email2 = document.forms["myForm"]["code"].value;
-      if (this.email2.includes(email2)) {
+      if (this.emailCheck.includes(email)) {
         this.$notify({
                     title: "Warning",
                     message: "Email này đã tồn tại!",
                     type: "warning",
                   });
-        document.getElementById("email").focus();          
+        document.getElementById("email").focus();  
+        this.ischeckcode = true
+        this.ischeckName = true
+        this.ischeckDate = true
+        this.ischeckDepartment = true
+        this.ischeckMoney = true
+        this.ischeckEmail = false;                 
         return false;
       }
       let date = document.forms["myForm"]["date"].value;
@@ -1139,7 +1139,13 @@ export default {
                     message: "Ngày sinh không được để trống!",
                     type: "warning",
                   });
-        document.getElementById("date").focus();           
+        document.getElementById("date").focus();  
+        this.ischeckcode = true
+        this.ischeckName = true
+        this.ischeckDepartment = true
+        this.ischeckMoney = true
+        this.ischeckEmail = true; 
+        this.ischeckDate = false;                          
         return false;
       }     
       let welfareMoney = document.forms["myForm"]["welfareMoney"].value;
@@ -1151,7 +1157,13 @@ export default {
                     size: 100,
                   });
           document.getElementById("welfareMoney").focus(); 
-        return false;
+          this.ischeckcode = true
+          this.ischeckName = true
+          this.ischeckDepartment = true
+          this.ischeckMoney = true
+          this.ischeckEmail = true; 
+          this.ischeckDate = false;  
+          return false;
       }
       if ( isNaN(moneyStaff)) {
         this.$notify({
@@ -1161,7 +1173,13 @@ export default {
                     size: 100,
                   });
           document.getElementById("welfareMoney").focus(); 
-        return false;
+          this.ischeckcode = true
+          this.ischeckName = true
+          this.ischeckDepartment = true
+          this.ischeckEmail = true; 
+          this.ischeckDate = true;  
+          this.ischeckMoney = false;                 
+          return false;
       }
       if ( moneyStaff < 0) {
         this.$notify({
@@ -1171,6 +1189,12 @@ export default {
                     size: 100,
                   });
           document.getElementById("welfareMoney").focus(); 
+          this.ischeckcode = true
+          this.ischeckName = true
+          this.ischeckDepartment = true
+          this.ischeckEmail = true; 
+          this.ischeckDate = true;  
+          this.ischeckMoney = false;                
         return false;
       }
       let department = document.forms["myForm"]["department"].value;
@@ -1181,10 +1205,17 @@ export default {
                     type: "warning",
                     size: 100,
                   });
-        document.getElementById("department").focus();           
-        return false;
+        document.getElementById("department").focus();
+          this.ischeckcode = true
+          this.ischeckName = true
+          this.ischeckEmail = true; 
+          this.ischeckDate = true;  
+          this.ischeckMoney = true;    
+          this.ischeckDepartment = false;                            
+          return false;
       }      
       else {
+   
         StaffService.createStaff2(data)
           .then((response) => {
             console.log(response.data);
@@ -1195,12 +1226,18 @@ export default {
               type: "success",
             });
             this.reset();
+            this.ischeckcode = true
+            this.ischeckName = true
+            this.ischeckEmail = true
+            this.ischeckDate = true
+            this.ischeckDepartment = true
+            this.ischeckMoney = true
           })
           .catch((e) => {
             console.log(e);
             this.$notify({
               title: "Warning",
-              message: "Bạn nhập sai thông tin",
+              message: "Lỗi hệ thống",
               type: "warning",
             });
           });
@@ -1220,8 +1257,7 @@ export default {
         document.getElementById("code").focus();          
         return false;
       }
-      let code2 = document.forms["form-update"]["code"].value;
-      if (this.code2.includes(code2)) {
+      if (this.code2Check.includes(x)) {
         this.$notify({
                     title: "Warning",
                     message: "Mã nhân viên đã tồn tại!",
@@ -1250,8 +1286,7 @@ export default {
         document.getElementById("email").focus();           
         return false;
       }
-      let email2 = document.forms["form-update"]["email"].value;
-      if (this.email2.includes(email2)) {
+      if (this.email2Check.includes(x)) {
         this.$notify({
                     title: "Warning",
                     message: "Email nhân viên này đã tồn tại!",
@@ -1332,25 +1367,14 @@ export default {
           console.log(e);
           this.$notify({
             title: "Warning",
-            message: "Bạn nhập sai thông tin",
+            message: "Lỗi hệ thống",
             type: "warning",
           });
         });
       }
      
     },
-    validateForm() {
-      let x = document.forms["myForm"]["code"].value;
-      if (x == "") {
-        this.$notify({
-                    title: "Warning",
-                    message: "Mã nhân viên không được để trống!",
-                    type: "warning",
-                    size: 100,
-                  });
-        return false;
-      }  
-    },
+
     selectAllCheckboxes () {
       const checkboxes = document.querySelectorAll('input[type=checkbox]');
 
@@ -1384,5 +1408,8 @@ export default {
 };
 </script>
 <style scoped>
+.nanan{
+  border-color: rgb(78, 86, 86)
+}
 @import "@/assets/css/hr/list.css";
 </style>

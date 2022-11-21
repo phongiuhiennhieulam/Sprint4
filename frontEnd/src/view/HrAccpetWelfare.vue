@@ -1,6 +1,6 @@
 <template>
   <div class="pl-body">
-    <div class="pl-content">
+    <div >
       <div class="hr-title"><strong>DANH SÁCH XÉT DUYỆT</strong></div>
       <div class="pl-ele">
         <div class="pl-table">
@@ -23,6 +23,8 @@
                     <td style="text-align: left;">{{ item.code }}</td>
                     <td>
                       <el-button @click="handShow(item.id)" type="warning"><strong>Danh sách xét duyệt</strong>
+                      </el-button>
+                      <el-button @click="handShow2(item.id)" type="warning"><strong>Danh sách xét duyệt 2</strong>
                       </el-button>
                     </td>
                   </tr>
@@ -73,9 +75,10 @@
       </div>
     </el-dialog>
     <!-- dialog xet duyet -->
-    <el-dialog :visible.sync="isWelfare" width="1000px" label-width="100px" top="5vh" left="150px" title="temp"
-      boder="">
+    <el-dialog :visible.sync="isWelfare" width="1320px" label-width="100px" top="5vh" left="150px" title="temp"
+      boder=""  >
       <span slot="title" class="title-dialog"><strong>Danh sách phúc lợi đăng ký</strong> </span>
+      {{dialongKey}}
       <div class="row">
         <div class="col-6">
           <strong>
@@ -88,15 +91,16 @@
         </div>
       </div>
       <div label-width="120px" class="hrAccW-table__content">
-        <table>
+        <table class="text-table">
           <thead>
             <tr>
               <th width="9%">STT</th>
               <th>Tên phúc lợi </th>
-              <th width="12%">Đơn giá</th>
-              <th width="10%">Số lượng</th>
-              <th width="15%">Tổng tiền</th>
-              <th width="15%">Thao tác</th>
+              <th width="14%">Đơn giá</th>
+              <th width="8%">Số lượng</th>
+              <th width="14%">Tổng tiền</th>
+              <th width="16%">Trạng thái</th>
+              <th width="12%">Thao tác</th>
             </tr>
           </thead>
           <tr v-for="(item, index) in listRegister" :key="item.id">
@@ -104,17 +108,34 @@
             <td style="text-align: left;">{{ item.name }}</td>
             <td style="text-align: right;">{{ formatCurrency(item.price) }} </td>
             <td>{{ item.quantity }}</td>
-            <td>{{ formatCurrency(item.price * item.quantity) }} </td>
+            <td  style="text-align: right;">{{ formatCurrency(item.price * item.quantity) }} </td>
+            <td>
+              <div :key="dialongKey">
+                <span v-if="item.status==0" style="color: seagreen;">
+                  Đã duyệt
+                </span>
+                <span v-if="item.status==1" style="color: red;">
+                  Đã hủy
+                </span>
+                <span v-if="item.status==2">
+                  Đang chờ
+                </span>
+              </div>
+            </td>
             <td>
               <div class="d-flex">
-                <el-button @click="handleSuccess(item.id, index)" type="success" icon="el-icon-check" circle>
-                </el-button>
+                <el-button @click="handleSuccess(item.id, index)" type="success" icon="el-icon-check" circle></el-button>
                 <el-button @click="handleDelete(item.id, index)" type="danger" icon="el-icon-close" circle></el-button>
+                <el-button @click="handleReturn(item.id, index)" type="warning" icon="el-icon-refresh-left" circle></el-button>
               </div>
             </td>
           </tr>
         </table>
       </div>
+    </el-dialog>
+    <el-dialog :visible.sync="isWelfare2" width="1320px" label-width="100px" top="5vh" left="150px"
+      boder="" >
+     <dialog-accpet-welfare></dialog-accpet-welfare>
     </el-dialog>
   </div>
 </template>
@@ -125,7 +146,9 @@ import StaffService from "../service/hrService";
 import WelfareApi from "@/service/phucLoiService";
 let welfareApi = new WelfareApi();
 import _ from 'lodash'
+import DialogAccpetWelfare from './DialogAccpetWelfare.vue';
 export default {
+  components: { DialogAccpetWelfare },
   name: "PhucLoiList",
   data() {
     return {
@@ -137,23 +160,25 @@ export default {
       listStaff: [],
       idDelete: "",
       isWelfare: false,
+      isWelfare2: false,
       staff: {},
       listRegister: [],
       listHistory: [],
-      isHistory: false
-
+      isHistory: false,
+      dialongKey: 0
     };
   },
   methods: {
     showAddForm() {
-
       this.edit = {};
       this.isShowAdd = true;
+    },
+    loadingComponent(){
+      this.dialongKey += 1;
     },
     handleDelete(id, index) {
       try {
         StaffService.DeleteRegisterWelfare(id)
-        this.listRegister.splice(index, 1);
         this.$notify.info({
           title: 'notification',
           message: 'Từ chối thành công'
@@ -163,8 +188,8 @@ export default {
             "Bạn có chắc sẽ chốt danh sách này không. Continue?",
             "Warning!",
             {
-              confirmButtonText: "OK",
-              cancelButtonText: "Cancel",
+              confirmButtonText: "Có",
+              cancelButtonText: "Hủy",
               type: "warning",
             }
           ).then(() => {
@@ -175,11 +200,10 @@ export default {
         this.errorMessage = error
       }
     },
-    handleSuccess(id, index) {
-
+    handleSuccess(id) {
       try {
         StaffService.SuccessRegisterWelfare(id)
-        this.listRegister.splice(index, 1);
+        this.loadingComponent()
         this.$notify({
           title: 'Success',
           message: 'Xét duyệt',
@@ -190,8 +214,8 @@ export default {
             "Bạn có chắc sẽ chốt danh sách này không. Continue?",
             "Warning!",
             {
-              confirmButtonText: "OK",
-              cancelButtonText: "Cancel",
+              confirmButtonText: "Có",
+              cancelButtonText: "Hủy",
               type: "warning",
             }
           ).then(() => {
@@ -201,7 +225,6 @@ export default {
       } catch (error) {
         this.errorMessage = error
       }
-
     },
     handleReturn(id, index) {
       try {
@@ -219,6 +242,18 @@ export default {
     },
     handShow(id) {
       this.isWelfare = true
+      welfareApi.getAcceptWelfareOfUser(id)
+        .then((response) => {
+          this.listRegister = response.data;
+          console.log(response.data);
+        });
+      StaffService.getStaff(id)
+        .then((response) => {
+          this.staff = response.data;
+        });
+    },
+    handShow2(id) {
+      this.isWelfare2 = true
       welfareApi.getAcceptWelfareOfUser(id)
         .then((response) => {
           this.listRegister = response.data;
@@ -280,9 +315,7 @@ export default {
   },
   mounted() {
     this.getAll()
-
   }
-
 };
 </script>
 <style scoped>
@@ -332,5 +365,11 @@ export default {
 
 .hrAccW-table__content table tbody tr:hover {
   background-color: pink;
+}
+.text-table  th{
+ font-size: 35px;
+}
+.text-table  td{
+ font-size: 19px;
 }
 </style>
