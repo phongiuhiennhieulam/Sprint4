@@ -163,7 +163,6 @@ public class WelfareController {
             Welfare welfare = welfareService.findById(statusFormRequest.getItemID()).get();
             welfare.setStatus(statusFormRequest.getStatus());
             welfareService.update(statusFormRequest.getItemID(), welfare);
-
         }
         return new ResponseEntity<Void>(HttpStatus.OK);
     }

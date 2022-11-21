@@ -27,13 +27,13 @@ public interface WelfareStaffEntityRepository extends JpaRepository<WelfareStaff
     List<WelfareStaffInterface> getWelfareOfUser(@Param("id") Long id);
     @Query(value = "select  ws.id_welfare from welfare w,welfare_staff ws where w.id = ws.id_welfare and w.is_quantity = true and ws.id_staff = ? and ws.status != 1",nativeQuery = true)
     List<Integer> getOnlyOneWelfareOfUser(@Param("id") Long id);
-    @Query(value = "select ws.id,ws.id_welfare as idWelfare,ws.id_staff as idUser,ws.status,w.price,w.name,w.text,ws.quantity as quantity from welfare_staff ws,welfare w where w.id = ws.id_welfare and ws.status = 2 and ws.id_staff = ?",nativeQuery = true)
+    @Query(value = "select ws.id,ws.id_welfare as idWelfare,ws.id_staff as idUser,ws.status,w.price,w.name,w.text,ws.quantity as quantity from welfare_staff ws,welfare w where w.id = ws.id_welfare and ws.id_staff = ?",nativeQuery = true)
     List<WelfareStaffInterface> getAcceptWelfareOfUser(@Param("id") Long id);
 
     @Query(value = "select staff.id ,staff.code,staff.name from staff where staff.id in (select ws.id_staff from welfare_staff ws where ws.status = 2)", nativeQuery = true)
     List<StaffInterface> getStaffRegister();
     @Query(value = "select ws.id,ws.id_welfare as idWelfare,ws.id_staff as idUser,ws.status,w.price,w.name,w.text,ws.quantity as quantity from welfare_staff ws,welfare w where w.id = ws.id_welfare and (ws.status = 0 or ws.status = 1 ) and ws.id_staff = ?",nativeQuery = true)
     List<WelfareStaffInterface> getHistoryAcceptWelfareOfUser(@Param("id") Long id);
- @Query(value = "select ws.id,ws.id_welfare as idWelfare,ws.id_staff as idUser,ws.status,w.price,w.name,w.text,ws.quantity as quantity from welfare_staff ws,welfare w where w.id = ws.id_welfare and (ws.status = 2 or ws.status = 1 ) and ws.id_staff = ?",nativeQuery = true)
- List<WelfareStaffInterface> getStatusWelfareOfUser(@Param("id") Long id);
+   @Query(value = "select ws.id,ws.id_welfare as idWelfare,ws.id_staff as idUser,ws.status,w.price,w.name,w.text,ws.quantity as quantity from welfare_staff ws,welfare w where w.id = ws.id_welfare and (ws.status = 2 or ws.status = 1 ) and ws.id_staff = ?",nativeQuery = true)
+   List<WelfareStaffInterface> getStatusWelfareOfUser(@Param("id") Long id);
 }

@@ -19,13 +19,10 @@ import java.util.List;
 public class StatisticalController {
     @Autowired
     private StaffService staffService;
-
-
     @GetMapping("/staffs-by-welfare/{id}")
     public ResponseEntity<List<StatisticalInterface>> getList(@PathVariable Long id){
         return new ResponseEntity<List<StatisticalInterface>>(staffService.getStaffByWelfare(id), HttpStatus.OK);
     }
-
     @GetMapping("/costs")
     public ResponseEntity<List<CostInterface>> getCost(){
         return new ResponseEntity<List<CostInterface>>(staffService.getCost(), HttpStatus.OK);
