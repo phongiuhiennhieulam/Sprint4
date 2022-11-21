@@ -63,10 +63,9 @@
                   layout="prev, pager, next"
                   :page-count="count"
                   :total="this.array.length"
-                  :total-index="pageIndex"
-                  :page-size="pageSize"
-                  :page-sizes="pageSizes"
-                  @current-change="getPage(pageIndex)"
+                 
+                
+                  @current-change="getPage(count)"
                   hide-on-single-page >
                 </el-pagination>
               </div>
@@ -75,6 +74,7 @@
         </div>
       </div>
     </div>
+    <pre>{{count}}</pre>
   </div>
 </template>
 
@@ -116,11 +116,11 @@ export default {
         }))]
     },
     getPage(page){
+      console.log(page)
       // number = this.pageIndex
       // number = this.count;
       // this.page =  this.paginate(this.array, number, 3)
-      console.log(page)
-
+      this.count++;
     },
     handleOpen(key, keyPath) {
       console.log(key, keyPath);
