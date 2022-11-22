@@ -5,6 +5,9 @@ class StaffService {
     updateMoney (money,ids) {
         return  axios.put('http://localhost:8083/api/staff/update-money/' + money + '?ids=' + ids, {headers: authHeader()})
     }
+    updateMoney2 (money,ids) {
+        return  axios.post('http://localhost:8083/api/staff/update-money2/' + money + '?ids=' + ids, {headers: authHeader()})
+    }
      getAll(params) {
         return  axios.get('http://localhost:8083/api/staffs', {params, headers: authHeader()})
     }

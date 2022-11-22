@@ -935,7 +935,7 @@ export default {
       )
       .then(() => {
 
-          StaffService.updateMoney(money, this.selected)
+          StaffService.updateMoney2(money, this.selected)
           this.loading()
           this.$message({
             type: "success",
@@ -987,7 +987,6 @@ export default {
           });
         });
     },
-
     codeExists(text) {
       return this.code.some(function (el) {
         return el.text === text;
@@ -1394,7 +1393,6 @@ export default {
     else
        alert('sai.');      
 }
-
   },  
   mounted() {
     // this.staff.date = this.formatDate(this.staff.date)
@@ -1404,7 +1402,6 @@ export default {
     this.listEmail();
     this.formatCurrency();
   },
-  
 };
 </script>
 <style scoped>
