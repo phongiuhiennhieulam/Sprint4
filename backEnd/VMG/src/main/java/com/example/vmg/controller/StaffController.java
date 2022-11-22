@@ -2,8 +2,10 @@ package com.example.vmg.controller;
 
 
 import com.example.vmg.dto.respose.MessageResponse;
+import com.example.vmg.dto.respose.ResponseMessage;
 import com.example.vmg.form.StaffForm;
 import com.example.vmg.form.WelfareForm;
+import com.example.vmg.helper.ExcelHelper;
 import com.example.vmg.model.ERole;
 import com.example.vmg.model.Role;
 import com.example.vmg.model.Staff;
@@ -22,6 +24,7 @@ import com.example.vmg.service.*;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.math.BigDecimal;
@@ -46,6 +49,9 @@ public class StaffController {
     @Autowired
     private WelfareStaffService welfareStaffService;
     @Autowired private WelfareStaffEntityService welfareStaffEntityService;
+
+    @Autowired
+    private ExcelHelper excelHelper;
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/staffs")
@@ -276,6 +282,25 @@ public class StaffController {
     @GetMapping("/getcode2/{id}")
     public List<String> getCode2(@PathVariable("id") Long id){
         return staffService.getCodeByUpdate(id);
+    }
+    @PostMapping("/uploadExcel")
+    public ResponseEntity<ResponseMessage> uploadFile(@RequestParam("file") MultipartFile file) {
+        String message = "";
+
+        if (excelHelper.hasExcelFormat(file)) {
+            try {
+                staffService.saveExcel(file);
+
+                message = "Uploaded the file successfully: " + file.getOriginalFilename();
+                return ResponseEntity.status(HttpStatus.OK).body(new ResponseMessage(message));
+            } catch (Exception e) {
+                message = "Could not upload the file: " + file.getOriginalFilename() + "!";
+                return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(new ResponseMessage(message));
+            }
+        }
+
+        message = "Please upload an excel file!";
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseMessage(message));
     }
 
 }

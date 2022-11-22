@@ -5,52 +5,40 @@
       <br />
 
       <div class="de-info">
-        <div class="de-table">
+        <div class="col-3"></div>
+        <div class="col-6">
           <table>
-                <tr width="90%">
-                  <th>
-                    <div>
-                      <el-form :inline="true" class="input-find">
-                        <el-form-item>
-                          <el-input
-                            v-model="keyWord"
-                            placeholder="Nhập tên phòng ban"
-                            style="width: 400px"
-                          >
-                            <i
-                              slot="prefix"
-                              class="el-input__icon el-icon-search"
-                            ></i>
-                          </el-input>
-                        </el-form-item>
-                        <el-form-item>
-                          <el-button type="warning" @click="onFind()"
-                            >Tìm kiếm</el-button
-                          >
-                        </el-form-item>
-                      </el-form>
-                    </div>
-                  </th>
+            <tr width="90%">
+              <th>
+                <div>
+                  <el-form :inline="true" class="input-find">
+                    <el-form-item>
+                      <el-input v-model="keyWord" placeholder="Nhập tên phòng ban" style="width: 400px">
+                        <i slot="prefix" class="el-input__icon el-icon-search"></i>
+                      </el-input>
+                    </el-form-item>
+                    <el-form-item>
+                      <el-button type="warning" @click="onFind()">Tìm kiếm</el-button>
+                    </el-form-item>
+                  </el-form>
+                </div>
+              </th>
 
-                  <th width="10%">
-                    <div>
-                      <el-form :inline="true" class="demo-form-inline">
-                        <el-form-item>
-                          <el-button
-                            type="erorr"
-                            class="btn btn-danger"
-                            @click="showAddForm"
-                          >
-                            <i class="el-icon-plus"></i> Thêm mới
-                          </el-button>
-                        </el-form-item>
-                      </el-form>
-                    </div>
-                  </th>
-                </tr>
-            </table>
+              <th width="10%">
+                <div>
+                  <el-form :inline="true" class="demo-form-inline">
+                    <el-form-item>
+                      <el-button type="erorr" class="btn btn-danger" @click="showAddForm">
+                        <i class="el-icon-plus"></i> Thêm mới
+                      </el-button>
+                    </el-form-item>
+                  </el-form>
+                </div>
+              </th>
+            </tr>
+          </table>
 
-            
+
 
           <div class="de-table__content">
             <table>
@@ -75,6 +63,8 @@
               </tbody>
             </table>
           </div>
+          <div class="col-3"></div>
+
           <!-- phân trang -->
           <el-pagination style="text-align: right" background layout="prev, pager, next" :page-count="count"
             :page-size="pageSize" :page-sizes="pageSizes" @current-change="handlePageChange" class="de-page">
@@ -90,7 +80,7 @@
         <div class="row">
           <div class="mb-3 col-12">
             <el-form-item style="text-align: left" label="Tên phòng ban:" prop="name">
-              <el-input type="number" :min="0" v-model.number="add.price"></el-input>
+              <el-input type="text" :min="0" v-model.number="add.name"></el-input>
             </el-form-item>
           </div>
         </div>

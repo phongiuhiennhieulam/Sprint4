@@ -147,3 +147,6 @@ input::-webkit-inner-spin-button {
 .plList-table__content table tbody tr:hover {
     background-color: pink;
 }
+.el-select{
+    width: 100%;
+}

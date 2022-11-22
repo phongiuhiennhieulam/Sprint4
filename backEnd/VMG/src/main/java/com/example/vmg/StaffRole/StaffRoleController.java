@@ -60,6 +60,7 @@ public class StaffRoleController {
             System.out.println("last");
             return new ResponseEntity<>( HttpStatus.CREATED);
         } catch (Exception e) {
+            e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
 //        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);

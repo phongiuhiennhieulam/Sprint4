@@ -34,9 +34,9 @@
       </div>
     </div>
     <!-- dialog lịch sử xet duyet -->
-    <el-dialog title="temp" :visible.sync="isHistory" width="53%" :before-close="handleClose">
+    <el-dialog title="temp" :visible.sync="isHistory" width="53%">
       <span slot="title" class="title-dialog"><strong>Lịch xử xét duyệt</strong> </span>
-      <span>Lịch sử xét duyệt của nhân viên: <strong>{{staff.name}}</strong></span>
+      <span>Lịch sử xét duyệt của nhân viên: <strong>{{ staff.name }}</strong></span>
       <div label-width="120px" class="hrAccW-table__content">
         <table>
           <thead>
@@ -123,6 +123,7 @@
 /* eslint-disable */
 import StaffService from "../service/hrService";
 import WelfareApi from "@/service/phucLoiService";
+
 let welfareApi = new WelfareApi();
 import _ from 'lodash'
 export default {
@@ -222,7 +223,6 @@ export default {
       welfareApi.getAcceptWelfareOfUser(id)
         .then((response) => {
           this.listRegister = response.data;
-          console.log(response.data);
         });
       StaffService.getStaff(id)
         .then((response) => {
@@ -234,7 +234,6 @@ export default {
       welfareApi.getHistoryAcceptWelfareOfUser(id)
         .then((response) => {
           this.listHistory = response.data;
-          console.log(response.data);
         });
       StaffService.getStaff(id)
         .then((response) => {
@@ -245,10 +244,7 @@ export default {
       StaffService.getRegisterWelfare()
         .then(response => {
           this.list = response.data
-          console.log(this.list)
           this.listStaff = _.unionBy(this.list, 'staff.id')
-          console.log(this.listStaff)
-
         })
         .catch(e => {
           console.log(e)
@@ -287,6 +283,7 @@ export default {
 </script>
 <style scoped>
 @import "@/assets/css/hr/accept.css";
+
 .hrAccW-table__content table {
   width: 100%;
   border-collapse: collapse;
@@ -319,7 +316,7 @@ export default {
 .hrAccW-table__content table thead th {
   font-size: 14px;
   font-weight: 600;
-  
+
 }
 
 .hrAccW-table__content table tr td {
