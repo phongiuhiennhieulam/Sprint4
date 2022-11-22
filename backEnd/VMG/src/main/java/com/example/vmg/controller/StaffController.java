@@ -8,6 +8,7 @@ import com.example.vmg.model.ERole;
 import com.example.vmg.model.Role;
 import com.example.vmg.model.Staff;
 import com.example.vmg.model.User;
+import com.example.vmg.respository.MoneyUpdateRepository;
 import com.example.vmg.respository.StaffRepository;
 import com.example.vmg.service.RoleServiceImpl;
 import com.example.vmg.service.StaffService;
@@ -46,6 +47,9 @@ public class StaffController {
     @Autowired
     private WelfareStaffService welfareStaffService;
     @Autowired private WelfareStaffEntityService welfareStaffEntityService;
+
+    @Autowired private MoneyUpdateRepository moneyUpdateRepository;
+
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/staffs")
@@ -142,6 +146,20 @@ public class StaffController {
                 .map(value ->  Long.toString(value)).collect(Collectors.toList()));
         return ResponseEntity.ok(new MessageResponse("update money staff successfully!"));
     }
+    @PostMapping("/staff/update-money2/{money}")
+    public ResponseEntity<?> updatemoney(@RequestParam("ids") List<String> ids,
+                                         @PathVariable BigDecimal money){
+        List<MoneyUpdate> moneyUpdates = new ArrayList<MoneyUpdate>();
+        for(String i : ids){
+            MoneyUpdate moneyUpdate = new MoneyUpdate();
+            moneyUpdate.setMaNV(i);
+            moneyUpdate.setMoneyUpdate(money);
+            moneyUpdate.setStatus(0);
+            moneyUpdates.add(moneyUpdate);
+            moneyUpdateRepository.save(moneyUpdate);
+        }
+        return ResponseEntity.ok(new MessageResponse("update money staff successfully!"));
+    }
     @PutMapping("/staff-deletes")
     public ResponseEntity<?> mutilpartDelete(@RequestParam("ids") List<Long> ids){
         staffService.mutipartDelete(ids);
@@ -151,23 +169,7 @@ public class StaffController {
                 .map(value ->  Long.toString(value)).collect(Collectors.toList()));
         return ResponseEntity.ok(new MessageResponse("delete staff successfully!"));
     }
-    @PutMapping("/update-money2")
-    public ResponseEntity<?> updatemoney(@RequestParam("ids") List<String> ids,
-                                         @RequestParam("money") BigDecimal money){
 
-        List<MoneyUpdate> moneyUpdates = new ArrayList<>();
-        int index = 0;
-        MoneyUpdate moneyUpdate = new MoneyUpdate();
-        while (index<ids.size()){
-            moneyUpdate.setMaNV(ids.get(index));
-            moneyUpdate.setMoneyUpdate(money);
-            moneyUpdates.add(moneyUpdate);
-            index++;
-        }
-        System.out.println(moneyUpdates);
-
-        return ResponseEntity.ok(new MessageResponse("update money staff successfully!"));
-    }
 
     @GetMapping("/getcode")
     public List<String> getCode(){
