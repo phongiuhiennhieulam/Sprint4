@@ -2,15 +2,9 @@
   <div class="hr-list" >
     <div class="hr-content">
       <div class="hr-title"><strong> QUẢN LÝ NHÂN VIÊN</strong></div>
-      <br/>
-      <div class="row">
-        <div class="col-4" style="margin-left: 35px">
-        </div>
-        <div class="col-2" style="margin-left: 332px">
-        </div>
-        <div class="col-6"></div>
-      </div>
-      <div class="hr-info">
+     
+    
+      <div class="hr-info mt-2">
         <div class="hr-table">
           <div class="hr-selected"></div>
           <table>

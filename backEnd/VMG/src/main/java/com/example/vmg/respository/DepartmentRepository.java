@@ -9,4 +9,6 @@ import org.springframework.data.jpa.repository.Query;
 public interface DepartmentRepository extends JpaRepository<Department,Long> {
     @Query("select s from Department s where s.name like  (:keyWord) ")
     Page<Department> getPage(Pageable pageable, String keyWord);
+
+    Department getDepartmentByName(String name);
 }

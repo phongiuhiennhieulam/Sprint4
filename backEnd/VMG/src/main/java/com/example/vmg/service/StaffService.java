@@ -1,5 +1,6 @@
 package com.example.vmg.service;
 
+import com.example.vmg.helper.ExcelHelper;
 import com.example.vmg.model.*;
 import com.example.vmg.respository.StaffRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,7 +8,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
@@ -18,6 +21,9 @@ import java.util.Optional;
 public class StaffService {
     @Autowired
     private StaffRepository staffRepository;
+
+    @Autowired
+    private ExcelHelper excelHelper;
 
     public List<Staff> getList(){
         return staffRepository.findAll();
@@ -111,6 +117,16 @@ public class StaffService {
     }
     public Staff getUsernameByEmail(String email){
         return staffRepository.finByEmail(email);
+    }
+
+    public void saveExcel(MultipartFile file){
+        try{
+            excelHelper.excelToTutorials(file.getInputStream());
+//            staffRepository.saveAll(staffs);
+
+        } catch (IOException e) {
+            throw new RuntimeException("fail to store data "+e.getMessage());
+        }
     }
 
 }
