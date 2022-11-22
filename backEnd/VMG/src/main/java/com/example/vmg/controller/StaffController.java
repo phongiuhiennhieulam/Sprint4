@@ -10,6 +10,7 @@ import com.example.vmg.model.ERole;
 import com.example.vmg.model.Role;
 import com.example.vmg.model.Staff;
 import com.example.vmg.model.User;
+import com.example.vmg.respository.MoneyUpdateRepository;
 import com.example.vmg.respository.StaffRepository;
 import com.example.vmg.service.RoleServiceImpl;
 import com.example.vmg.service.StaffService;
@@ -52,6 +53,8 @@ public class StaffController {
 
     @Autowired
     private ExcelHelper excelHelper;
+    @Autowired private MoneyUpdateRepository moneyUpdateRepository;
+
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/staffs")
@@ -148,6 +151,20 @@ public class StaffController {
                 .map(value ->  Long.toString(value)).collect(Collectors.toList()));
         return ResponseEntity.ok(new MessageResponse("update money staff successfully!"));
     }
+    @PostMapping("/staff/update-money2/{money}")
+    public ResponseEntity<?> updatemoney(@RequestParam("ids") List<String> ids,
+                                         @PathVariable BigDecimal money){
+        List<MoneyUpdate> moneyUpdates = new ArrayList<MoneyUpdate>();
+        for(String i : ids){
+            MoneyUpdate moneyUpdate = new MoneyUpdate();
+            moneyUpdate.setMaNV(i);
+            moneyUpdate.setMoneyUpdate(money);
+            moneyUpdate.setStatus(0);
+            moneyUpdates.add(moneyUpdate);
+            moneyUpdateRepository.save(moneyUpdate);
+        }
+        return ResponseEntity.ok(new MessageResponse("update money staff successfully!"));
+    }
     @PutMapping("/staff-deletes")
     public ResponseEntity<?> mutilpartDelete(@RequestParam("ids") List<Long> ids){
         staffService.mutipartDelete(ids);
@@ -157,6 +174,7 @@ public class StaffController {
                 .map(value ->  Long.toString(value)).collect(Collectors.toList()));
         return ResponseEntity.ok(new MessageResponse("delete staff successfully!"));
     }
+
 
     @GetMapping("/getcode")
     public List<String> getCode(){

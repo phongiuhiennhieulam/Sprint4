@@ -2,14 +2,10 @@
   <div class="pl-body">
     <div class="pl-content">
       <div class="hr-title"><strong>DANH SÁCH XÉT DUYỆT</strong></div>
-      <br>
-    
       <div class="pl-ele">
         <div class="pl-table">
           <div class="pl-table__content">
             <form id="form" label-width="100px">
-              <el-button style="float: left; margin-bottom: 5px;" @click="handShowHistory()" type="warning"><i class="el-icon-s-order"><Strong>Lịch sử</Strong></i>
-              </el-button>
               <table>
                 <thead>
                   <tr>
@@ -17,6 +13,7 @@
                     <th>Họ tên </th>
                     <th>Mã nhân viên</th>
                     <th>Danh sách đăng ký </th>
+
                   </tr>
                 </thead>
                 <tbody>
@@ -37,15 +34,14 @@
       </div>
     </div>
     <!-- dialog lịch sử xet duyet -->
-    <el-dialog title="temp" :visible.sync="isHistory" width="53%">
+    <el-dialog title="temp" :visible.sync="isHistory" width="53%" :before-close="handleClose">
       <span slot="title" class="title-dialog"><strong>Lịch xử xét duyệt</strong> </span>
+      <span>Lịch sử xét duyệt của nhân viên: <strong>{{staff.name}}</strong></span>
       <div label-width="120px" class="hrAccW-table__content">
         <table>
           <thead>
             <tr>
               <th width="9%">STT</th>
-              <th>Mã NV</th>
-              <th>Họ tên NV</th>
               <th width="20%">Tên phúc lợi</th>
               <th width="12%">Đơn giá</th>
               <th width="10%">Số lượng</th>
@@ -56,8 +52,6 @@
           </thead>
           <tr v-for="(item, index) in listHistory" :key="item.name">
             <td>{{ index + 1 }}</td>
-            <td style="text-align: left;">{{ item.code }}</td>
-            <td style="text-align: left;">{{ item.userName }}</td>
             <td style="text-align: left;">{{ item.name }}</td>
             <td style="text-align: right;">{{ formatCurrency(item.price) }} </td>
             <td>{{ item.quantity }}</td>
@@ -89,7 +83,7 @@
           </strong>
         </div>
         <div class="col-6" style="text-align: right; margin-bottom: 5px;">
-          <el-button @click="handShowHistory()" type="warning"><strong><i class="el-icon-s-order"></i> Lịch
+          <el-button @click="handShowHistory(staff.id)" type="warning"><strong><i class="el-icon-s-order"></i> Lịch
               sử</strong></el-button>
         </div>
       </div>
@@ -129,7 +123,6 @@
 /* eslint-disable */
 import StaffService from "../service/hrService";
 import WelfareApi from "@/service/phucLoiService";
-
 let welfareApi = new WelfareApi();
 import _ from 'lodash'
 export default {
@@ -229,17 +222,19 @@ export default {
       welfareApi.getAcceptWelfareOfUser(id)
         .then((response) => {
           this.listRegister = response.data;
+          console.log(response.data);
         });
       StaffService.getStaff(id)
         .then((response) => {
           this.staff = response.data;
         });
     },
-    handShowHistory() {
+    handShowHistory(id) {
       this.isHistory = true
-      welfareApi.getHistoryAcceptWelfareOfUser()
+      welfareApi.getHistoryAcceptWelfareOfUser(id)
         .then((response) => {
           this.listHistory = response.data;
+          console.log(response.data);
         });
       StaffService.getStaff(id)
         .then((response) => {
@@ -250,7 +245,10 @@ export default {
       StaffService.getRegisterWelfare()
         .then(response => {
           this.list = response.data
+          console.log(this.list)
           this.listStaff = _.unionBy(this.list, 'staff.id')
+          console.log(this.listStaff)
+
         })
         .catch(e => {
           console.log(e)
@@ -289,7 +287,6 @@ export default {
 </script>
 <style scoped>
 @import "@/assets/css/hr/accept.css";
-
 .hrAccW-table__content table {
   width: 100%;
   border-collapse: collapse;
@@ -322,7 +319,7 @@ export default {
 .hrAccW-table__content table thead th {
   font-size: 14px;
   font-weight: 600;
-
+  
 }
 
 .hrAccW-table__content table tr td {
