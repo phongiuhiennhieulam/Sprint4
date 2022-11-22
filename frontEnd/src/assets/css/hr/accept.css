@@ -117,14 +117,14 @@ input::-webkit-inner-spin-button {
   border: 1px solid #23282b8f;
 }
 
-.el-dialog__title {
+/* .el-dialog__title {
   margin-left: 56px;
   font-size: 25px;
   font-weight: 700;
   line-height: 35px;
   letter-spacing: 0em;
   text-align: left;
-}
+} */
 
 .el-dialog__headerbtn i {
   font-size: 24px;

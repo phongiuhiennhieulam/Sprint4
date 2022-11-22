@@ -39,4 +39,7 @@ public class DepartmentService {
         return departmentRepository.getPage(pageable,keyWord);
     }
 
+    public boolean existsByName(String name) {
+        return departmentRepository.existsByName(name);
+    }
 }

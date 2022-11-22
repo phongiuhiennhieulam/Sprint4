@@ -18,6 +18,17 @@ const routes = [
     meta: { requiresAuth: true }
   },
   {
+    path:'/auth-redirect', redirect: '/welcome_page'
+  },
+  {
+    path: "/erorr-404",
+    name: "Erorrpage",
+    component: () => import("@/view/Error-404.vue"),
+  },
+  {
+    path:'*', redirect: '/erorr-404'
+  },
+  {
     path: "/thongke",
     name: "thongke",
     component: () => import("@/view/StatisticalAll.vue"),
@@ -68,6 +79,12 @@ const routes = [
     path: "/home_welfare",
     name: "HomeWelfare",
     component: () => import("@/view/PhucLoiHome.vue"),
+    meta: { requiresAuth: true }
+  },
+  {
+    path: "/accept_price",
+    name: "AcceptPrice",
+    component: () => import("@/view/AcceptPrice.vue"),
     meta: { requiresAuth: true }
   },
   {

@@ -1,140 +1,240 @@
 <template>
-  <div class="de-list">
-    <div class="de-content">
-      <div class="de-title"><strong>QUẢN LÝ PHÒNG BAN</strong></div>
-      <br />
+  <div>
+    <div class="de-list" v-if="hasRole">
+      <div class="de-content">
+        <div class="de-title"><strong>QUẢN LÝ PHÒNG BAN</strong></div>
+        <br />
 
-      <div class="de-info">
-        <div class="de-table">
-          <table>
-                <tr width="90%">
-                  <th>
-                    <div>
-                      <el-form :inline="true" class="input-find">
-                        <el-form-item>
-                          <el-input
-                            v-model="keyWord"
-                            placeholder="Nhập tên phòng ban"
-                            style="width: 400px"
-                          >
-                            <i
-                              slot="prefix"
-                              class="el-input__icon el-icon-search"
-                            ></i>
-                          </el-input>
-                        </el-form-item>
-                        <el-form-item>
-                          <el-button type="warning" @click="onFind()"
-                            >Tìm kiếm</el-button
-                          >
-                        </el-form-item>
-                      </el-form>
-                    </div>
-                  </th>
-
-                  <th width="10%">
-                    <div>
-                      <el-form :inline="true" class="demo-form-inline">
-                        <el-form-item>
-                          <el-button
-                            type="erorr"
-                            class="btn btn-danger"
-                            @click="showAddForm"
-                          >
-                            <i class="el-icon-plus"></i> Thêm mới
-                          </el-button>
-                        </el-form-item>
-                      </el-form>
-                    </div>
-                  </th>
-                </tr>
-            </table>
-
-            
-
-          <div class="de-table__content">
+        <div class="de-info">
+          <div class="col-3"></div>
+          <div class="col-6">
             <table>
-              <thead>
-                <tr class="de-table_row">
-                  <th width="100px">STT</th>
-                  <th width="600px">Tên phòng ban</th>
-                  <!-- <th width="200x">Trạng thái</th> -->
-                  <th width="200px">Thao tác</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr v-for="(item, index) in listDepartments.content" :key="index">
-                  <td>{{ index + 1 }}</td>
-                  <td style="text-align: left">{{ item.name }}</td>
-                  <td>
-                    <span class="icon-edit" @click="showEditForm(item)">
-                      <i class="fa fa-edit"></i>
-                    </span>
-                  </td>
-                </tr>
-              </tbody>
+              <tr width="90%">
+                <th>
+                  <div>
+                    <el-form :inline="true" class="input-find">
+                      <el-form-item>
+                        <el-input
+                          v-model="keyWord"
+                          placeholder="Nhập tên phòng ban"
+                          style="width: 400px"
+                        >
+                          <i
+                            slot="prefix"
+                            class="el-input__icon el-icon-search"
+                          ></i>
+                        </el-input>
+                      </el-form-item>
+                      <el-form-item>
+                        <el-button type="warning" @click="onFind()"
+                          >Tìm kiếm</el-button
+                        >
+                      </el-form-item>
+                    </el-form>
+                  </div>
+                </th>
+
+                <th width="10%">
+                  <div>
+                    <el-form :inline="true" class="demo-form-inline">
+                      <el-form-item>
+                        <el-button
+                          type="erorr"
+                          class="btn btn-danger"
+                          @click="showAddForm"
+                        >
+                          <i class="el-icon-plus"></i> Thêm mới
+                        </el-button>
+                      </el-form-item>
+                    </el-form>
+                  </div>
+                </th>
+              </tr>
             </table>
-          </div>
-          <!-- phân trang -->
-          <el-pagination style="text-align: right" background layout="prev, pager, next" :page-count="count"
-            :page-size="pageSize" :page-sizes="pageSizes" @current-change="handlePageChange" class="de-page">
-          </el-pagination>
-        </div>
-        <div class="department-image"></div>
-      </div>
-    </div>
-
-    <el-dialog style="text-align: center" title="Thêm mới phòng ban" :visible.sync="isShowAdd" width="600px"
-      label-width="100px" top="5vh" left="150px">
-      <el-form :model="add" ref="add" label-width="120px" label-position="top">
-        <div class="row">
-          <div class="mb-3 col-12">
-            <el-form-item style="text-align: left" label="Tên phòng ban:" prop="name">
-              <el-input type="number" :min="0" v-model.number="add.price"></el-input>
-            </el-form-item>
-          </div>
-        </div>
-      </el-form>
-      <div slot="footer" class="dialog-footer" style="text-align: center">
-        <el-button class="de-detail__button" round @click="addDepartMent(add)">Thêm mới
-        </el-button>
-      </div>
-    </el-dialog>
-
-    <el-dialog style="text-align: center" title="Chỉnh sửa thông tin phòng ban" :visible.sync="isShowEdit" width="600px"
-      label-width="100px" top="5vh" left="150px">
-      <el-form :model="edit" ref="add" label-width="120px" label-position="top">
-        <el-form :model="add" ref="add" label-width="120px" label-position="top">
-          <div class="row">
-            <div class="mb-3 col-12">
-
-              <el-form-item style="text-align: left" label="Tên phòng ban:" prop="name">
-                <el-input type="text" v-model="edit.name" required placeholder="Tên Phòng Ban"></el-input>
-              </el-form-item>
+            <div class="de-table__content">
+              <table>
+                <thead>
+                  <tr class="de-table_row">
+                    <th width="100px">STT</th>
+                    <th width="600px">Tên phòng ban</th>
+                    <th width="200px">Thao tác</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr
+                    v-for="(item, index) in listDepartments.content"
+                    :key="index"
+                  >
+                    <td>{{ index + 1 }}</td>
+                    <td style="text-align: left">{{ item.name }}</td>
+                    <td>
+                      <span class="icon-edit" @click="showEditForm(item)">
+                        <i class="fa fa-edit"></i>
+                      </span>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
+            <div class="col-3"></div>
+            <!-- phân trang -->
+            <el-pagination
+              style="text-align: right"
+              background
+              layout="prev, pager, next"
+              :page-count="count"
+              :page-size="pageSize"
+              :page-sizes="pageSizes"
+              @current-change="handlePageChange"
+              class="de-page"
+            >
+            </el-pagination>
           </div>
-        </el-form>
-      </el-form>
-      <div slot="footer" class="dialog-footer" style="text-align: center">
-
-        <el-button class="de-detail__button" round @click="editDepartMent(edit.id, edit)">Cập nhật
-        </el-button>
+          <div class="department-image"></div>
+        </div>
       </div>
-    </el-dialog>
+      <!-- Thêm mới phòng ban -->
+      <el-dialog
+        style="text-align: center"
+        title="Thêm mới phòng ban"
+        :visible.sync="isShowAdd"
+        width="600px"
+        label-width="100px"
+        top="5vh"
+        left="150px"
+      >
+        <el-form
+          :model="add"
+          ref="add"
+          label-width="120px"
+          label-position="top"
+        >
+          <ValidationObserver ref="observer">
+            <div class="row">
+              <div class="mb-3 col-12">
+                <ValidationProvider
+                  v-slot="{ errors }"
+                  name="userName"
+                  :rules="{
+                    required: true,
+                  }"
+                >
+                  <el-form-item
+                    style="text-align: left"
+                    prop="name"
+                    :error="messageError(addDepartment.name, errors[0])"
+                  >
+                    <Strong
+                      >Tên phòng ban<span style="color: red">(*)</span>:</Strong
+                    >
+                    <el-input
+                      type="text"
+                      v-model="add.name"
+                      @input="checkDuplicate"
+                    ></el-input>
+                  </el-form-item>
+                </ValidationProvider>
+              </div>
+            </div>
+          </ValidationObserver>
+        </el-form>
+        <div slot="footer" class="dialog-footer" style="text-align: center">
+          <el-button class="de-detail__button" round @click="addDepartMent(add)"
+            >Thêm mới
+          </el-button>
+        </div>
+      </el-dialog>
+      <!-- Chỉnh sửa phòng ban -->
+      <el-dialog
+        style="text-align: center"
+        title="Chỉnh sửa thông tin phòng ban"
+        :visible.sync="isShowEdit"
+        width="600px"
+        label-width="100px"
+        top="5vh"
+        left="150px"
+      >
+        <el-form
+          :model="edit"
+          ref="add"
+          label-width="120px"
+          label-position="top"
+        >
+          <ValidationObserver ref="observer">
+            <el-form
+              :model="add"
+              ref="add"
+              label-width="120px"
+              label-position="top"
+            >
+              <div class="row">
+                <div class="mb-3 col-12">
+                  <ValidationProvider
+                    v-slot="{ errors }"
+                    name="userName"
+                    :rules="{
+                      required: true,
+                    }"
+                  >
+                    <el-form-item
+                      style="text-align: left"
+                      prop="name"
+                      :error="messageError(addDepartment.name, errors[0])"
+                    >
+                      <Strong
+                        >Tên phòng ban
+                        <span style="color: red">(*)</span> :</Strong
+                      >
+                      <el-input
+                        type="text"
+                        v-model="departmentName"
+                        required
+                        placeholder="Tên Phòng Ban"
+                      ></el-input>
+                    </el-form-item>
+                  </ValidationProvider>
+                </div>
+              </div>
+            </el-form>
+          </ValidationObserver>
+        </el-form>
+        <div slot="footer" class="dialog-footer" style="text-align: center">
+          <el-button
+            class="de-detail__button"
+            round
+            @click="editDepartMent(edit.id, edit)"
+            ><strong>Cập nhật</strong>
+          </el-button>
+        </div>
+      </el-dialog>
+    </div>
+    <div class="error-middle" v-if="!hasRole">
+      <strong class="fa fa-times-circle"> Error 401 - Unauthorized</strong
+      ><br />
+      _________________________________________<br />
+      <h3>Bạn không có quyền truy cập vào đường dẫn này.</h3>
+      <h3>You are not authorized to access this link.</h3>
+    </div>
   </div>
 </template>
 
 <script>
+import { ValidationObserver, ValidationProvider } from "vee-validate";
+import DepartmentValidate from "@/utils/DepartmentValidate";
 import DepartmentApi from "@/service/departmentService";
 export default {
   name: "DepartmentList",
+  components: { ValidationObserver, ValidationProvider },
+  mixins: [DepartmentValidate],
   data() {
     return {
+      departmentName: "",
       listDepartments: [],
       name: "",
       status: true,
       content: "",
       keyWord: "",
+      hasRole: false,
       count: 0,
       pageSize: 10,
       pageSizes: [2, 4, 6],
@@ -154,12 +254,16 @@ export default {
   computed: {},
 
   methods: {
+    // submit() {
+    //   this.editDepartMent(this.edit.id, this.edit);
+    // },
     showAddForm() {
       this.isShowAdd = true;
     },
     showEditForm(item) {
       this.isShowEdit = true;
       this.edit = item;
+      this.departmentName = item.name;
     },
 
     getRequestParams(page, pageSize, keyWord) {
@@ -209,23 +313,21 @@ export default {
       console.log(params);
       new DepartmentApi().getDepartment(params).then((res) => {
         this.listDepartments = res.data;
+        this.hasRole =true;
         this.count = res.data.totalPages;
         this.itemCount = res.data.totalElements;
       });
     },
 
     editDepartMent(editId, editObject) {
+      editObject.name = this.departmentName;
       let isValidate = true;
       if (!editObject.name) {
-        this.$alert(
-          "Thông tin đầu vào không hợp lệ vui lòng nhập đủ thông tin!",
-          "Thông tin không hợp lệ",
-          {
-            confirmButtonText: "OK",
-            callback: () => { },
-          }
-        );
-        isValidate = false;
+        this.$alert("Tên phòng ban không được phép để trống", "Nhập lại", {
+          confirmButtonText: "OK",
+          callback: () => {},
+        });
+        this.isShowEdit = false;
       }
       if (isValidate) {
         new DepartmentApi().updateDepartment(editId, editObject).then((res) => {
@@ -237,31 +339,24 @@ export default {
             message: "Cập nhật Phòng Ban thành công",
             type: "success",
           });
+          this.getAllDepartments();
         });
-
-        this.isShowAdd = false;
-        // add.name = "";
-        // add.status = 0;
+        this.isShowEdit = false;
       }
     },
 
     addDepartMent(add) {
       let isValidate = true;
       if (!add.name) {
-        this.$alert(
-          "Thông tin đầu vào không hợp lệ vui lòng nhập đủ thông tin!",
-          "Thông tin không hợp lệ",
-          {
-            confirmButtonText: "OK",
-            callback: () => { },
-          }
-        );
+        this.$alert("Tên phòng ban không được phép để trống", "Nhập lại", {
+          confirmButtonText: "OK",
+          callback: () => {},
+        });
         isValidate = false;
       }
       if (isValidate) {
         new DepartmentApi().createDepartment(add).then((res) => {
           console.log(res);
-          // self.isLoaded = true;
           this.getAllDepartments();
           this.$notify({
             title: "Success",
@@ -269,20 +364,43 @@ export default {
             type: "success",
           });
         });
-
         this.isShowAdd = false;
         add.name = "";
-        add.status = 0;
       }
+
+      // if(add.name.includes(this.departmentName)){
+      //     this.$notify({
+      //       title: "Warning",
+      //     message: "Mã nhân viên đã tồn tại!",
+      //     type: "warning",
+      //     });
+      //     return false;
+      // }
+
+      // else{
+      //   this.$notify({
+      //       title: "Warning",
+      //       message: "Tên phòng ban không được phép để trống",
+      //       type: "Warning",
+      //     });
+      // }
     },
 
     onFind() {
       this.getAllDepartments();
     },
+    checkDuplicate() {
+      //alert(this.add.name);
+    },
+
+    createDepartment() {},
   },
 
   created() {
     this.getAllDepartments();
+  },
+  checkDuplicate() {
+    alert(this.departmentName);
   },
 };
 </script>
@@ -391,14 +509,6 @@ export default {
   flex: 1;
 }
 
-.de-detail__body ul {
-  margin: 0;
-}
-
-.de-detail__body ul li {
-  padding: 8px 0px;
-}
-
 .de-detail__footer {
   display: flex;
   justify-content: flex-end;
@@ -420,10 +530,6 @@ export default {
 .de-detail__button:active {
   background-color: rgba(255, 0, 0, 0.3) !important;
   border-color: rgba(255, 0, 0, 0.3) !important;
-}
-
-.de-function {
-  margin-top: 40px;
 }
 
 /* .el-input__inner {
@@ -555,5 +661,18 @@ export default {
 .de-table__content table tr {
   background: #f2e7ddf8;
   text-align: center;
+}
+.error-middle {
+  font-size: xx-large;
+  text-align: center;
+  margin-top: 100px;
+}
+.error-middle h3 {
+  font-size: large;
+  padding-top: 6px;
+  font-style: italic;
+}
+.fa {
+  letter-spacing: 3px;
 }
 </style>

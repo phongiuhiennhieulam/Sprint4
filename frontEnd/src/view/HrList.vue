@@ -1,80 +1,92 @@
 <template >
-  <div class="hr-list" >
+  <div class="hr-list">
     <div class="hr-content">
       <div class="hr-title"><strong> QUẢN LÝ NHÂN VIÊN</strong></div>
-      <br/>
+      <br />
       <div class="row">
-        <div class="col-4" style="margin-left: 35px">
-        </div>
-        <div class="col-2" style="margin-left: 332px">
-        </div>
+        <div class="col-4" style="margin-left: 35px"></div>
+        <div class="col-2" style="margin-left: 332px"></div>
         <div class="col-6"></div>
       </div>
       <div class="hr-info">
         <div class="hr-table">
           <div class="hr-selected"></div>
           <table>
-              <thead>
-                <tr width="90%">
-                  <th >     
-                    <div >
-                      <el-form :inline="true" class="demo-form-inline">
-                          <el-form-item>
-                            <el-input style="width: 300px;"
-                              v-model="text" 
-                              placeholder="Nhập tên/ mã nhân viên/ phòng ban">
-                              <i slot="prefix" class="el-input__icon el-icon-search"></i>
-                            </el-input>
-                          </el-form-item>
-                          <span>
-                            <el-button type="warning" @click="onFind">Tìm kiếm </el-button>
-                          </span>
+            <thead>
+              <tr width="90%">
+                <th>
+                  <div>
+                    <el-form :inline="true" class="demo-form-inline">
+                      <el-form-item>
+                        <el-input
+                          style="width: 300px"
+                          v-model="text"
+                          placeholder="Nhập tên/ mã nhân viên/ phòng ban"
+                        >
+                          <i
+                            slot="prefix"
+                            class="el-input__icon el-icon-search"
+                          ></i>
+                        </el-input>
+                      </el-form-item>
+                      <span>
+                        <el-button type="warning" @click="onFind"
+                          >Tìm kiếm
+                        </el-button>
+                      </span>
                     </el-form>
-                    </div>  
-                  </th>                                                  
-                  <th width="10%" style="margin-right: 0px;">
-                    <div v-if="selected.length > 0">
-                      <el-form :inline="true" class="demo-form-inline">
-                          <el-form-item>
-                            <el-button class="btn btn-danger" @click="handlDeletes">
-                             <i class="el-icon-lock"></i> Khóa
-                            </el-button>
-                          </el-form-item>
+                  </div>
+                </th>
+                <th width="10%" style="margin-right: 0px">
+                  <div v-if="selected.length > 0">
+                    <el-form :inline="true" class="demo-form-inline">
+                      <el-form-item>
+                        <el-button class="btn btn-danger" @click="handlDeletes">
+                          <i class="el-icon-lock"></i> Khóa
+                        </el-button>
+                      </el-form-item>
                     </el-form>
-                    </div>  
-                  </th>
-                  <th width="10%" style="padding-right: 14px;">
-                    <div v-if="selected.length !==0">
-                      <el-form :inline="true" class="demo-form-inline">
-                          <el-form-item>
-                            <el-button class="btn btn-danger"
-                            v-loading.fullscreen.lock="fullscreenLoading"
-                             @click="isUpdateMoney = true">
-                             <i class="el-icon-refresh"></i> Cập nhật tiền hỗ trợ 
-                            </el-button>
-                          </el-form-item>
+                  </div>
+                </th>
+                <th width="10%" style="padding-right: 14px">
+                  <div v-if="selected.length !== 0">
+                    <el-form :inline="true" class="demo-form-inline">
+                      <el-form-item>
+                        <el-button
+                          class="btn btn-danger"
+                          v-loading.fullscreen.lock="fullscreenLoading"
+                          @click="isUpdateMoney = true"
+                        >
+                          <i class="el-icon-refresh"></i> Cập nhật tiền hỗ trợ
+                        </el-button>
+                      </el-form-item>
                     </el-form>
-                    </div>  
-                  </th>
-                  
-                  <th width="10%">
-                    <div>
-                      <el-form :inline="true" class="demo-form-inline">
-                          <el-form-item>
-                            <el-button type="erorr" class="btn btn-danger" @click="showAddForm">
-                              <i class="el-icon-plus"></i> Thêm mới</el-button>
-                          </el-form-item>
+                  </div>
+                </th>
+
+                <th width="10%">
+                  <div>
+                    <el-form :inline="true" class="demo-form-inline">
+                      <el-form-item>
+                        <el-button
+                          type="erorr"
+                          class="btn btn-danger"
+                          @click="showAddForm"
+                        >
+                          <i class="el-icon-plus"></i> Thêm mới</el-button
+                        >
+                      </el-form-item>
                     </el-form>
-                    </div>  
-                  </th>
-                </tr>
-              </thead>
-            </table>
+                  </div>
+                </th>
+              </tr>
+            </thead>
+          </table>
           <div class="hr-table__content">
             <table>
               <thead>
                 <tr>
-                  <th><input type="checkbox" v-model="selectAll"></th>
+                  <th><input type="checkbox" v-model="selectAll" /></th>
                   <th width="50px">Khóa</th>
                   <th width="70px">STT</th>
                   <th width="200px">Họ và tên</th>
@@ -89,22 +101,22 @@
                 <tr v-for="(item, index) in staffs.content" :key="index">
                   <td>
                     <input
-                        type="checkbox"
-                        :value="item.id"
-                        v-model="selected"
-                        :ref="item.id"
-                        required
-                      />
+                      type="checkbox"
+                      :value="item.id"
+                      v-model="selected"
+                      :ref="item.id"
+                      required
+                    />
                   </td>
                   <td>
                     <!-- <span class="icon-delete" @click="deleteStaff(item.id)">
                       <i class="fa fa-trash" aria-hidden="true"></i>
                     </span> -->
-                    <span  v-if="item.status == 0">
+                    <span v-if="item.status == 0">
                       <el-button
                         @click="deleteStaff(item.id, index)"
                         type="danger"
-                        icon="el-icon-lock" 
+                        icon="el-icon-lock"
                         circle
                       ></el-button>
                     </span>
@@ -112,17 +124,17 @@
                       <el-button
                         @click="unlockStaff(item.id)"
                         type="warning"
-                        icon="el-icon-unlock" 
+                        icon="el-icon-unlock"
                         circle
                       ></el-button>
                     </span>
                   </td>
                   <td>{{ index + 1 }}</td>
-                  <td style="text-align: left;">{{ item.name }}</td>
-                  <td style="text-align: left;">{{ item.code }}</td>
-                  <td style="text-align: left;">{{ item.department.name }}</td>
+                  <td style="text-align: left">{{ item.name }}</td>
+                  <td style="text-align: left">{{ item.code }}</td>
+                  <td style="text-align: left">{{ item.department.name }}</td>
                   <!-- <td style="text-align: right;">{{formatCurrency(item.welfareMoney)}}</td> -->
-                  <td style="text-align: left;">
+                  <td style="text-align: left">
                     <div v-if="item.status == 0">Đang làm việc</div>
                     <div v-if="item.status == 1">Tạm ngưng</div>
                   </td>
@@ -150,7 +162,7 @@
           </div>
         </div>
         <transition name="slideLeft" v-if="isShow">
-          <div class="hr-table__detail"  ref="detail">
+          <div class="hr-table__detail" ref="detail">
             <div class="hr-detail__header">
               <span class="hr-detail__title">Thông tin nhân viên</span>
               <span class="hr-detail__close" @click="isShow = false">
@@ -193,26 +205,25 @@
                 </li>
               </ul>
             </div>
-            <br>
-            <br>
-            <div style="text-align: center;">
-                <el-button
-                  @click="getEdit(form.id)"
-                  slot="reference"
-                  style="text-align: center; font: 1em sans-serif"
-                  class="btn btn-danger"
-                >
-                  Sửa thông tin
-                </el-button>
-                <el-button
-                  @click="handleShow(form.id)"
-                  slot="reference"
-                  style="text-align: center; font: 1em sans-serif"
-                  class="btn btn-danger"
-                >
-                  Kiểm tra phúc lợi
-                </el-button>
-             
+            <br />
+            <br />
+            <div style="text-align: center">
+              <el-button
+                @click="getEdit(form.id)"
+                slot="reference"
+                style="text-align: center; font: 1em sans-serif"
+                class="btn btn-danger"
+              >
+                Sửa thông tin
+              </el-button>
+              <el-button
+                @click="handleShow(form.id)"
+                slot="reference"
+                style="text-align: center; font: 1em sans-serif"
+                class="btn btn-danger"
+              >
+                Kiểm tra phúc lợi
+              </el-button>
             </div>
           </div>
         </transition>
@@ -220,17 +231,17 @@
       <div class="hr-image"></div>
       <!-- dialog cap nhat tien PL -->
       <el-dialog
-      :visible.sync="isUpdateMoney"
-      width="500px"
-      label-width="100px"
-      top="5vh"
-      left="150px"
-      title="temp"
-    >
-    <span slot="title" class="title-dialog"> <Strong>Cập nhật số tiền hỗ trợ</Strong></span>
-      <div class="row">
-        <form name="form-updateMoney">
-          <div class="row">            
+        :visible.sync="isUpdateMoney"
+        width="500px"
+        label-width="100px"
+        top="5vh"
+        left="150px"
+        title="temp"
+      >
+        <span> <Strong>Cập nhật số tiền hỗ trợ</Strong></span>
+        <div class="row">
+          <form name="form-updateMoney">
+            <div class="row">
               <div>
                 <div class="mb-3">
                   <label class="form-label"
@@ -242,296 +253,339 @@
                     v-model="moneyUpdate"
                     required
                     id="moneyUpdate"
-                    name="moneyUpdate" 
+                    name="moneyUpdate"
                     type="text"
                     class="form-control"
                     placeholder="Tiền hỗ trợ phúc lợi"
                   />
                 </div>
-              </div> 
-          </div>
-          <div style="text-align: center">
-                <button @click.prevent="handlUpdateMoney()" class="btn btn-danger">
-                  <strong>Cập nhật</strong>
-                </button>
-          </div>
-          </form>
-
-      </div>
-    </el-dialog>
-<!-- dialog update -->
-    <el-dialog
-      :visible.sync="isShowUpdate"
-      width="900px"
-      label-width="100px"
-      top="5vh"
-      left="150px"
-      title="temp"
-    >
-    <span class="title-dialog" slot="title"><strong>Sửa thông tin nhân viên</strong></span>
-      <div class="row">
-        <form name="form-update">
-          <div class="row">
-            <div class="col-6">
-              <div>
-                <div class="mb-3">
-                <label class="form-label"><strong>Mã nhân viên:</strong></label>
-                <input
-                  v-model="staffUpdate.code"
-                  type="text"
-                  id="code"
-                  name="code"
-                  class="form-control"
-                  required
-                  placeholder="Mã nhân viên"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <div class="mb-3">
-                <label class="form-label"
-                  ><Strong>Họ tên nhân viên:</Strong></label
-                >
-                <input
-                  v-model="staffUpdate.name"
-                  type="text"
-                  id="name"
-                  name="name"
-                  class="form-control"
-                  required
-                  placeholder="Họ tên nhân viên"
-                />
-                </div>
-              </div>
-              <div>
-                <div class="mb-3">
-                <label class="form-label"><Strong>Email:</Strong></label>
-                <input
-                  name="email"
-                  id="email"
-                  v-model="staffUpdate.email"
-                  type="email"
-                  required
-                  class="form-control"
-                  placeholder="Email nhân viên"
-                />
-                </div>
               </div>
             </div>
-
-            <div class="col-6">
-              <div>
-                <div class="mb-3">
-                  <label class="form-label"><Strong>Ngày sinh(năm / tháng / ngày):</Strong></label>
-                  <input
-                    v-model="staffUpdate.date"
-                    id="date"
-                    name="date"
-                    required
-                    type="date"
-                    class="form-control"
-                    placeholder="YYYY/MM/DD"
-                  />
-                </div>
-              </div>  
-
-              <div>
-                <div class="mb-3">
-                  <label class="form-label"
-                    ><Strong>Số tiền hỗ trợ phúc lợi:</Strong></label
-                  >
-                  <input
-                    @keyup="keyupStaffUpdate"
-                    v-model="staffUpdate.welfareMoney"
-                    @blur="keyupStaffUpdate"
-                    required
-                    id="welfareMoney"
-                    name="welfareMoney" 
-                    type="text"
-                    class="form-control"
-                    placeholder="Tiền hỗ trợ phúc lợi"
-                  />
-                </div>
-              </div> 
-
-              <div>
-                  <div class="mb-3">
-                  <label class="form-label"><Strong>Phòng ban:</Strong> </label>
-                  <select style="height: 55px;"
-                    v-model="staffUpdate.department"
-                    placeholder="Chọn phòng ban"
-                    class="form-control"
-                    name="department"
-                    id="department"
-                  >
-                    <option v-for="x in departments" :value="x" :key="x.id">
-                      {{ x.name }}
-                    </option>
-                  </select>
-                  </div>
-              </div>
-            </div>
-          </div>
-
-              <div style="text-align: center">
-                <button @click.prevent="update(form.id)" class="btn btn-danger">
-                  <strong>Cập nhật</strong>
-                </button>
-              </div>
-            </form>
-
-      </div>
-    </el-dialog>
- <!-- dialog create -->
-    <el-dialog
-      :visible.sync="isShowAdd"
-      width="900px"
-      label-width="100px"
-      top="5vh"
-      left="150px"
-      title="temp"
-    >    
-    <span slot="title" style="color: red; font-size: 30px; text-align: center; display: block;"><Strong>Thêm mới nhân viên</Strong></span>
-      <div class="row">
-        <form name="myForm">
-          <div class="row">
-            <div class="col-6">
-              <div>
-                <div class="mb-3">
-                <label class="form-label">
-                  <strong>Mã nhân viên <span style="color: red;">(*)</span>:</strong>
-                </label>
-                <input
-                  v-model="staff.code"
-                  type="text"
-                  id="code"
-                  name="code"
-                  class="form-control"
-                  required
-                  placeholder="Mã nhân viên"
-                  />
-                </div>             
-              </div>
-
-              <div>
-                <div class="mb-3">
-                <label class="form-label"
-                  ><Strong>Họ tên nhân viên <span style="color: red;">(*)</span>:</Strong></label
-                >
-                <input
-                  v-model="staff.name"
-                  type="text"
-                  id="name"
-                  name="name"
-                  class="form-control"
-                  required
-                  placeholder="Họ tên nhân viên"
-                />
-                </div>
-              </div>
-              <div>
-                <div class="mb-3">
-                <label class="form-label">
-            
-                  <Strong>Email <span style="color: red;">(*)</span>: </Strong>
-                </label>
-                <input
-                  id="email"
-                  name="email"
-                  v-model="staff.email"
-                  type="email"
-                  required
-                  class="form-control"
-                  placeholder="Email nhân viên"
-                />
-                </div>
-              </div>
-            </div>
-
-            <div class="col-6">
-              <div>
-                <div class="mb-3">
-                  <label class="form-label"><Strong>Ngày sinh <span style="color: red;">(*)</span>:</Strong></label>
-                  <input
-                    v-model="staff.date"
-                    id="date"
-                    name="date"
-                    required
-                    type="date"
-                    value="staff.date"
-                    class="form-control"
-                    placeholder="YYYY/DD/MM"
-                  />
-                </div>
-              </div>  
-
-              <div>
-                <div class="mb-3">
-                  <label class="form-label"
-                    ><Strong>Số tiền hỗ trợ phúc lợi <span style="color: red;">(*)</span>:</Strong></label
-                  >
-                  <input
-                    v-model="staff.welfareMoney"
-                    required
-                    v-on:blur="keyupStaff"
-                    @keyup="keyupStaff"
-                    id="welfareMoney"
-                    name="welfareMoney" 
-                    type="text"
-                    class="form-control"
-                    placeholder="Tiền hỗ trợ phúc lợi"
-                  />
-                </div>
-              </div> 
-
-              <div>
-                  <div class="mb-3">
-                  <label class="form-label"><Strong>Chọn phòng ban <span style="color: red;">(*)</span>:</Strong> </label>
-                  <select style="height: 55px;"
-                    v-model="staff.department"
-                    placeholder="Chọn phòng ban"
-                    class="form-control"
-                    name="department"
-                    id="department"
-                    required
-                  >
-                    <option v-for="x in departments" :value="x" :key="x.id">
-                      {{ x.name }}
-                    </option>
-                  </select>
-                  </div>
-              </div>
-            </div>
-          </div>
-          <div  style="text-align: center">
-            <button @click.prevent="create" class="btn btn-danger">
-                  <strong>Thêm mới</strong>
+            <div style="text-align: center">
+              <button
+                @click.prevent="handlUpdateMoney()"
+                class="btn btn-danger"
+              >
+                <strong>Cập nhật</strong>
               </button>
-          </div>
-              
-        </form>
-      </div>
-    </el-dialog>
- <!-- dialog xem phuc loi nhan vien -->
-    <el-dialog
-      :visible.sync="isWelfare"
-      width="900px"
-      label-width="100px"
-      top="5vh"
-      left="150px"
-      title="temp"
-      boder=""
-    >
-    <span slot="title" class="title-dialog"><strong>Phúc lợi đang hưởng</strong> </span>
-    <div label-width="120px" class="pl-table__content">
-      <h6>Nhân viên: {{staff.name}} / Tổng tiền hỗ trợ phúc lợi: <strong>{{formatCurrency(staff.welfareMoney)}}</strong>
-         / Số tiền đang sử dụng: <strong>{{formatCurrency(Money1 + Money2)}}</strong> 
-        <span v-if="staff.welfareMoney < (Money1 + Money2)">
-          <Strong style="color: red;">&nbsp;(Lỗi!) </Strong>
+            </div>
+          </form>
+        </div>
+      </el-dialog>
+      <!-- dialog update -->
+      <el-dialog
+        :visible.sync="isShowUpdate"
+        width="900px"
+        label-width="100px"
+        top="5vh"
+        left="150px"
+        title="temp"
+      >
+        <span class="title-dialog" slot="title"
+          ><strong>Sửa thông tin nhân viên</strong></span
+        >
+        <div class="row">
+          <form name="form-update">
+            <div class="row">
+              <div class="col-6">
+                <div>
+                  <div class="mb-3">
+                    <label class="form-label"
+                      ><strong>Mã nhân viên:</strong></label
+                    >
+                    <input
+                      v-model="staffUpdate.code"
+                      type="text"
+                      id="code"
+                      name="code"
+                      class="form-control"
+                      required
+                      placeholder="Mã nhân viên"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <div class="mb-3">
+                    <label class="form-label"
+                      ><Strong>Họ tên nhân viên:</Strong></label
+                    >
+                    <input
+                      v-model="staffUpdate.name"
+                      type="text"
+                      id="name"
+                      name="name"
+                      class="form-control"
+                      required
+                      placeholder="Họ tên nhân viên"
+                    />
+                  </div>
+                </div>
+                <div>
+                  <div class="mb-3">
+                    <label class="form-label"><Strong>Email:</Strong></label>
+                    <input
+                      name="email"
+                      id="email"
+                      v-model="staffUpdate.email"
+                      type="email"
+                      required
+                      disabled
+                      class="form-control"
+                      placeholder="Email nhân viên"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-6">
+                <div>
+                  <div class="mb-3">
+                    <label class="form-label"
+                      ><Strong>Ngày sinh(năm / tháng / ngày):</Strong></label
+                    >
+                    <input
+                      v-model="staffUpdate.date"
+                      id="date"
+                      name="date"
+                      required
+                      type="date"
+                      class="form-control"
+                      placeholder="YYYY/MM/DD"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <div class="mb-3">
+                    <label class="form-label"
+                      ><Strong>Số tiền hỗ trợ phúc lợi:</Strong></label
+                    >
+                    <input
+                      @keyup="keyupStaffUpdate"
+                      v-model="staffUpdate.welfareMoney"
+                      @blur="keyupStaffUpdate"
+                      required
+                      id="welfareMoney"
+                      name="welfareMoney"
+                      type="text"
+                      class="form-control"
+                      placeholder="Tiền hỗ trợ phúc lợi"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <div class="mb-3">
+                    <label class="form-label"
+                      ><Strong>Phòng ban:</Strong>
+                    </label>
+                    <select
+                      style="height: 55px"
+                      v-model="staffUpdate.department"
+                      placeholder="Chọn phòng ban"
+                      class="form-control"
+                      name="department"
+                      id="department"
+                    >
+                      <option v-for="x in departments" :value="x" :key="x.id">
+                        {{ x.name }}
+                      </option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div style="text-align: center">
+              <button @click.prevent="update(form.id)" class="btn btn-danger">
+                <strong>Cập nhật</strong>
+              </button>
+            </div>
+          </form>
+        </div>
+      </el-dialog>
+      <!-- dialog create -->
+      <el-dialog
+        :visible.sync="isShowAdd"
+        width="900px"
+        label-width="100px"
+        top="5vh"
+        left="150px"
+        title="temp"
+      >
+        <span
+          slot="title"
+          style="
+            color: red;
+            font-size: 30px;
+            text-align: center;
+            display: block;
+          "
+          ><Strong>Thêm mới nhân viên</Strong></span
+        >
+        <div class="row">
+          <form name="myForm">
+            <div class="row">
+              <div class="col-6">
+                <div>
+                  <div class="mb-3">
+                    <label class="form-label">
+                      <strong
+                        >Mã nhân viên
+                        <span style="color: red">(*)</span>:</strong
+                      >
+                    </label>
+                    <input
+                      v-model="staff.code"
+                      type="text"
+                      id="code"
+                      name="code"
+                      class="form-control"
+                      required
+                      placeholder="Mã nhân viên"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <div class="mb-3">
+                    <label class="form-label"
+                      ><Strong
+                        >Họ tên nhân viên
+                        <span style="color: red">(*)</span>:</Strong
+                      ></label
+                    >
+                    <input
+                      v-model="staff.name"
+                      type="text"
+                      id="name"
+                      name="name"
+                      class="form-control"
+                      required
+                      placeholder="Họ tên nhân viên"
+                    />
+                  </div>
+                </div>
+                <div>
+                  <div class="mb-3">
+                    <label class="form-label">
+                      <Strong
+                        >Email <span style="color: red">(*)</span>:
+                      </Strong>
+                    </label>
+                    <input
+                      id="email"
+                      name="email"
+                      v-model="staff.email"
+                      type="email"
+                      required
+                      class="form-control"
+                      placeholder="Email nhân viên"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-6">
+                <div>
+                  <div class="mb-3">
+                    <label class="form-label"
+                      ><Strong
+                        >Ngày sinh <span style="color: red">(*)</span>:</Strong
+                      ></label
+                    >
+                    <input
+                      v-model="staff.date"
+                      id="date"
+                      name="date"
+                      required
+                      type="date"
+                      value="staff.date"
+                      class="form-control"
+                      placeholder="YYYY/DD/MM"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <div class="mb-3">
+                    <label class="form-label"
+                      ><Strong
+                        >Số tiền hỗ trợ phúc lợi
+                        <span style="color: red">(*)</span>:</Strong
+                      ></label
+                    >
+                    <input
+                      v-model="staff.welfareMoney"
+                      required
+                      v-on:blur="keyupStaff"
+                      @keyup="keyupStaff"
+                      id="welfareMoney"
+                      name="welfareMoney"
+                      type="text"
+                      class="form-control"
+                      placeholder="Tiền hỗ trợ phúc lợi"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <div class="mb-3">
+                    <label class="form-label"
+                      ><Strong
+                        >Chọn phòng ban
+                        <span style="color: red">(*)</span>:</Strong
+                      >
+                    </label>
+                    <select
+                      style="height: 55px"
+                      v-model="staff.department"
+                      placeholder="Chọn phòng ban"
+                      class="form-control"
+                      name="department"
+                      id="department"
+                      required
+                    >
+                      <option v-for="x in departments" :value="x" :key="x.id">
+                        {{ x.name }}
+                      </option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div style="text-align: center">
+              <button @click.prevent="create" class="btn btn-danger">
+                <strong>Thêm mới</strong>
+              </button>
+            </div>
+          </form>
+        </div>
+      </el-dialog>
+      <!-- dialog xem phuc loi nhan vien -->
+      <el-dialog
+        :visible.sync="isWelfare"
+        width="900px"
+        label-width="100px"
+        top="5vh"
+        left="150px"
+        title="temp"
+        boder=""
+      >
+        <span slot="title" class="title-dialog"
+          ><strong>Phúc lợi đang hưởng</strong>
         </span>
-        <span v-else></span>
-        </h6>
+        <div label-width="120px" class="pl-table__content">
+          <h6>
+            Nhân viên: {{ staff.name }} / Tổng tiền hỗ trợ phúc lợi:
+            <strong>{{ formatCurrency(staff.welfareMoney) }}</strong> / Số tiền
+            đang sử dụng: <strong>{{ formatCurrency(Money1 + Money2) }}</strong>
+            <span v-if="staff.welfareMoney < Money1 + Money2">
+              <Strong style="color: red">&nbsp;(Lỗi!) </Strong>
+            </span>
+            <span v-else></span>
+          </h6>
           <table>
             <thead>
               <tr>
@@ -545,8 +599,12 @@
             <tbody>
               <tr>
                 <td style="font-weight: bold">I</td>
-                <td colspan="3" style="font-weight: bold; text-align: center;">Phúc Lợi Chung</td>
-                <td><strong>{{formatCurrency(Money1)}}</strong></td>
+                <td colspan="3" style="font-weight: bold; text-align: center">
+                  Phúc Lợi Chung
+                </td>
+                <td>
+                  <strong>{{ formatCurrency(Money1) }}</strong>
+                </td>
               </tr>
               <tr v-for="(item, index) in gerenalWelfares" :key="index">
                 <td style="font-weight: bold">{{ index + 1 }}.</td>
@@ -559,22 +617,26 @@
               </tr>
               <tr>
                 <td style="font-weight: bold">II</td>
-                <td colspan="3" style="font-weight: bold;  text-align: center;">Phúc Lợi Cá Nhân Hóa</td>
-                <td><strong>{{formatCurrency(Money2)}}</strong></td>
+                <td colspan="3" style="font-weight: bold; text-align: center">
+                  Phúc Lợi Cá Nhân Hóa
+                </td>
+                <td>
+                  <strong>{{ formatCurrency(Money2) }}</strong>
+                </td>
               </tr>
               <tr v-for="(item, index) in welfares" :key="index">
                 <td style="font-weight: bold">{{ index + 1 }}.</td>
                 <td>{{ item.name }}</td>
                 <td>{{ formatCurrency(item.price) }}</td>
                 <td>
-                  {{item.quantity}}
+                  {{ item.quantity }}
                 </td>
-                <td>{{formatCurrency(item.price*item.quantity)}}</td>
+                <td>{{ formatCurrency(item.price * item.quantity) }}</td>
               </tr>
             </tbody>
           </table>
-        </div>  
-    </el-dialog>
+        </div>
+      </el-dialog>
     </div>
   </div>
 </template>
@@ -583,36 +645,38 @@ import moment from "moment";
 import StaffService from "@/service/hrService";
 import WelfareApi from "../service/phucLoiService";
 let welfareApi = new WelfareApi();
-import _ from 'lodash'
+import _ from "lodash";
 export default {
   name: "HrList",
   computed: {
-        selectAll: {
-            get: function (){
-                return this.staffs.content ? this.selected.length == this.staffs.content.length : false;
-            },
-            set: function (value) {
-                var selected = [];
+    selectAll: {
+      get: function () {
+        return this.staffs.content
+          ? this.selected.length == this.staffs.content.length
+          : false;
+      },
+      set: function (value) {
+        var selected = [];
 
-                if (value) {
-                    this.staffs.content.forEach(function (staff) {
-                        selected.push(staff.id);
-                    });
-                }
-                this.selected = selected;
-            }
+        if (value) {
+          this.staffs.content.forEach(function (staff) {
+            selected.push(staff.id);
+          });
         }
-    },  
+        this.selected = selected;
+      },
+    },
+  },
   data() {
     return {
       componentKey: 0,
       fullscreenLoading: false,
       staffs: [],
       welfares: [],
-      welfaresMoney: '',
+      welfaresMoney: "",
       gerenalWelfares: [],
-      Money1: '',
-      Money2: '',
+      Money1: "",
+      Money2: "",
       departments: [],
       text: "",
       staffId: "",
@@ -652,8 +716,7 @@ export default {
       isShow: false,
       showDialogAdd: true,
       status: true,
-      moneyUpdate: ''
-     
+      moneyUpdate: "",
     };
   },
   // created(){
@@ -661,37 +724,48 @@ export default {
   // },
   methods: {
     addCommas(nStr) {
-            var x, x1, x2;
-            nStr += '';
-            x = nStr.split('.');
-            x1 = x[0];
-            x2 = x.length > 1 ? ',' + x[1] : '';
-            var rgx = /(\d+)(\d{3})/;
-            while (rgx.test(x1)) {
-                x1 = x1.replace(rgx, '$1' + ',' + '$2');
-            }
-            return x1 + x2;
-      },
+      var x, x1, x2;
+      nStr += "";
+      x = nStr.split(".");
+      x1 = x[0];
+      x2 = x.length > 1 ? "," + x[1] : "";
+      var rgx = /(\d+)(\d{3})/;
+      while (rgx.test(x1)) {
+        x1 = x1.replace(rgx, "$1" + "," + "$2");
+      }
+      return x1 + x2;
+    },
     isNumber: function (evt) {
-            evt = (evt) ? evt : window.event;
-            var charCode = (evt.which) ? evt.which : evt.keyCode;
-            if ((charCode > 31 && (charCode < 48 || charCode > 57)) && charCode !== 46) {
-                evt.preventDefault();
-            } else {
-                return true;
-            }
-      },
+      evt = evt ? evt : window.event;
+      var charCode = evt.which ? evt.which : evt.keyCode;
+      if (
+        charCode > 31 &&
+        (charCode < 48 || charCode > 57) &&
+        charCode !== 46
+      ) {
+        evt.preventDefault();
+      } else {
+        return true;
+      }
+    },
     keyupStaff() {
-            this.staff.welfareMoney = this.addCommas(this.staff.welfareMoney.replace(/,/g, ''));
-            this.$emit("input", parseInt(this.staff.welfareMoney.replace(/,/g, '')))
+      this.staff.welfareMoney = this.addCommas(
+        this.staff.welfareMoney.replace(/,/g, "")
+      );
+      this.$emit("input", parseInt(this.staff.welfareMoney.replace(/,/g, "")));
     },
     keyupStaffUpdate() {
-            this.staffUpdate.welfareMoney = this.addCommas(this.staffUpdate.welfareMoney.replace(/,/g, ''));
-            this.$emit("input", parseInt(this.staffUpdate.welfareMoney.replace(/,/g, '')))
+      this.staffUpdate.welfareMoney = this.addCommas(
+        this.staffUpdate.welfareMoney.replace(/,/g, "")
+      );
+      this.$emit(
+        "input",
+        parseInt(this.staffUpdate.welfareMoney.replace(/,/g, ""))
+      );
     },
     keyupUpdateMoney() {
-            this.moneyUpdate = this.addCommas(this.moneyUpdate.replace(/,/g, ''));
-            this.$emit("input", parseInt(this.staff.welfareMoney.replace(/,/g, '')))
+      this.moneyUpdate = this.addCommas(this.moneyUpdate.replace(/,/g, ""));
+      this.$emit("input", parseInt(this.staff.welfareMoney.replace(/,/g, "")));
     },
     showupdateForm() {
       this.isShowUpdate = true;
@@ -722,7 +796,6 @@ export default {
         ids.push(v.id);
       });
       this.multipleSelection = [...ids];
-  
     },
     showDialog() {
       this.showDialogAdd = true;
@@ -747,11 +820,11 @@ export default {
     },
     isValidDate(dateString) {
       var regEx = /^\d{4}\/\d{2}\/\d{2}$/;
-      if(!dateString.match(regEx)) return false;  // Invalid format
+      if (!dateString.match(regEx)) return false; // Invalid format
       var d = new Date(dateString);
       var dNum = d.getTime();
-      if(!dNum && dNum !== 0) return false; // NaN value, Invalid date
-      return d.toISOString().slice(0,10) === dateString;
+      if (!dNum && dNum !== 0) return false; // NaN value, Invalid date
+      return d.toISOString().slice(0, 10) === dateString;
     },
     formatCurrency(value) {
       return Intl.NumberFormat("vi-VN", {
@@ -807,46 +880,43 @@ export default {
       });
     },
     handleShow(id) {
-      this.isWelfare = true
+      this.isWelfare = true;
       this.staffId = id;
       welfareApi.getAllWelfareWithQuantity(id).then((response) => {
         this.welfares = response.data;
-        this.Money2  = 0;
-        for(let item of this.welfares){
-          this.Money2 += item.price * item.quantity
+        this.Money2 = 0;
+        for (let item of this.welfares) {
+          this.Money2 += item.price * item.quantity;
         }
-
       });
       StaffService.getGeneralWelfare().then((response) => {
         this.gerenalWelfares = response.data;
-        this.Money1 = _.sumBy(response.data, 'price')
+        this.Money1 = _.sumBy(response.data, "price");
       });
-      StaffService.getStaff(id)
-      .then((response) => {
+      StaffService.getStaff(id).then((response) => {
         this.staff = response.data;
       });
       this.status = false;
     },
 
     getEdit(id) {
-      this.retrieveStaff()
-      this.showupdateForm()
-      StaffService.getEmail2(id)
-        .then( response =>{
-          this.email2= response.data
-        })
-        StaffService.getCode2(id)
-        .then( response =>{
-          this.code2= response.data
-        })
+      this.retrieveStaff();
+      this.showupdateForm();
+      StaffService.getEmail2(id).then((response) => {
+        this.email2 = response.data;
+      });
+      StaffService.getCode2(id).then((response) => {
+        this.code2 = response.data;
+      });
       StaffService.getStaff(id).then((response) => {
         this.staffUpdate = response.data;
-        this.staffUpdate.welfareMoney = this.addCommas( response.data.welfareMoney)
+        this.staffUpdate.welfareMoney = this.addCommas(
+          response.data.welfareMoney
+        );
         this.staffUpdate.date = this.formatDate(response.data.date);
       });
-      
     },
-    handlDeletes () {
+    handlDeletes() {
       this.$confirm(
         "Bạn có chắc sẽ khóa những nhân viên này không. Continue?",
         "Warning",
@@ -856,9 +926,9 @@ export default {
           type: "warning",
         }
       )
-      .then(() => {
-          StaffService.deletes(this.selected)
-          this.loading()
+        .then(() => {
+          StaffService.deletes(this.selected);
+          this.loading();
           this.$message({
             type: "success",
             message: "Khóa thành công!",
@@ -870,48 +940,47 @@ export default {
             message: "Đã hủy khóa!",
           });
         });
-      
     },
-    loading(){
+    loading() {
       const loading = this.$loading({
         lock: true,
-        text: 'Loading',
-        spinner: 'el-icon-loading',
-        background: 'rgba(0, 0, 0, 0.7)'
+        text: "Loading",
+        spinner: "el-icon-loading",
+        background: "rgba(0, 0, 0, 0.7)",
       });
       setTimeout(() => {
         loading.close();
-        this.$router.go()
+        this.$router.go();
       }, 1200);
     },
-    handlUpdateMoney () {
-      let money = this.moneyUpdate.replace(/,/g, '');
+    handlUpdateMoney() {
+      let money = this.moneyUpdate.replace(/,/g, "");
       let x = document.forms["form-updateMoney"]["moneyUpdate"].value;
       if (x == "") {
         this.$notify({
-                    title: "Warning",
-                    message: "Tổng tiền không được để trống!",
-                    type: "warning",
-                  });
-        document.getElementById("moneyUpdate").focus();          
+          title: "Warning",
+          message: "Tổng tiền không được để trống!",
+          type: "warning",
+        });
+        document.getElementById("moneyUpdate").focus();
         return false;
       }
       if (money < 0) {
         this.$notify({
-                    title: "Warning",
-                    message: "Tổng tiền phải là số dương!",
-                    type: "warning",
-                  });
-        document.getElementById("moneyUpdate").focus();          
+          title: "Warning",
+          message: "Tổng tiền phải là số dương!",
+          type: "warning",
+        });
+        document.getElementById("moneyUpdate").focus();
         return false;
       }
       if (isNaN(money)) {
         this.$notify({
-                    title: "Warning",
-                    message: "Tổng tiền phải là số!",
-                    type: "warning",
-                  });
-        document.getElementById("moneyUpdate").focus();          
+          title: "Warning",
+          message: "Tổng tiền phải là số!",
+          type: "warning",
+        });
+        document.getElementById("moneyUpdate").focus();
         return false;
       }
       this.$confirm(
@@ -923,34 +992,30 @@ export default {
           type: "warning",
         }
       )
-      .then(() => {
-
-          StaffService.updateMoney(money, this.selected)
-          this.loading()
+        .then(() => {
+          StaffService.updateMoney(money, this.selected);
+          this.loading();
           this.$message({
             type: "success",
             message: "Đã cập nhật!",
           });
-          
         })
         .catch(() => {
-          this.loading()
+          this.loading();
           this.$message({
             type: "info",
             message: "Hủy cập nhật!",
           });
         });
-      
     },
-    unlockStaff(id){
+    unlockStaff(id) {
       StaffService.unlookStaff(id);
       this.loading();
       this.$notify({
-            title: "Success",
-            message: "Mở khóa thành công!",
-            type: "success",
-          });    
-
+        title: "Success",
+        message: "Mở khóa thành công!",
+        type: "success",
+      });
     },
     deleteStaff(id) {
       this.$confirm(
@@ -964,7 +1029,7 @@ export default {
       )
         .then(() => {
           StaffService.deleteStaff(id);
-          this.loading()
+          this.loading();
           this.$message({
             type: "success",
             message: "lock up completed",
@@ -1031,7 +1096,6 @@ export default {
       } else {
         this.showValidateNullMoney = false;
       }
-      
     },
 
     listCode() {
@@ -1053,138 +1117,137 @@ export default {
         });
     },
     create() {
-      let moneyStaff = this.staff.welfareMoney.replace(/,/g, '');
+      let moneyStaff = this.staff.welfareMoney.replace(/,/g, "");
       var data = {
-          code: this.staff.code,
-          name: this.staff.name,
-          email: this.staff.email,
-          date: this.staff.date,
-          department: this.staff.department,
-          welfareMoney: moneyStaff,
-        }
+        code: this.staff.code,
+        name: this.staff.name,
+        email: this.staff.email,
+        date: this.staff.date,
+        department: this.staff.department,
+        welfareMoney: moneyStaff,
+      };
       let x = document.forms["myForm"]["code"].value;
       if (x == "") {
         this.$notify({
-                    title: "Warning",
-                    message: "Mã nhân viên không được để trống!",
-                    type: "warning",
-                  });
-        document.getElementById("code").focus();          
+          title: "Warning",
+          message: "Mã nhân viên không được để trống!",
+          type: "warning",
+        });
+        document.getElementById("code").focus();
         return false;
       }
       let code2 = document.forms["myForm"]["code"].value;
       if (this.code.includes(code2)) {
         this.$notify({
-                    title: "Warning",
-                    message: "Mã nhân viên đã tồn tại!",
-                    type: "warning",
-                  });
-        document.getElementById("code").focus();          
+          title: "Warning",
+          message: "Mã nhân viên đã tồn tại!",
+          type: "warning",
+        });
+        document.getElementById("code").focus();
         return false;
       }
       let name = document.forms["myForm"]["name"].value;
       if (name == "") {
         this.$notify({
-                    title: "Warning",
-                    message: "Họ tên nhân viên không được để trống!",
-                    type: "warning",
-                  });
-        document.getElementById("name").focus();       
+          title: "Warning",
+          message: "Họ tên nhân viên không được để trống!",
+          type: "warning",
+        });
+        document.getElementById("name").focus();
         return false;
       }
       if (!isNaN(name)) {
         this.$notify({
-                    title: "Warning",
-                    message: "Họ tên nhân viên không được để số!",
-                    type: "warning",
-                  });
-        document.getElementById("name").focus();       
+          title: "Warning",
+          message: "Họ tên nhân viên không được để số!",
+          type: "warning",
+        });
+        document.getElementById("name").focus();
         return false;
       }
-      var re = /^[\sa-zA-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂẾưăạảấầẩẫậắằẳẵặẹẻẽềềểếỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ\\s\\W|_]+$/;
-      if(!re.test(document.forms["myForm"]["name"].value))
-       {
+      var re =
+        /^[\sa-zA-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂẾưăạảấầẩẫậắằẳẵặẹẻẽềềểếỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ\\s\\W|_]+$/;
+      if (!re.test(document.forms["myForm"]["name"].value)) {
         this.$notify({
-                    title: "Warning",
-                    message: "Tên không được có số và ký tự đặc biệt!",
-                    type: "warning",
-                  });
-        document.getElementById("email").focus();           
+          title: "Warning",
+          message: "Tên không được có số và ký tự đặc biệt!",
+          type: "warning",
+        });
+        document.getElementById("email").focus();
         return false;
-       }
+      }
       let email = document.forms["myForm"]["email"].value;
       if (email == "") {
         this.$notify({
-                    title: "Warning",
-                    message: "Email không được để trống!",
-                    type: "warning",
-                  });
-        document.getElementById("email").focus();           
+          title: "Warning",
+          message: "Email không được để trống!",
+          type: "warning",
+        });
+        document.getElementById("email").focus();
         return false;
       }
       let email2 = document.forms["myForm"]["code"].value;
       if (this.email2.includes(email2)) {
         this.$notify({
-                    title: "Warning",
-                    message: "Email này đã tồn tại!",
-                    type: "warning",
-                  });
-        document.getElementById("email").focus();          
+          title: "Warning",
+          message: "Email này đã tồn tại!",
+          type: "warning",
+        });
+        document.getElementById("email").focus();
         return false;
       }
       let date = document.forms["myForm"]["date"].value;
       if (date == "") {
         this.$notify({
-                    title: "Warning",
-                    message: "Ngày sinh không được để trống!",
-                    type: "warning",
-                  });
-        document.getElementById("date").focus();           
+          title: "Warning",
+          message: "Ngày sinh không được để trống!",
+          type: "warning",
+        });
+        document.getElementById("date").focus();
         return false;
-      }     
+      }
       let welfareMoney = document.forms["myForm"]["welfareMoney"].value;
       if (welfareMoney == "") {
         this.$notify({
-                    title: "Warning",
-                    message: "Số tiền hỗ trợ không được để trống!",
-                    type: "warning",
-                    size: 100,
-                  });
-          document.getElementById("welfareMoney").focus(); 
+          title: "Warning",
+          message: "Số tiền hỗ trợ không được để trống!",
+          type: "warning",
+          size: 100,
+        });
+        document.getElementById("welfareMoney").focus();
         return false;
       }
-      if ( isNaN(moneyStaff)) {
+      if (isNaN(moneyStaff)) {
         this.$notify({
-                    title: "Warning",
-                    message: "Số tiền hỗ trợ phải là số!",
-                    type: "warning",
-                    size: 100,
-                  });
-          document.getElementById("welfareMoney").focus(); 
+          title: "Warning",
+          message: "Số tiền hỗ trợ phải là số!",
+          type: "warning",
+          size: 100,
+        });
+        document.getElementById("welfareMoney").focus();
         return false;
       }
-      if ( moneyStaff < 0) {
+      if (moneyStaff < 0) {
         this.$notify({
-                    title: "Warning",
-                    message: "Số tiền hỗ trợ phải là số dương!",
-                    type: "warning",
-                    size: 100,
-                  });
-          document.getElementById("welfareMoney").focus(); 
+          title: "Warning",
+          message: "Số tiền hỗ trợ phải là số dương!",
+          type: "warning",
+          size: 100,
+        });
+        document.getElementById("welfareMoney").focus();
         return false;
       }
       let department = document.forms["myForm"]["department"].value;
       if (department == "") {
         this.$notify({
-                    title: "Warning",
-                    message: "phòng ban không được để trống!",
-                    type: "warning",
-                    size: 100,
-                  });
-        document.getElementById("department").focus();           
+          title: "Warning",
+          message: "phòng ban không được để trống!",
+          type: "warning",
+          size: 100,
+        });
+        document.getElementById("department").focus();
         return false;
-      }      
-      else {
+      } else {
         StaffService.createStaff2(data)
           .then((response) => {
             console.log(response.data);
@@ -1204,174 +1267,167 @@ export default {
               type: "warning",
             });
           });
-
       }
     },
     update(id) {
-      let moneyStaff = this.staffUpdate.welfareMoney.replace(/,/g, '');
+      let moneyStaff = this.staffUpdate.welfareMoney.replace(/,/g, "");
 
       let x = document.forms["form-update"]["code"].value;
       if (x == "") {
         this.$notify({
-                    title: "Warning",
-                    message: "Mã nhân viên không được để trống!",
-                    type: "warning",
-                  });
-        document.getElementById("code").focus();          
+          title: "Warning",
+          message: "Mã nhân viên không được để trống!",
+          type: "warning",
+        });
+        document.getElementById("code").focus();
         return false;
       }
       let code2 = document.forms["form-update"]["code"].value;
       if (this.code2.includes(code2)) {
         this.$notify({
-                    title: "Warning",
-                    message: "Mã nhân viên đã tồn tại!",
-                    type: "warning",
-                  });
-        document.getElementById("code").focus();          
+          title: "Warning",
+          message: "Mã nhân viên đã tồn tại!",
+          type: "warning",
+        });
+        document.getElementById("code").focus();
         return false;
       }
       let name = document.forms["form-update"]["name"].value;
       if (name == "") {
         this.$notify({
-                    title: "Warning",
-                    message: "Họ tên nhân viên không được để trống!",
-                    type: "warning",
-                  });
-        document.getElementById("name").focus();       
+          title: "Warning",
+          message: "Họ tên nhân viên không được để trống!",
+          type: "warning",
+        });
+        document.getElementById("name").focus();
         return false;
       }
       let email = document.forms["form-update"]["email"].value;
       if (email == "") {
         this.$notify({
-                    title: "Warning",
-                    message: "Email không được để trống!",
-                    type: "warning",
-                  });
-        document.getElementById("email").focus();           
+          title: "Warning",
+          message: "Email không được để trống!",
+          type: "warning",
+        });
+        document.getElementById("email").focus();
         return false;
       }
       let email2 = document.forms["form-update"]["email"].value;
       if (this.email2.includes(email2)) {
         this.$notify({
-                    title: "Warning",
-                    message: "Email nhân viên này đã tồn tại!",
-                    type: "warning",
-                  });
-        document.getElementById("email").focus();          
+          title: "Warning",
+          message: "Email nhân viên này đã tồn tại!",
+          type: "warning",
+        });
+        document.getElementById("email").focus();
         return false;
       }
       let date = document.forms["form-update"]["date"].value;
       if (date == "") {
         this.$notify({
-                    title: "Warning",
-                    message: "Ngày sinh không được để trống!",
-                    type: "warning",
-                  });
-        document.getElementById("date").focus();           
+          title: "Warning",
+          message: "Ngày sinh không được để trống!",
+          type: "warning",
+        });
+        document.getElementById("date").focus();
         return false;
-      }     
+      }
       let welfareMoney = document.forms["form-update"]["welfareMoney"].value;
       if (welfareMoney == "") {
         this.$notify({
-                    title: "Warning",
-                    message: "Số tiền hỗ trợ không được để trống!",
-                    type: "warning",
-                    size: 100,
-                  });
-          document.getElementById("welfareMoney").focus(); 
+          title: "Warning",
+          message: "Số tiền hỗ trợ không được để trống!",
+          type: "warning",
+          size: 100,
+        });
+        document.getElementById("welfareMoney").focus();
         return false;
       }
-      if ( moneyStaff < 0) {
+      if (moneyStaff < 0) {
         this.$notify({
-                    title: "Warning",
-                    message: "Số tiền hỗ trợ phải là số dương!",
-                    type: "warning",
-                    size: 100,
-                  });
-          document.getElementById("welfareMoney").focus(); 
+          title: "Warning",
+          message: "Số tiền hỗ trợ phải là số dương!",
+          type: "warning",
+          size: 100,
+        });
+        document.getElementById("welfareMoney").focus();
         return false;
       }
-      if ( isNaN(moneyStaff)) {
+      if (isNaN(moneyStaff)) {
         this.$notify({
-                    title: "Warning",
-                    message: "Số tiền hỗ trợ phải là số!",
-                    type: "warning",
-                    size: 100,
-                  });
-          document.getElementById("welfareMoney").focus(); 
+          title: "Warning",
+          message: "Số tiền hỗ trợ phải là số!",
+          type: "warning",
+          size: 100,
+        });
+        document.getElementById("welfareMoney").focus();
         return false;
       }
       let department = document.forms["form-update"]["department"].value;
       if (department == "") {
         this.$notify({
-                    title: "Warning",
-                    message: "phòng ban không được để trống!",
-                    type: "warning",
-                    size: 100,
-                  });
-        document.getElementById("department").focus();           
-        return false;
-      }      
-      else{
-        // if(!moneyStaff==""){
-        
-        // }
-        this.staffUpdate.welfareMoney = moneyStaff
-        StaffService.updateStaff(id, this.staffUpdate)
-        .then((response) => {
-          console.log(response.data);
-          this.retrieveStaff();
-          this.$notify({
-            title: "Success",
-            message: "Cập nhật thông tin nhân viên thành công",
-            type: "success",
-          });
-          this.reset();
-        })
-        .catch((e) => {
-          console.log(e);
-          this.$notify({
-            title: "Warning",
-            message: "Bạn nhập sai thông tin",
-            type: "warning",
-          });
+          title: "Warning",
+          message: "phòng ban không được để trống!",
+          type: "warning",
+          size: 100,
         });
+        document.getElementById("department").focus();
+        return false;
+      } else {
+        // if(!moneyStaff==""){
+
+        // }
+        this.staffUpdate.welfareMoney = moneyStaff;
+        StaffService.updateStaff(id, this.staffUpdate)
+          .then((response) => {
+            console.log(response.data);
+            this.retrieveStaff();
+            this.$notify({
+              title: "Success",
+              message: "Cập nhật thông tin nhân viên thành công",
+              type: "success",
+            });
+            this.reset();
+          })
+          .catch((e) => {
+            console.log(e);
+            this.$notify({
+              title: "Warning",
+              message: "Bạn nhập sai thông tin",
+              type: "warning",
+            });
+          });
       }
-     
     },
     validateForm() {
       let x = document.forms["myForm"]["code"].value;
       if (x == "") {
         this.$notify({
-                    title: "Warning",
-                    message: "Mã nhân viên không được để trống!",
-                    type: "warning",
-                    size: 100,
-                  });
+          title: "Warning",
+          message: "Mã nhân viên không được để trống!",
+          type: "warning",
+          size: 100,
+        });
         return false;
-      }  
+      }
     },
-    selectAllCheckboxes () {
-      const checkboxes = document.querySelectorAll('input[type=checkbox]');
+    selectAllCheckboxes() {
+      const checkboxes = document.querySelectorAll("input[type=checkbox]");
 
-      checkboxes.forEach((cb) => { 
-        if(cb.checked == false ){
-           cb.checked = true; 
-        }
-        else{
+      checkboxes.forEach((cb) => {
+        if (cb.checked == false) {
+          cb.checked = true;
+        } else {
           cb.checked = false;
         }
       });
     },
-    validateName() {    
-    var re = /^[A-Za-z]+$/;
-    if(re.test(document.getElementById("textboxID").value))
-       alert('ddungs!');
-    else
-       alert('sai.');      
-}
-
-  },  
+    validateName() {
+      var re = /^[A-Za-z]+$/;
+      if (re.test(document.getElementById("textboxID").value)) alert("ddungs!");
+      else alert("sai.");
+    },
+  },
   mounted() {
     // this.staff.date = this.formatDate(this.staff.date)
     this.retrieveStaff();
@@ -1380,7 +1436,6 @@ export default {
     this.listEmail();
     this.formatCurrency();
   },
-  
 };
 </script>
 <style scoped>

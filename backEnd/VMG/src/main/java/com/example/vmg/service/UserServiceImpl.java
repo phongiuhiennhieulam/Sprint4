@@ -7,13 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 @Service
 public class UserServiceImpl implements IUserService {
@@ -43,6 +40,10 @@ public User update(Long id, User user) {
         return userRepository.findAll();
     }
 
+//    public List<User> findNotIn(){
+//        return userRepository.findNotIN();
+//    }
+
     public Optional<User> findById(Long id) {
         return userRepository.findById(id);
     }
@@ -71,4 +72,7 @@ public User update(Long id, User user) {
     }
 
 
+    public Optional<User> getNameByUserName(String userName) {
+        return userRepository.findByUserName(userName);
+    }
 }

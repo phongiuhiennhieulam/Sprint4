@@ -4,10 +4,10 @@ import authHeader from './auth-hreader'
 class UserService{
 
     async getAUser(params){
-        return await axios.get('http://localhost:8083/api/get-user', {params, headers: authHeader()})
+        return await axios.get('http://localhost:8083/api/get-user', {params})
     }
     async getAllUser(params){
-        return await axios.get('http://localhost:8083/api/users', {params})
+        return await axios.get('http://localhost:8083/api/users', {params, headers: authHeader()})
     }
     async getUser(id){
         return await axios.get(`http://localhost:8083/api/user/${id}`)

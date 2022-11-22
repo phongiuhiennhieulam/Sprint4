@@ -101,7 +101,6 @@ public class StaffController {
             user.setName(staff.getName());
             user.setRoles(roles);
             user.setStatus(0);
-//            user.setStaff(add);
             staffService.saveOrUpDate(staff);
             userService.save(user);
             return ResponseEntity.ok(new MessageResponse("create staff successfully!"));
@@ -132,6 +131,10 @@ public class StaffController {
     @PutMapping("/staffs/{id}")
     public ResponseEntity<Void> update(@PathVariable Long id, @RequestBody Staff staff){
         staffService.update(id, staff);
+        User user = userService.findByUsername(staff.getEmail()).get();
+        user.setName(staff.getName());
+        user.setStatus(staff.getStatus());
+        userService.save(user);
         return new ResponseEntity<Void>(HttpStatus.OK);
     }
 //    @PreAuthorize("hasRole('ROLE_ADMIN')")
@@ -277,5 +280,6 @@ public class StaffController {
     public List<String> getCode2(@PathVariable("id") Long id){
         return staffService.getCodeByUpdate(id);
     }
+
 
 }

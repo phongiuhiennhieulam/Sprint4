@@ -171,4 +171,6 @@ public class WelfareController {
     public List<WelfareStaffInterface> getStatusWelfareOfUser(@PathVariable Long id){
         return welfareStaffEntityService.getStatusWelfareOfUser(id);
     }
+
+
 }

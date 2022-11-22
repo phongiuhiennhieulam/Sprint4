@@ -14,7 +14,8 @@ import java.util.Optional;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
-    Optional<User> findByUserName(String userName);
+//    @Query(value = "select s from User s where s.userName like ")
+//    Optional User findByUserName(String userName);
     Boolean existsByUserName(String userName);
 
     @Query("select s from User s where  s.name like (:keyWord) or s.userName like (:keyWord) order by s.id DESC")
@@ -24,6 +25,11 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Transactional
     @Query("update User p set p.status = 1 where p.userName in(:emails)")
     void looks(List<String> emails);
+
+    Optional<User> findByUserName(String userName);
+
+//    @Query("select q from User where ")
+//    List<User> findNotIN();
 
 //    Boolean existsByEmail(String email);
 }
