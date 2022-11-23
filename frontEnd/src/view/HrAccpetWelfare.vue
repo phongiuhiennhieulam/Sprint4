@@ -160,17 +160,7 @@ export default {
           message: 'Từ chối thành công'
         });
         if (this.listRegister.length < 1) {
-          this.$confirm(
-            "Bạn có chắc sẽ chốt danh sách này không. Continue?",
-            "Warning!",
-            {
-              confirmButtonText: "OK",
-              cancelButtonText: "Cancel",
-              type: "warning",
-            }
-          ).then(() => {
-            this.loading()
-          })
+         this.loading();
         }
       } catch (error) {
         this.errorMessage = error
@@ -187,17 +177,7 @@ export default {
           type: 'success'
         });
         if (this.listRegister.length < 1) {
-          this.$confirm(
-            "Bạn có chắc sẽ chốt danh sách này không. Continue?",
-            "Warning!",
-            {
-              confirmButtonText: "OK",
-              cancelButtonText: "Cancel",
-              type: "warning",
-            }
-          ).then(() => {
-            this.loading()
-          })
+         this.loading();
         }
       } catch (error) {
         this.errorMessage = error

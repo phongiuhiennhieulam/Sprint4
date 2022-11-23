@@ -159,6 +159,10 @@ export default {
   text-align: center;
   z-index: 2;
 }
+.static-table__content{
+  height: 500px;
+  overflow-y: scroll;
+}
 
 .static-table__content table {
   width: 100%;
@@ -168,6 +172,7 @@ export default {
 .static-table__content table tr {
   background: #f2e7ddf8;
 }
+
 
 .static-table__content table tr th {
   border-right: 1px solid #e4c9ac;
@@ -183,6 +188,8 @@ export default {
 
 .static-table__content table thead tr {
   background-color: #fdf9f8;
+  position:sticky;
+  top: 0;
 }
 
 .static-table__content table thead th {

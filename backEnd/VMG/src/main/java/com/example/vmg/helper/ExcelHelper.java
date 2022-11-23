@@ -42,7 +42,7 @@ public class ExcelHelper {
             return false;
         return true;
     }
-    public void excelToTutorials(InputStream is) {
+    public void excelToTutorials(InputStream is ) {
         try{
             Workbook workbook = new XSSFWorkbook(is);
             Sheet sheet = workbook.getSheet(SHEET);
@@ -50,7 +50,7 @@ public class ExcelHelper {
             List<Staff> staffs = new ArrayList<Staff>();
             int rowNumber = 0;
             while(rows.hasNext()){
-
+                // boolean isExistcode = false
                 Row currentRow = rows.next();
                 if(rowNumber == 0){
                     rowNumber++;
@@ -65,6 +65,11 @@ public class ExcelHelper {
                     switch (cellIdx){
                         case 0:
                             staff.setCode(currentCell.getStringCellValue());
+                            // check code xem ton tai chua neu ton tại thì
+//                            if(isUpdate){
+//                                // check code exist
+//                                // nếu exist thì isExistcode = true
+//                            }
 
                             System.out.println(staff.getCode());
                             break;
@@ -90,8 +95,6 @@ public class ExcelHelper {
                             System.out.println(staff.getStatus());
                             break;
                         case 6:
-
-
                             staff.setDepartment(departmentRepository.getDepartmentByName(currentCell.getStringCellValue()));
                             System.out.println(staff.getDepartment());
                             break;
@@ -102,6 +105,11 @@ public class ExcelHelper {
                    cellIdx++;
                 }
                 System.out.println(staff.getCode());
+//                if(isExistCode){
+//                     staffRepository.update(staff);
+//                }else{
+//                    staffRepository.save(staff);
+//                }
                 staffRepository.save(staff);
                 String pass = "123456";
                 User user = new User(staff.getEmail(),
