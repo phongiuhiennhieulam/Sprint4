@@ -32,14 +32,31 @@ public class StatisticalController {
     public ResponseEntity<List<CostInterface>> getCost(){
         return new ResponseEntity<List<CostInterface>>(staffService.getCost(), HttpStatus.OK);
     }
-    @GetMapping("/getvui")
-    public String getVui(){
-        String ok = "{"
-                    + "\"name\":\"khang\""
-                    + ",\"age\":\"17\""
+    @PostMapping("/getvui")
+    public String getVui(@RequestBody String p_cifinfo){
+        String id1 = "{"
+                    +"\"p_cifinfo\":\"01791798\""
+                    +"}";
+        String ok;
+        if(p_cifinfo.equals(id1)){
+            ok = "{"
+                    + "\"results\":"
+                    + "{"
+                    + "\"cif\":\"01275299\""
+                    + ",\"dkkd\":\"01275299\""
+                    + ",\"mst\":\"null\""
+                    + ",\"industry\":\"179900\""
+                    + ",\"industry_code\":\"CAC H.DONG VA DICH VU KHAC\""
+                    + "}"
                     + "}";
-        return ok;
+            return ok;
+        }
+        else {
+            ok = "[]";
+            return ok;
+        }
     }
+
 
     @GetMapping("/getList/money")
     public ResponseEntity<List<MoneyUpdateInterface>> getList(){

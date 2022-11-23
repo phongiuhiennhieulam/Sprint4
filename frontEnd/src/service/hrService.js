@@ -3,10 +3,10 @@ import authHeader from './auth-hreader'
 
 class StaffService {
     updateMoney (money,ids) {
-        return  axios.put('http://localhost:8083/api/staff/update-money/' + money + '?ids=' + ids, {headers: authHeader()})
+        return  axios.put('http://localhost:8083/api/staff/update-money/' + money + '?ids=' + ids , {headers: authHeader()})
     }
-    updateMoney2 (money,ids) {
-        return  axios.post('http://localhost:8083/api/staff/update-money2/' + money + '?ids=' + ids, {headers: authHeader()})
+    updateMoney2 (money,ids, email) {
+        return  axios.post('http://localhost:8083/api/staff/update-money2/' + money + '?ids=' + ids + '&email=' + email, {headers: authHeader()})
     }
      getAll(params) {
         return  axios.get('http://localhost:8083/api/staffs', {params, headers: authHeader()})
@@ -15,22 +15,22 @@ class StaffService {
         return  axios.get(`http://localhost:8083/api/staff/${id}`, { headers: authHeader()})
     }
      getStaffByEmail(email) {
-        return  axios.get(`http://localhost:8083/api/staff-name/${email}`)
+        return  axios.get(`http://localhost:8083/api/staff-name/${email}`, { headers: authHeader()})
     }
      getCode() {
-        return  axios.get('http://localhost:8083/api/getcode')
+        return  axios.get('http://localhost:8083/api/getcode',{ headers: authHeader()})
     }
      getBirthdays() {
-        return  axios.get('http://localhost:8083/api/birthdays')
+        return  axios.get('http://localhost:8083/api/birthdays', { headers: authHeader()})
     }
      getEmail() {
-        return  axios.get('http://localhost:8083/api/getemail')
+        return  axios.get('http://localhost:8083/api/getemail', { headers: authHeader()})
     }
      getEmail2(id) {
-        return  axios.get(`http://localhost:8083/api/getemail2/${id}`)
+        return  axios.get(`http://localhost:8083/api/getemail2/${id}`, { headers: authHeader()})
     }
      getCode2(id) {
-        return  axios.get(`http://localhost:8083/api/getcode2/${id}`)
+        return  axios.get(`http://localhost:8083/api/getcode2/${id}`, { headers: authHeader()})
     }
      getUser() {
         return  axios.get('http://localhost:8083/api/get-user', { headers: authHeader()})
@@ -45,16 +45,16 @@ class StaffService {
         return  axios.get(`http://localhost:8083/api/staff-show-register/${id}`, { headers: authHeader()});
     }
      getGeneralWelfare() {
-        return  axios.get('http://localhost:8083/api/general-welfanes');
+        return  axios.get('http://localhost:8083/api/general-welfanes', { headers: authHeader()});
     }
      getDepartments() {
-        return  axios.get('http://localhost:8083/api/departments', );
+        return  axios.get('http://localhost:8083/api/departments', { headers: authHeader()});
     }
      deleteStaff(id) {
         return  axios.put(`http://localhost:8083/api/staff-delete/${id}`, { headers: authHeader()})
     }
      unlookStaff(id) {
-        return  axios.put(`http://localhost:8083/api/staff-unlock/${id}`, { headers: authHeader()})
+        return  axios.post(`http://localhost:8083/api/vmg/staff/unlock/${id}`, { headers: authHeader()})
     }
      updateStaff(id, staff) {
         return  axios.put(`http://localhost:8083/api/staffs/${id}`, staff,  { headers: authHeader()})
@@ -91,7 +91,7 @@ class StaffService {
         return  axios.get(`http://localhost:8083/api/staffs-by-welfare/${id}`,  { headers: authHeader()})
     }   
      GetCost() {
-        return  axios.get('http://localhost:8083/api/costs')
+        return  axios.get('http://localhost:8083/api/costs', { headers: authHeader()})
     } 
    
    

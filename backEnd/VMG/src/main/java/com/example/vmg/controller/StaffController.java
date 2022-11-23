@@ -22,6 +22,8 @@ import com.example.vmg.model.*;
 import com.example.vmg.service.*;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -115,6 +117,7 @@ public class StaffController {
             return ResponseEntity.ok(new RuntimeException("Erorr!"));
         }
     }
+
     @PutMapping("/staff-delete/{id}")
     public ResponseEntity<Void> lookStaff(@PathVariable Long id){
         staffService.delete(id);
@@ -124,14 +127,15 @@ public class StaffController {
         userService.save(user);
         return new ResponseEntity<Void>(HttpStatus.OK);
     }
-    @PutMapping("/staff-unlock/{id}")
-    public ResponseEntity<Void> unLookStaff(@PathVariable Long id){
+//    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PostMapping("/vmg/staff/unlock/{id}")
+    public ResponseEntity<?> unLookStaff(@PathVariable Long id){
         staffService.unLock(id);
         Staff staff = staffService.getById(id);
         User user = userService.findByUsername(staff.getEmail()).get();
         user.setStatus(0);
         userService.save(user);
-        return new ResponseEntity<Void>(HttpStatus.OK);
+        return ResponseEntity.ok(new MessageResponse("ok"));
     }
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PutMapping("/staffs/{id}")
@@ -148,18 +152,24 @@ public class StaffController {
         return ResponseEntity.ok(new MessageResponse("update money staff successfully!"));
     }
     @PostMapping("/staff/update-money2/{money}")
-    public ResponseEntity<?> updatemoney(@RequestParam("ids") List<String> ids,
-                                         @PathVariable BigDecimal money){
-        List<MoneyUpdate> moneyUpdates = new ArrayList<MoneyUpdate>();
-        for(String i : ids){
-            MoneyUpdate moneyUpdate = new MoneyUpdate();
-            moneyUpdate.setMaNV(i);
-            moneyUpdate.setMoneyUpdate(money);
-            moneyUpdate.setStatus(0);
-            moneyUpdates.add(moneyUpdate);
-            moneyUpdateRepository.save(moneyUpdate);
-        }
-        return ResponseEntity.ok(new MessageResponse("update money staff successfully!"));
+    public ResponseEntity<?> updatemoney2(@RequestParam("ids") List<Long> ids,@RequestParam("email") String email,
+                                         @PathVariable BigDecimal money ){
+        User user = userService.findByUsername(email).get();
+       try {
+           for(Long i : ids) {
+               MoneyUpdate moneyUpdate = new MoneyUpdate();
+               Staff staff = staffService.getById(i);
+               moneyUpdate.setMaNV(staff.getCode());
+               moneyUpdate.setMoneyUpdate(money);
+               moneyUpdate.setStatus(0);
+               moneyUpdate.setIdStaff(user.getId());
+               moneyUpdateRepository.save(moneyUpdate);
+           }
+           return ResponseEntity.ok(new MessageResponse("update money staff successfully!"));
+       }catch (Exception e){
+           e.printStackTrace();
+           return ResponseEntity.ok(new MessageResponse("loi"));
+       }
     }
     @PutMapping("/staff-deletes")
     public ResponseEntity<?> mutilpartDelete(@RequestParam("ids") List<Long> ids){

@@ -13,9 +13,9 @@ public class AutoController {
 
     private static final SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
 
-    @Scheduled(cron = "0 45 14 * * *")
-    public void reportCurrentTime() {
-        System.out.println("hello khang");
-    }
+//    @Scheduled(cron = "0 45 14 * * *")
+//    public void reportCurrentTime() {
+//        System.out.println("hello khang");
+//    }
 
 }
