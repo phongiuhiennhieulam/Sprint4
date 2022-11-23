@@ -63,8 +63,6 @@
                   layout="prev, pager, next"
                   :page-count="count"
                   :total="this.array.length"
-                 
-                
                   @current-change="getPage(count)"
                   hide-on-single-page >
                 </el-pagination>
@@ -74,7 +72,6 @@
         </div>
       </div>
     </div>
-    <pre>{{count}}</pre>
   </div>
 </template>
 

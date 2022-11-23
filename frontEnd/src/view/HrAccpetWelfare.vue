@@ -1,6 +1,6 @@
 <template>
-  <div class="pl-body">
-    <div class="pl-content">
+  <div class="">
+    <div class="ap-content">
       <div class="hr-title"><strong>DANH SÁCH XÉT DUYỆT</strong></div>
       <br>
     

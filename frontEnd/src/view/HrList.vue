@@ -659,6 +659,7 @@ export default {
       ischeckDate: true,
       ischeckMoney: true,
       ischeckDepartment: true,
+      user: {}
     };
   },
   // created(){
@@ -928,12 +929,14 @@ export default {
         }
       )
       .then(() => {
-
-          StaffService.updateMoney2(money, this.selected)
+          var username = this.user.userName;
+          console.log(this.user) 
+          console.log(username) 
+          StaffService.updateMoney2(money, this.selected, username)
           this.loading()
           this.$message({
             type: "success",
-            message: "Đã cập nhật!",
+            message: "Đã gửi yêu cầu cập nhật!",
           });
           
         })
@@ -947,14 +950,20 @@ export default {
       
     },
     unlockStaff(id){
-      StaffService.unlookStaff(id);
-      this.loading();
+     
+    StaffService.unlookStaff(id)
+      .then((response) => {
+         console.log(response)
+        })
+        .catch((e) => {
+          console.log(e);
+        });
+     // this.loading();
       this.$notify({
             title: "Success",
             message: "Mở khóa thành công!",
             type: "success",
           });    
-
     },
     deleteStaff(id) {
       this.$confirm(
@@ -1395,6 +1404,10 @@ export default {
     this.listCode();
     this.listEmail();
     this.formatCurrency();
+    StaffService.getUser()
+          .then((response) =>{
+            this.user = response.data;
+          })
   },
 };
 </script>
