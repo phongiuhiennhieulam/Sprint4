@@ -37,12 +37,44 @@
       </div>
     </div>
     <!-- dialog lịch sử xet duyet -->
-    <el-dialog title="temp" :visible.sync="isHistory" width="53%">
+    <el-dialog title="temp" :visible.sync="isHistory" width="58%">
       <span slot="title" class="title-dialog"><strong>Lịch xử xét duyệt</strong> </span>
+      <table style="margin-bottom: 6px;">
+          <thead>
+            <tr>  
+                <th width="40%">
+                    <el-input
+                    placeholder="Nhập mã nhân viên"
+                    prefix-icon="el-icon-search"
+                    v-model="code"
+                   >
+                    </el-input>
+                  
+                </th>     
+                <th>
+                  <el-button type="warning" @click="findByCode(code)" style="margin-left: 5px;">
+                      <strong>
+                        Tìm kiếm
+                      </strong>
+                  </el-button>  
+                </th>        
+                                                                                     
+                <th width="10%" >
+                    <el-button style="margin-left: 20px;"   class="btn btn-danger" @click="handReturnWelfare()">
+                      <strong>
+                        <i class="el-icon-refresh-left"></i>
+                       Hoàn tác
+                      </strong>
+                    </el-button>
+                </th>
+            </tr>     
+          </thead>
+      </table>
       <div label-width="120px" class="hrAccW-table__content">
         <table>
           <thead>
             <tr>
+              <th style="text-align: center;" width="9%" ><input type="checkbox" v-model="selectAll"></th>
               <th width="9%">STT</th>
               <th>Mã NV</th>
               <th>Họ tên NV</th>
@@ -54,7 +86,16 @@
               <th width="13%">Hoàn tác</th>
             </tr>
           </thead>
-          <tr v-for="(item, index) in listHistory" :key="item.name">
+          <tr v-for="(item, index) in listHistory" :key="item.id">
+            <td style="text-align: center;">
+                    <input
+                        type="checkbox"
+                        :value="item.id"
+                        v-model="selected"
+                        :ref="item.id"
+                        required
+                      />
+            </td>
             <td>{{ index + 1 }}</td>
             <td style="text-align: left;">{{ item.code }}</td>
             <td style="text-align: left;">{{ item.userName }}</td>
@@ -87,10 +128,6 @@
           <strong>
             <h5>Nhân viên: {{ staff.name }}</h5>
           </strong>
-        </div>
-        <div class="col-6" style="text-align: right; margin-bottom: 5px;">
-          <el-button @click="handShowHistory()" type="warning"><strong><i class="el-icon-s-order"></i> Lịch
-              sử</strong></el-button>
         </div>
       </div>
       <div label-width="120px" class="hrAccW-table__content">
@@ -134,6 +171,23 @@ let welfareApi = new WelfareApi();
 import _ from 'lodash'
 export default {
   name: "PhucLoiList",
+  computed: {
+        selectAll: {
+            get: function (){
+                return this.listHistory ? this.selected.length == this.listHistory.length : false;
+            },
+            set: function (value) {
+                var selected = [];
+
+                if (value) {
+                    this.listHistory.forEach(function (staff) {  
+                        selected.push(staff.id);
+                    });
+                }
+                this.selected = selected;
+            }
+        }
+    },  
   data() {
     return {
       value: "",
@@ -147,7 +201,9 @@ export default {
       staff: {},
       listRegister: [],
       listHistory: [],
-      isHistory: false
+      isHistory: false,
+      selected: [],
+      code: ''
 
     };
   },
@@ -274,6 +330,33 @@ export default {
         this.$router.go()
       }, 1200);
     },
+    findByCode(code){
+        StaffService.GetWelfareofStaffByCode(code)
+        .then(response => {
+          this.listHistory = response.data;
+        })
+      },
+    handReturnWelfare(ids){
+      this.$confirm(
+            "Bạn có chắc sẽ hoàn tác những mục đã chọn không?",
+            "Warning!",
+            {
+              confirmButtonText: "Có",
+              cancelButtonText: "Hủy",
+              type: "warning",
+            }
+          ).then(() => {
+            ids = this.selected
+            console.log(ids)
+            StaffService.GetReturn(ids);
+            this.loading();
+            this.$notify({
+              title: 'Success',
+              message: 'Hoàn tác thành công',
+              type: 'success'
+            });
+          })
+    }  
 
   },
 

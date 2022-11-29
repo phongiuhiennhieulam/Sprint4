@@ -32,6 +32,11 @@ public interface StaffRepository extends JpaRepository<Staff,Long> {
     @Query("update Staff p set p.status = 1 where p.id in(:longs)")
     void MutipartDelete(List<Long> longs);
 
+    @Modifying
+    @Transactional
+    @Query("update WelfareStaff p set p.status = 2 where p.id in(:longs)")
+    public void MutipartReturn(List<Long> longs);
+
     @Query("select s.email from Staff s where s.id in(:longs)")
     public List<String> getEmailById(List<Long> longs);
     @Query("select email from Staff")

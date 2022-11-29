@@ -2,10 +2,10 @@ import axios from 'axios';
 import authHeader from './auth-hreader'
 
 class StaffService {
-    updateMoney (money,ids) {
+     updateMoney (money,ids) {
         return  axios.put('http://localhost:8083/api/staff/update-money/' + money + '?ids=' + ids , {headers: authHeader()})
     }
-    updateMoney2 (money,ids, email) {
+     updateMoney2 (money,ids, email) {
         return  axios.post('http://localhost:8083/api/staff/update-money2/' + money + '?ids=' + ids + '&email=' + email, {headers: authHeader()})
     }
      getAll(params) {
@@ -93,7 +93,12 @@ class StaffService {
      GetCost() {
         return  axios.get('http://localhost:8083/api/costs', { headers: authHeader()})
     } 
-   
-   
+     GetWelfareofStaffByCode(code) {
+        return  axios.get(`http://localhost:8083/api/get-history-accept-welfare-by-code?code=${code}`, { headers: authHeader()})
+    }
+    GetReturn(ids) {
+        return  axios.put(`http://localhost:8083/api/staff/return?ids=${ids}`, { headers: authHeader()})
+    }
+    
 }
 export default new StaffService()

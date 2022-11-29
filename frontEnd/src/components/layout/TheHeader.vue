@@ -349,11 +349,11 @@
                     <el-dropdown>
                       <span class="el-dropdown-link" style="cursor: pointer; font-size: 20px">
                         <i class="fa-solid fa-user"></i>
-                        <span>Hello: <Strong>{{ user.userName }}</Strong><span v-if="quanly">(quản lý)</span>
+                        <span>Hello: <Strong>{{ user.name }}</Strong><span v-if="quanly">(quản lý)</span>
                           <Strong v-if="(!nhanvien && !quanly && !nhansu)" style="color: red;">
                             Tài khoản của bạn đã bị khóa!
                           </Strong></span>
-                      </span>
+                        </span>
                       <el-dropdown-menu slot="dropdown">
                         <el-dropdown-item
                           style="text-decoration: none;color:#606266;cursor:pointer width: 100%; font-size: 20px">

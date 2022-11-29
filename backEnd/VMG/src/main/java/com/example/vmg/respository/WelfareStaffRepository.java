@@ -3,7 +3,9 @@ package com.example.vmg.respository;
 import com.example.vmg.model.WelfareStaff;
 import com.example.vmg.model.WelfareStaffEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -18,4 +20,9 @@ public interface WelfareStaffRepository extends JpaRepository<WelfareStaff, Long
     public List<WelfareStaff> getByRegister();
     @Query("select x from WelfareStaffEntity x where x.status = 2 AND x.idStaff =:id ")
     List<WelfareStaffEntity> findByStaffRegisterId(Long id);
+
+    @Modifying
+    @Transactional
+    @Query("update WelfareStaffEntity p set p.status = 2 where p.id in(:longs)")
+    public void MutipartReturn(List<Long> longs);
 }

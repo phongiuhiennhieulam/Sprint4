@@ -9,7 +9,7 @@
           <div class="hr-selected"></div>
           <table>
               <thead>
-                <tr width="90%">
+                <tr width="90%"  >
                   <th >     
                     <div >
                       <el-form :inline="true" class="demo-form-inline">
@@ -23,7 +23,7 @@
                           <span>
                             <el-button type="warning" @click="onFind">Tìm kiếm </el-button>
                           </span>
-                    </el-form>
+                      </el-form>
                     </div>  
                   </th>                                                  
                   <th width="10%" style="margin-right: 0px;">
@@ -53,7 +53,7 @@
                   
                   <th width="10%">
                     <div>
-                      <el-form :inline="true" class="demo-form-inline">
+                      <el-form :inline="true" class="d emo-form-inline">
                           <el-form-item>
                             <el-button type="erorr" class="btn btn-danger" @click="showAddForm">
                               <i class="el-icon-plus"></i> Thêm mới</el-button>
@@ -82,25 +82,50 @@
               <tbody>
                 <tr v-for="(item, index) in staffs.content" :key="index">
                   <td>
-                    <input
+                    <div v-if="item.email === user.userName">
+                      <input
+                        disabled="true"
                         type="checkbox"
                         :value="item.id"
                         v-model="selected"
                         :ref="item.id"
                         required
                       />
+                    </div>
+                    <div v-else>
+                      <input
+                        type="checkbox"
+                        :value="item.id"
+                        v-model="selected"
+                        :ref="item.id"
+                        required
+                      />
+                    </div>
+                   
                   </td>
                   <td>
                     <!-- <span class="icon-delete" @click="deleteStaff(item.id)">
                       <i class="fa fa-trash" aria-hidden="true"></i>
                     </span> -->
-                    <span  v-if="item.status == 0">
-                      <el-button
+                    <span  v-if="item.status == 0" >
+                      <div v-if="item.email === user.userName">
+                        <el-button
+                        disabled="disabled"
                         @click="deleteStaff(item.id, index)"
                         type="danger"
                         icon="el-icon-lock" 
                         circle
                       ></el-button>
+                      </div>
+                      <div v-else>
+                      <el-button
+                       
+                        @click="deleteStaff(item.id, index)"
+                        type="danger"
+                        icon="el-icon-lock" 
+                        circle
+                      ></el-button>
+                      </div>
                     </span>
                     <span v-if="item.status == 1">
                       <el-button
@@ -588,15 +613,17 @@ export default {
   name: "HrList",
   computed: {
         selectAll: {
+          
             get: function (){
                 return this.staffs.content ? this.selected.length == this.staffs.content.length : false;
             },
             set: function (value) {
                 var selected = [];
-
+                var checkBox = this.staffs.content;
+                var newCheckBox = checkBox.filter(item => item.email !== this.user.userName);
                 if (value) {
-                    this.staffs.content.forEach(function (staff) {
-                        selected.push(staff.id);
+                  newCheckBox.forEach(function (x) {
+                        selected.push(x.id);
                     });
                 }
                 this.selected = selected;
@@ -659,7 +686,9 @@ export default {
       ischeckDate: true,
       ischeckMoney: true,
       ischeckDepartment: true,
-      user: {}
+      user: {},
+      checktrung: true,
+      checkBox: []
     };
   },
   // created(){
@@ -687,6 +716,13 @@ export default {
                 return true;
             }
       },
+    checkChan (email){
+      if(this.user.userName === email){
+        return false;
+      }else{
+        return true;
+      }
+    },  
     keyupStaff() {
             this.staff.welfareMoney = this.addCommas(this.staff.welfareMoney.replace(/,/g, ''));
             this.$emit("input", parseInt(this.staff.welfareMoney.replace(/,/g, '')))
