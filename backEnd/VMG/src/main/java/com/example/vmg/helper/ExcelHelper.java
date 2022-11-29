@@ -12,6 +12,7 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -32,6 +33,8 @@ public class ExcelHelper {
     private PasswordEncoder passwordEncoder;
     @Autowired
     private StaffRepository staffRepository;
+
+    @Lazy
     @Autowired
     private StaffService staffService;
     @Autowired
@@ -90,7 +93,7 @@ public class ExcelHelper {
                             System.out.println(staff.getWelfareMoney());
                             break;
                         case 5:
-                            staff.setStatus(0);
+                            staff.setStatus(Integer.parseInt(String.valueOf(currentCell.getNumericCellValue())));
                             System.out.println(staff.getStatus());
                             break;
                         case 6:
@@ -123,7 +126,8 @@ public class ExcelHelper {
                     user.setRoles(roles);
                     user.setStatus(0);
                     userService.save(user);
-                }else
+                }
+                else
                     staffService.update((long)0,staff);
             }
             workbook.close();
