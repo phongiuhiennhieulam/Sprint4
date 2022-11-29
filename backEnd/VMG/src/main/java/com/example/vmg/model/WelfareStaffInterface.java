@@ -12,4 +12,7 @@ public interface WelfareStaffInterface {
     String getName();
     String getText();
 
+    String getUserName();
+    String getCode();
+
 }

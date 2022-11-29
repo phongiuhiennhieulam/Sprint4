@@ -10,6 +10,7 @@ import com.example.vmg.model.ERole;
 import com.example.vmg.model.Role;
 import com.example.vmg.model.Staff;
 import com.example.vmg.model.User;
+import com.example.vmg.respository.MoneyUpdateRepository;
 import com.example.vmg.respository.StaffRepository;
 import com.example.vmg.service.RoleServiceImpl;
 import com.example.vmg.service.StaffService;
@@ -21,7 +22,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import com.example.vmg.model.*;
 import com.example.vmg.service.*;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -49,6 +53,8 @@ public class StaffController {
     @Autowired
     private WelfareStaffService welfareStaffService;
     @Autowired private WelfareStaffEntityService welfareStaffEntityService;
+
+    @Autowired private MoneyUpdateRepository moneyUpdateRepository;
 
     @Autowired
     private ExcelHelper excelHelper;
@@ -116,6 +122,7 @@ public class StaffController {
             return ResponseEntity.ok(new RuntimeException("Erorr!"));
         }
     }
+
     @PutMapping("/staff-delete/{id}")
     public ResponseEntity<Void> lookStaff(@PathVariable Long id){
         staffService.delete(id);
@@ -125,14 +132,14 @@ public class StaffController {
         userService.save(user);
         return new ResponseEntity<Void>(HttpStatus.OK);
     }
-    @PutMapping("/staff-unlock/{id}")
-    public ResponseEntity<Void> unLookStaff(@PathVariable Long id){
+    @PostMapping("/vmg/staff/unlock/{id}")
+    public ResponseEntity<?> unLookStaff(@PathVariable Long id){
         staffService.unLock(id);
         Staff staff = staffService.getById(id);
         User user = userService.findByUsername(staff.getEmail()).get();
         user.setStatus(0);
         userService.save(user);
-        return new ResponseEntity<Void>(HttpStatus.OK);
+        return ResponseEntity.ok(new MessageResponse("ok"));
     }
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PutMapping("/staffs/{id}")
@@ -147,6 +154,27 @@ public class StaffController {
         String.join(",", ids.stream()
                 .map(value ->  Long.toString(value)).collect(Collectors.toList()));
         return ResponseEntity.ok(new MessageResponse("update money staff successfully!"));
+    }
+
+    @PostMapping("/staff/update-money2/{money}")
+    public ResponseEntity<?> updatemoney2(@RequestParam("ids") List<Long> ids,@RequestParam("email") String email,
+                                         @PathVariable BigDecimal money ){
+        User user = userService.findByUsername(email).get();
+       try {
+           for(Long i : ids) {
+               MoneyUpdate moneyUpdate = new MoneyUpdate();
+               Staff staff = staffService.getById(i);
+               moneyUpdate.setMaNV(staff.getCode());
+               moneyUpdate.setMoneyUpdate(money);
+               moneyUpdate.setStatus(0);
+               moneyUpdate.setIdStaff(user.getId());
+               moneyUpdateRepository.save(moneyUpdate);
+           }
+           return ResponseEntity.ok(new MessageResponse("update money staff successfully!"));
+       }catch (Exception e){
+           e.printStackTrace();
+           return ResponseEntity.ok(new MessageResponse("loi"));
+       }
     }
     @PutMapping("/staff-deletes")
     public ResponseEntity<?> mutilpartDelete(@RequestParam("ids") List<Long> ids){

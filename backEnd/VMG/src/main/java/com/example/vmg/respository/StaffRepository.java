@@ -93,7 +93,7 @@ public interface StaffRepository extends JpaRepository<Staff,Long> {
     @Modifying
     @Transactional
     @Query(value = "select s.id, s.name, s.code ,count(s.id) as quantity from staff s, welfare_staff ws\n" +
-            "where ws.id_welfare = ? and s.id = ws.id_staff\n" +
+            "where ws.id_welfare = ? and s.id = ws.id_staff and ws.status=0 \n " +
             "group by s.id", nativeQuery = true)
     public List<StatisticalInterface> getStaffByWelfare(Long id);
 

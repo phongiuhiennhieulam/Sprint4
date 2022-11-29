@@ -346,7 +346,7 @@
                   <div class="mb-3">
                     <label class="form-label"><Strong>Chọn phòng ban <span style="color: red;">(*)</span>:</Strong>
                     </label>
-                    <select style="height: 55px;" v-model="staff.department" placeholder="Chọn phòng ban"
+                    <select style="height: 36px;" v-model="staff.department" placeholder="Chọn phòng ban"
                       class="form-control" name="department" id="department" required>
                       <option v-for="x in departments" :value="x" :key="x.id">
                         {{ x.name }}
@@ -500,8 +500,14 @@ export default {
       isShow: false,
       showDialogAdd: true,
       status: true,
-      moneyUpdate: ''
-
+      moneyUpdate: '',
+      ischeckcode: true,
+      ischeckName: true,
+      ischeckEmail: true,
+      ischeckDate: true,
+      ischeckMoney: true,
+      ischeckDepartment: true,
+      user: {}
     };
   },
   // created(){
@@ -774,13 +780,16 @@ export default {
           type: "warning",
         }
       )
-        .then(() => {
 
-          StaffService.updateMoney(money, this.selected)
+      .then(() => {
+          var username = this.user.userName;
+          console.log(this.user) 
+          console.log(username) 
+          StaffService.updateMoney2(money, this.selected, username)
           this.loading()
           this.$message({
             type: "success",
-            message: "Đã cập nhật!",
+            message: "Đã gửi yêu cầu cập nhật!",
           });
 
         })
@@ -793,15 +802,22 @@ export default {
         });
 
     },
-    unlockStaff(id) {
-      StaffService.unlookStaff(id);
-      this.loading();
-      this.$notify({
-        title: "Success",
-        message: "Mở khóa thành công!",
-        type: "success",
-      });
 
+    unlockStaff(id){
+    StaffService.unlookStaff(id)
+      .then((response) => {
+         console.log(response)
+        })
+        .catch((e) => {
+          console.log(e);
+        });
+     // this.loading();
+      this.$notify({
+            title: "Success",
+            message: "Mở khóa thành công!",
+            type: "success",
+          }); 
+          this.loading()   
     },
     deleteStaff(id) {
       this.$confirm(
@@ -1221,7 +1237,6 @@ export default {
         alert('sai.');
     },
     handleFilesUpload(object) {
-      // chỉ nhận xls và xlsx
       if (object.target.files[0].type != "application/vnd.ms-excel" && object.target.files[0].type != "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet") {
         this.$notify({
           title: "Warning",
@@ -1266,6 +1281,10 @@ export default {
     this.listCode();
     this.listEmail();
     this.formatCurrency();
+    StaffService.getUser()
+          .then((response) =>{
+            this.user = response.data;
+          })
   },
 
 };

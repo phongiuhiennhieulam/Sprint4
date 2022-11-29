@@ -58,13 +58,21 @@
                     Không có nhân viên nào đăng ký phúc lợi này!
                   </h5>
                 </form>
+<!-- 
+                <el-pagination
+                  background
+                  layout="prev, pager, next"
+                  :page-count="count"
+                  :total="this.array.length"
+                  @current-change="getPage(count)"
+                  hide-on-single-page >
+                </el-pagination> -->
               </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-
   </div>
 </template>
 

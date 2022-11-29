@@ -2,7 +2,7 @@
   <div class="plList-main">
     <!-- Khu vực hiển thị thông tin phúc lợi -->
     <div class="plList-content">
-      <div class="plList-title"><strong>DANH SÁCH PHÚC LỢI</strong></div>
+      <div class="plList-title"><strong>QUẢN LÍ PHÚC LỢI</strong></div>
       <MediaQueryProvider :queries="$options.queries">
         <MatchMedia v-slot="{ desktop }">
           <div v-if="desktop">
@@ -99,11 +99,10 @@
                       <div class="row">
                         <div class="mb-3 col-6">
                           <label class="form-label">
-                            <strong>Thành tiền:&nbsp;{{ formatCurrency(add.price) }}<span style="color:red;">&nbsp;
-                                (*)</span></strong>
+                            <strong>Thành tiền: </strong>
                           </label>
                           <el-form-item prop="price" label-width="0px">
-                            <el-input type="number" :min="0" v-model.number="add.price"></el-input>
+                            <el-input type="text" v-model="add.price" @blur="keyUpMoney" @input="keyUpMoney"></el-input>
                           </el-form-item>
                         </div>
                         <div class="mb-3 col-6" v-if="value == 0">
@@ -196,7 +195,7 @@
                               (*)</span></strong>
                         </label>
                         <el-form-item prop="price" label-width="0px">
-                          <el-input type="number" :min="0" v-model.number="add.price"></el-input>
+                          <el-input type="text" v-model="add.price" @blur="keyUpMoney" @input="keyUpMoney"></el-input>
                         </el-form-item>
                       </div>
                     </div>
@@ -273,6 +272,7 @@ export default {
       addText: "Thêm mới phúc lợi cá nhân hóa",
     };
   },
+
   components: {
     MediaQueryProvider, MatchMedia
   },
@@ -315,6 +315,22 @@ export default {
     }
   },
   methods: {
+    addCommas(nStr) {
+      var x, x1, x2;
+      nStr += '';
+      x = nStr.split('.');
+      x1 = x[0];
+      x2 = x.length > 1 ? ',' + x[1] : '';
+      var rgx = /(\d+)(\d{3})/;
+      while (rgx.test(x1)) {
+        x1 = x1.replace(rgx, '$1' + ',' + '$2');
+      }
+      return x1 + x2;
+    },
+    keyUpMoney() {
+      this.add.price = this.add.price.replace(/[^0-9.,]/g, '')
+      this.add.price = this.addCommas(this.add.price.replace(/,/g, ''));
+    },
     isDuplicateName(value) {
       if (this.formMode === 'edit') {
         return this.list.filter((x) => format.removeVietnameseTones(x.name).toLowerCase() === (format.removeVietnameseTones(value).toLowerCase()) && x.id !== this.add.id).length > 0
@@ -357,6 +373,7 @@ export default {
       })
       if (isValid) {
         const qs = require("qs");
+        self.add.price = parseInt(self.add.price.replace(/,/g, ''))
         if (self.formMode === 'edit') {
           if (this.value === 0) {
             welfareApi.updateWelfare(self.add.id, qs.stringify(self.add)).then((res) => {
@@ -448,6 +465,7 @@ export default {
     },
     showEditForm(item) {
       setTimeout(() => {
+        item.price = this.addCommas(item.price);
         this.add = JSON.parse(JSON.stringify(item)); //clone item object
         this.formMode = 'edit'
         if (item.isQuantity === false) this.label = "Chọn số lượng";

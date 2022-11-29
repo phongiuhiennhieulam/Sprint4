@@ -2,98 +2,101 @@ import axios from 'axios';
 import authHeader from './auth-hreader'
 
 class StaffService {
-    async updateMoney(money, ids) {
-        return await axios.put('http://localhost:8083/api/staff/update-money/' + money + '?ids=' + ids, { headers: authHeader() })
+    updateMoney (money,ids) {
+        return  axios.put('http://localhost:8083/api/staff/update-money/' + money + '?ids=' + ids , {headers: authHeader()})
     }
-    async getAll(params) {
-        return await axios.get('http://localhost:8083/api/staffs', { params, headers: authHeader() })
+    updateMoney2 (money,ids, email) {
+        return  axios.post('http://localhost:8083/api/staff/update-money2/' + money + '?ids=' + ids + '&email=' + email, {headers: authHeader()})
     }
-    async getStaff(id) {
-        return await axios.get(`http://localhost:8083/api/staff/${id}`, { headers: authHeader() })
+     getAll(params) {
+        return  axios.get('http://localhost:8083/api/staffs', {params, headers: authHeader()})
     }
-    async getStaffByEmail(email) {
-        return await axios.get(`http://localhost:8083/api/staff-name/${email}`)
+     getStaff(id) {
+        return  axios.get(`http://localhost:8083/api/staff/${id}`, { headers: authHeader()})
     }
-    async getCode() {
-        return await axios.get('http://localhost:8083/api/getcode')
+     getStaffByEmail(email) {
+        return  axios.get(`http://localhost:8083/api/staff-name/${email}`, { headers: authHeader()})
     }
-    async getBirthdays() {
-        return await axios.get('http://localhost:8083/api/birthdays')
+     getCode() {
+        return  axios.get('http://localhost:8083/api/getcode',{ headers: authHeader()})
     }
-    async getEmail() {
-        return await axios.get('http://localhost:8083/api/getemail')
+     getBirthdays() {
+        return  axios.get('http://localhost:8083/api/birthdays', { headers: authHeader()})
     }
-    async getEmail2(id) {
-        return await axios.get(`http://localhost:8083/api/getemail2/${id}`)
+     getEmail() {
+        return  axios.get('http://localhost:8083/api/getemail', { headers: authHeader()})
     }
-    async getCode2(id) {
-        return await axios.get(`http://localhost:8083/api/getcode2/${id}`)
+     getEmail2(id) {
+        return  axios.get(`http://localhost:8083/api/getemail2/${id}`, { headers: authHeader()})
     }
-    async getUser() {
-        return await axios.get('http://localhost:8083/api/get-user', { headers: authHeader() })
+     getCode2(id) {
+        return  axios.get(`http://localhost:8083/api/getcode2/${id}`, { headers: authHeader()})
     }
-    async getFind(text) {
-        return await axios.get(`http://localhost:8083/api/staffs/find?text=${text}`, { headers: authHeader() })
+     getUser() {
+        return  axios.get('http://localhost:8083/api/get-user', { headers: authHeader()})
     }
-    async getWelfare(id) {
-        return await axios.get(`http://localhost:8083/api/staff-show/${id}`, { headers: authHeader() });
+     getFind(text) {
+        return  axios.get(`http://localhost:8083/api/staffs/find?text=${text}`, { headers: authHeader()})
     }
-    async getWelfareRegister(id) {
-        return await axios.get(`http://localhost:8083/api/staff-show-register/${id}`, { headers: authHeader() });
+     getWelfare(id) {
+        return  axios.get(`http://localhost:8083/api/staff-show/${id}`, { headers: authHeader()}) ;
     }
-    async getGeneralWelfare() {
-        return await axios.get('http://localhost:8083/api/general-welfanes');
+     getWelfareRegister(id) {
+        return  axios.get(`http://localhost:8083/api/staff-show-register/${id}`, { headers: authHeader()});
     }
-    async getDepartments() {
-        return await axios.get('http://localhost:8083/api/departments',);
+     getGeneralWelfare() {
+        return  axios.get('http://localhost:8083/api/general-welfanes', { headers: authHeader()});
     }
-    async deleteStaff(id) {
-        return await axios.put(`http://localhost:8083/api/staff-delete/${id}`, { headers: authHeader() })
+     getDepartments() {
+        return  axios.get('http://localhost:8083/api/departments', { headers: authHeader()});
     }
-    async unlookStaff(id) {
-        return await axios.put(`http://localhost:8083/api/staff-unlock/${id}`, { headers: authHeader() })
+     deleteStaff(id) {
+        return  axios.put(`http://localhost:8083/api/staff-delete/${id}`, { headers: authHeader()})
     }
-    async updateStaff(id, staff) {
-        return await axios.put(`http://localhost:8083/api/staffs/${id}`, staff, { headers: authHeader() })
+     unlookStaff(id) {
+        return  axios.post(`http://localhost:8083/api/vmg/staff/unlock/${id}`, { headers: authHeader()})
     }
-    async createStaff2(staff) {
-        return await axios.post('http://localhost:8083/api/staffs', staff, { headers: authHeader() })
+     updateStaff(id, staff) {
+        return  axios.put(`http://localhost:8083/api/staffs/${id}`, staff,  { headers: authHeader()})
     }
-    async getRegisterWelfare() {
-        return await axios.get('http://localhost:8083/api/registers', { headers: authHeader() })
+     createStaff2(staff) {
+        return  axios.post('http://localhost:8083/api/staffs', staff, { headers: authHeader()})
     }
-
-    async DeleteRegisterWelfare(id) {
-        return await axios.put(`http://localhost:8083/api/register-delete/${id}`, { headers: authHeader() })
+     getRegisterWelfare() {
+        return  axios.get('http://localhost:8083/api/registers', { headers: authHeader()})
     }
-    async deletes(ids) {
-        return await axios.put(`http://localhost:8083/api/staff-deletes?ids=${ids}`, { headers: authHeader() })
+      
+     DeleteRegisterWelfare(id) {
+        return  axios.put(`http://localhost:8083/api/register-delete/${id}`, { headers: authHeader()})
     }
-    async getErorr() {
-        return await axios.get('http://localhost:8083/api/staff-erorr', { headers: authHeader() })
+deletes (ids) {
+        return  axios.put(`http://localhost:8083/api/staff-deletes?ids=${ids}`, { headers: authHeader()})
     }
-    async getStaffByDepartment(id) {
-        return await axios.get(`http://localhost:8083/api/list-department/${id}`, { headers: authHeader() })
+     getErorr () {
+        return  axios.get('http://localhost:8083/api/staff-erorr', { headers: authHeader()})
     }
-    async getDepartment2() {
-        return await axios.get('http://localhost:8083/api/list-department/1', { headers: authHeader() })
+     getStaffByDepartment (id) {
+        return  axios.get(`http://localhost:8083/api/list-department/${id}`, { headers: authHeader()})
     }
-    async SuccessRegisterWelfare(id) {
-        return await axios.put(`http://localhost:8083/api/register/${id}`, { headers: authHeader() })
+     getDepartment2 () {
+        return  axios.get('http://localhost:8083/api/list-department/1', { headers: authHeader()})
     }
-    async ReturnRegisterWelfare(id) {
-        return await axios.put(`http://localhost:8083/api/return/${id}`, { headers: authHeader() })
+     SuccessRegisterWelfare(id) {
+        return  axios.put(`http://localhost:8083/api/register/${id}`, { headers: authHeader()})
     }
-    async GetStaffByWelfare(id) {
-        return await axios.get(`http://localhost:8083/api/staffs-by-welfare/${id}`, { headers: authHeader() })
+     ReturnRegisterWelfare(id) {
+        return  axios.put(`http://localhost:8083/api/return/${id}`, { headers: authHeader()})
     }
-    async GetCost() {
-        return await axios.get('http://localhost:8083/api/costs')
-    }
+     GetStaffByWelfare(id) {
+        return  axios.get(`http://localhost:8083/api/staffs-by-welfare/${id}`,  { headers: authHeader()})
+    }   
+     GetCost() {
+        return  axios.get('http://localhost:8083/api/costs', { headers: authHeader()})
+    } 
     async ImportExcel(file) {
         return await axios.post('http://localhost:8083/api/uploadExcel', file, { headers: authHeader() })
     }
-
-
+   
+   
 }
 export default new StaffService()

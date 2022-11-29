@@ -149,9 +149,9 @@ public class WelfareController {
         return welfareService.getAllStatistic();
     }
 
-    @GetMapping("/get-history-accept-welfare/{id}")
-    public List<WelfareStaffInterface> getHistoryAcceptWelfareOfUser(@PathVariable Long id){
-        return welfareStaffEntityService.getHistoryAcceptWelfareOfUser(id);
+    @GetMapping("/get-history-accept-welfare")
+    public List<WelfareStaffInterface> getHistoryAcceptWelfareOfUser(){
+        return welfareStaffEntityService.getHistoryAcceptWelfareOfUser();
     }
     @PutMapping("/status-welfare")
     public ResponseEntity<Void> updateStatusGeneralWelfare(@RequestBody StatusFormRequest statusFormRequest){

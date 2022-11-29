@@ -4,6 +4,7 @@ import com.example.vmg.model.*;
 import com.example.vmg.respository.DepartmentRepository;
 import com.example.vmg.respository.StaffRepository;
 import com.example.vmg.service.RoleServiceImpl;
+import com.example.vmg.service.StaffService;
 import com.example.vmg.service.UserServiceImpl;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
@@ -32,6 +33,8 @@ public class ExcelHelper {
     @Autowired
     private StaffRepository staffRepository;
     @Autowired
+    private StaffService staffService;
+    @Autowired
     private DepartmentRepository departmentRepository;
     public static String TYPE = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
     static String[] HEADERs = {"Code","Name","Date","Email","Welfare_money","Status"
@@ -50,7 +53,7 @@ public class ExcelHelper {
             List<Staff> staffs = new ArrayList<Staff>();
             int rowNumber = 0;
             while(rows.hasNext()){
-                // boolean isExistcode = false
+                boolean checkUpdate = false;
                 Row currentRow = rows.next();
                 if(rowNumber == 0){
                     rowNumber++;
@@ -60,17 +63,13 @@ public class ExcelHelper {
                 int cellIdx = 0;
                 Staff staff = new Staff();
                 while(cellsInRow.hasNext()){
-
                     Cell currentCell = cellsInRow.next();
                     switch (cellIdx){
                         case 0:
                             staff.setCode(currentCell.getStringCellValue());
-                            // check code xem ton tai chua neu ton tại thì
-//                            if(isUpdate){
-//                                // check code exist
-//                                // nếu exist thì isExistcode = true
-//                            }
-
+                            List<String> listCodes = staffRepository.getCode();
+                            if(listCodes.contains(currentCell.getStringCellValue()))
+                                checkUpdate = true;
                             System.out.println(staff.getCode());
                             break;
                         case 1:
@@ -110,18 +109,22 @@ public class ExcelHelper {
 //                }else{
 //                    staffRepository.save(staff);
 //                }
-                staffRepository.save(staff);
-                String pass = "123456";
-                User user = new User(staff.getEmail(),
-                        passwordEncoder.encode(pass));
-                Set<Role> roles = new HashSet<>();
-                Role userRole = roleService.findByName(ERole.ROLE_USER)
-                        .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-                roles.add(userRole);
-                user.setName(staff.getName());
-                user.setRoles(roles);
-                user.setStatus(0);
-                userService.save(user);
+
+                if(checkUpdate == false) {
+                    staffRepository.save(staff);
+                    String pass = "123456";
+                    User user = new User(staff.getEmail(),
+                            passwordEncoder.encode(pass));
+                    Set<Role> roles = new HashSet<>();
+                    Role userRole = roleService.findByName(ERole.ROLE_USER)
+                            .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+                    roles.add(userRole);
+                    user.setName(staff.getName());
+                    user.setRoles(roles);
+                    user.setStatus(0);
+                    userService.save(user);
+                }else
+                    staffService.update((long)0,staff);
             }
             workbook.close();
             //return staffs;
