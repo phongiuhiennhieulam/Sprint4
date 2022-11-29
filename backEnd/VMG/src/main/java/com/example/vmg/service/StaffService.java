@@ -98,6 +98,9 @@ public class StaffService {
         staffRepository.updateMoney(number, longs);
         System.out.println("update money");
     }
+    public void returnWelfare(List<Long> longs) {
+        staffRepository.MutipartReturn(longs);
+    }
     public void mutipartDelete(List<Long> longs) {
 //      personRepository.deleteByIdIn(new ArrayList<>(integers));
         staffRepository.MutipartDelete(longs);

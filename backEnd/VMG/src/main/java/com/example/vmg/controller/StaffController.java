@@ -253,6 +253,18 @@ public class StaffController {
         welfareStaffEntityService.update(id, welfareStaff);
         return ResponseEntity.ok(new MessageResponse("successfully!"));
     }
+    @PutMapping("/staff/return")
+    public ResponseEntity<?> returnWelfare(@RequestParam("ids") List<Long> ids){
+      try {
+          welfareStaffService.returnWelfare(ids);
+          String.join(",", ids.stream()
+                  .map(value ->  Long.toString(value)).collect(Collectors.toList()));
+          return ResponseEntity.ok(new MessageResponse("return welfare successfully!"));
+      }catch (Exception e){
+          e.printStackTrace();
+          return null;
+      }
+    }
 //    @PutMapping("/update-money")
 //    public String updateMoney2(@RequestParam("ids") List<Long> ids, @RequestBody BigDecimal number) {
 //        staffService.updateMoney(number, ids);

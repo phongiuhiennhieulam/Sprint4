@@ -170,4 +170,9 @@ public class WelfareController {
     public List<WelfareStaffInterface> getStatusWelfareOfUser(@PathVariable Long id){
         return welfareStaffEntityService.getStatusWelfareOfUser(id);
     }
+
+    @GetMapping("/get-history-accept-welfare-by-code")
+    public List<WelfareStaffInterface> getHistoryAcceptWelfareOfUserByCode(@RequestParam(name="code") String code){
+        return welfareStaffEntityService.getHistoryAcceptWelfareOfUserByCode(code);
+    }
 }
