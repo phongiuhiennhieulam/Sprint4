@@ -76,24 +76,31 @@ public class ExcelHelper {
                                 if (listCodes.contains(staff.getCode().trim().toLowerCase())) {
                                     checkUpdate = true;
                                 }
+                                System.out.println(staff.getCode());
                                 break;
                             case 1:
                                 staff.setName(currentCell.getStringCellValue());
+                                System.out.println(staff.getName());
                                 break;
                             case 2:
                                 staff.setDate(currentCell.getDateCellValue());
+                                System.out.println(staff.getDate());
                                 break;
                             case 3:
                                 staff.setEmail(currentCell.getStringCellValue());
+                                System.out.println(staff.getEmail());
                                 break;
                             case 4:
                                 staff.setWelfareMoney(BigDecimal.valueOf(currentCell.getNumericCellValue()));
+                                System.out.println(staff.getWelfareMoney());
                                 break;
                             case 5:
                                 staff.setStatus((int) currentCell.getNumericCellValue());
+                                System.out.println(staff.getStatus());
                                 break;
                             case 6:
                                 staff.setDepartment(departmentRepository.getDepartmentByName(currentCell.getStringCellValue()));
+                                System.out.println(staff.getDepartment().getName());
                                 break;
                             default:
                                 break;

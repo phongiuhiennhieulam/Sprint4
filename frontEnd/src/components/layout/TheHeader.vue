@@ -93,6 +93,16 @@
                   </router-link>
                 </el-badge>
               </div>
+
+              <div class="header-right__item" v-if="lanhdao">
+                <el-badge :value="list.length" :max="99" class="item" style="margin-right: 5px; margin-left: 5px">
+                  <router-link to="/accept_money"
+                    style="text-decoration: none;color:#606266;cursor:pointer width: 100%;font-size: 20px;">
+                    <i class="fa-solid fa-clipboard-check"></i>
+                    Xét duyệt tiền phúc lợi
+                  </router-link>
+                </el-badge>
+              </div>
               <el-dropdown v-if="quanly">
                 <el-badge :value="listbirthdays.length" :max="10" class="item"
                   style="margin-right: 5px; margin-left: 5px">
@@ -174,7 +184,7 @@
                 <i class="el-icon-s-custom"></i>
                 <el-dropdown>
                   <span class="el-dropdown-link" style="cursor: pointer; font-size: 19px">
-                    <span>Hello: <Strong>{{ user.userName }}</Strong><span v-if="quanly">(quản
+                    <span>Hello: <Strong>{{ user.name }}</Strong><span v-if="quanly">(quản
                         lý)</span>
                       <Strong v-if="(!nhanvien && !quanly && !nhansu)" style="color: red;">
                         Tài khoản của bạn đã bị khóa!
@@ -264,6 +274,7 @@
                       </router-link>
                     </el-badge>
                   </el-dropdown-item>
+
                   <el-dropdown-item class="header-right__item" v-if="quanly">
                     <el-dropdown>
                       <el-badge :value="listbirthdays.length" :max="10" class="item">
@@ -392,6 +403,8 @@ export default {
       nhanvien: false,
       quanly: false,
       nhansu: false,
+      lanhdao: false,
+
       list: [],
       listbirthdays: [],
       staffErorr: [],
@@ -458,8 +471,11 @@ export default {
         if (this.userExists("ROLE_ADMIN")) {
           this.quanly = true;
         }
-        if (this.userExists("ROLE_MODERATOR")) {
+        if (this.userExists("ROLE_PERSONNEL")) {
           this.nhansu = true;
+        }
+        if (this.userExists("ROLE_MODERATOR")) {
+          this.lanhdao = true;
         }
       }
     },

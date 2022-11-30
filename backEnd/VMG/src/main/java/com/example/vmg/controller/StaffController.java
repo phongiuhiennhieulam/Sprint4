@@ -158,19 +158,26 @@ public class StaffController {
     }
 
     @PostMapping("/staff/update-money2/{money}")
-    public ResponseEntity<?> updatemoney(@RequestParam("ids") List<String> ids,
-                                         @PathVariable BigDecimal money){
-        List<MoneyUpdate> moneyUpdates = new ArrayList<MoneyUpdate>();
-        for(String i : ids){
-            MoneyUpdate moneyUpdate = new MoneyUpdate();
-            moneyUpdate.setMaNV(i);
-            moneyUpdate.setMoneyUpdate(money);
-            moneyUpdate.setStatus(0);
-            moneyUpdates.add(moneyUpdate);
-            moneyUpdateRepository.save(moneyUpdate);
+    public ResponseEntity<?> updatemoney2(@RequestParam("ids") List<Long> ids,@RequestParam("email") String email,
+                                          @PathVariable BigDecimal money ){
+        User user = userService.findByUsername(email).get();
+        try {
+            for(Long i : ids) {
+                MoneyUpdate moneyUpdate = new MoneyUpdate();
+                Staff staff = staffService.getById(i);
+                moneyUpdate.setMaNV(staff.getCode());
+                moneyUpdate.setMoneyUpdate(money);
+                moneyUpdate.setStatus(0);
+                moneyUpdate.setIdStaff(user.getId());
+                moneyUpdateRepository.save(moneyUpdate);
+            }
+            return ResponseEntity.ok(new MessageResponse("update money staff successfully!"));
+        }catch (Exception e){
+            e.printStackTrace();
+            return ResponseEntity.ok(new MessageResponse("loi"));
         }
-        return ResponseEntity.ok(new MessageResponse("update money staff successfully!"));
     }
+
     @PutMapping("/staff-deletes")
     public ResponseEntity<?> mutilpartDelete(@RequestParam("ids") List<Long> ids){
         staffService.mutipartDelete(ids);
