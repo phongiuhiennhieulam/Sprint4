@@ -58,6 +58,7 @@
                     Không có nhân viên nào đăng ký phúc lợi này!
                   </h5>
                 </form>
+<!-- 
                 <el-pagination
                   background
                   layout="prev, pager, next"
@@ -65,7 +66,7 @@
                   :total="this.array.length"
                   @current-change="getPage(count)"
                   hide-on-single-page >
-                </el-pagination>
+                </el-pagination> -->
               </div>
             </div>
           </div>
@@ -84,41 +85,10 @@ export default {
     return {
       welfares: [],
       staffs: [],
-      welfare: {},
-      array: [
-                {id: "1"}, {id: "2"}, {id: "3"}, {id: "4"}, {id: "5"}, {id: "6"}, {id: "7"}, {id: "8"}, {id: "9"}, {id: "10"},{id: "11"},
-                {id: "11"}, {id: "21"}, {id: "31"}, {id: "41"}, {id: "51"}, {id: "16"}, {id: "17"}, {id: "18"}, {id: "19"}, {id: "110"},{id: "111"}
-              ],
-      page: [],
-      count: 1,
-      pageSize: 10,
-      pageSizes: [2, 4, 6],     
-      pageIndex: ''   
-      
+      welfare: {}
     }
   },
-
   methods: {
-
-
-   paginate(array, index, size) {
-        // transform values
-        index = Math.abs(parseInt(index));
-        index = index > 0 ? index - 1 : index;
-        size = parseInt(size);
-        size = size < 1 ? 1 : size;
-        // filter
-        return [...(array.filter((value, n) => {
-            return (n >= (index * size)) && (n < ((index+1) * size))
-        }))]
-    },
-    getPage(page){
-      console.log(page)
-      // number = this.pageIndex
-      // number = this.count;
-      // this.page =  this.paginate(this.array, number, 3)
-      this.count++;
-    },
     handleOpen(key, keyPath) {
       console.log(key, keyPath);
     },
@@ -150,8 +120,6 @@ export default {
   },
   mounted() {
     this.getAll();
-    this.getPage();
-    
   }
 }
 </script>
@@ -199,6 +167,10 @@ export default {
   text-align: center;
   z-index: 2;
 }
+.static-table__content{
+  height: 500px;
+  overflow-y: scroll;
+}
 
 .static-table__content table {
   width: 100%;
@@ -208,6 +180,7 @@ export default {
 .static-table__content table tr {
   background: #f2e7ddf8;
 }
+
 
 .static-table__content table tr th {
   border-right: 1px solid #e4c9ac;
@@ -223,6 +196,8 @@ export default {
 
 .static-table__content table thead tr {
   background-color: #fdf9f8;
+  position:sticky;
+  top: 0;
 }
 
 .static-table__content table thead th {

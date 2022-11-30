@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 
 public interface GeneralWelfareRepository extends JpaRepository<GeneralWelfare, Long> {
-    @Query(value = "select sum(x.price) from general_welfare x", nativeQuery = true)
+    @Query("select sum(x.price) from GeneralWelfare x")
     Long getAllMoneyGeneral();
     List<GeneralWelfare> findAllByOrderByIdDesc();
 

@@ -11,6 +11,7 @@ public interface WelfareStaffInterface {
     BigDecimal getPrice();
     String getName();
     String getText();
+
     String getUserName();
     String getCode();
 

@@ -37,7 +37,8 @@
       </div>
     </div>
     <!-- dialog lịch sử xet duyet -->
-    <el-dialog title="temp" :visible.sync="isHistory" width="53%" :before-close="handleClose">
+
+    <el-dialog title="temp" :visible.sync="isHistory" width="59%" :before-close="handleClose">
       <span slot="title" class="title-dialog"><strong>Lịch xử xét duyệt</strong> </span>
       <div label-width="120px" class="hrAccW-table__content">
         <table>
@@ -88,10 +89,10 @@
             <h5>Nhân viên: {{ staff.name }}</h5>
           </strong>
         </div>
-        <div class="col-6" style="text-align: right; margin-bottom: 5px;">
+        <!-- <div class="col-6" style="text-align: right; margin-bottom: 5px;">
           <el-button @click="handShowHistory()" type="warning"><strong><i class="el-icon-s-order"></i> Lịch
               sử</strong></el-button>
-        </div>
+        </div> -->
       </div>
       <div label-width="120px" class="hrAccW-table__content">
         <table>

@@ -15,213 +15,376 @@
         </defs>
       </svg>
     </div>
-
     <Transition name="fade">
-      <div class="header-right" v-if="loggedIn">
-        <div class="header-right__item" v-if="nhanvien">
-          <div class="header-right__item">
-            <i class="el-icon-s-home"></i>
-            <button class="btn nav-link">
-              <router-link to="/home_welfare" style="text-decoration: none; color: black; cursor: pointer">Phúc lợi của
-                tôi</router-link>
-            </button>
-          </div>
-        </div>
-        <div class="header-right__item" v-if="nhanvien">
-          <i class="el-icon-s-promotion"></i>
-          <div class="header-right__item--text">
-            <router-link to="/register_welfare" style="text-decoration: none; color: black; cursor: pointer">Đăng Kí
-              Phúc Lợi</router-link>
-          </div>
-          <div class="header-right__item--icon"></div>
-        </div>
+      <!--  Desktop header right -->
+        <MediaQueryProvider :queries="$options.queries">
+          <MatchMedia v-slot="{ desktop }">
+            <div v-if="desktop">
+              <div class="header-right" v-if="loggedIn">
+              <div class="header-right__item" v-if="nhanvien">
+                <div class="header-right__item">
+                  <i class="el-icon-s-home"></i>
+                  <button class="btn nav-link">
+                    <router-link to="/home_welfare" style="text-decoration: none; color: #606266; cursor: pointer">Phúc
+                      lợi
+                      của
+                      tôi</router-link>
+                  </button>
+                </div>
+              </div>
+              <div class="header-right__item" v-if="nhanvien">
+                <i class="el-icon-s-promotion"></i>
+                <div class="header-right__item--text">
+                  <router-link to="/register_welfare" style="text-decoration: none; color: #606266; cursor: pointer">
+                    Đăng
+                    Kí
+                    Phúc Lợi</router-link>
+                </div>
+                <div class="header-right__item--icon"></div>
+              </div>
+              <div class="header-right__item" v-if="quanly" style="margin-right: 5px; margin-left: 5px">
+                <!-- <i class="el-icon-s-order"></i> -->
+                <el-dropdown>
+                  <span class="el-dropdown-link" style="cursor: pointer; font-size: 19px; color: #606266">
+                    <i class="fa-solid fa-table-list"></i>
+                    Quản Lý <i class="el-icon-arrow-down el-icon--right"></i>
+                  </span>
+                  <el-dropdown-menu slot="dropdown">
+                    <router-link to="/hr" style="text-decoration: none;">
+                      <el-dropdown-item>
+                        Quản lý nhân
+                        viên
+                      </el-dropdown-item>
+                    </router-link>
+                    <router-link to="/phucloi" style="text-decoration: none;color:#606266;cursor:pointer width: 100%;">
+                      <el-dropdown-item>
+                        Quản lý phúc lợi
+                      </el-dropdown-item>
+                    </router-link>
 
-        <div class="header-right__item" v-if="quanly">
-          <i class="el-icon-s-order"></i>
-          <el-dropdown>
-            <span class="el-dropdown-link" style="cursor: pointer; font-size: 19px; color: black">
-              Quản Lý<i class="el-icon-arrow-down el-icon--right"></i>
-            </span>
-            <el-dropdown-menu slot="dropdown">
-              <router-link to="/hr" style="text-decoration: none;">
-                <el-dropdown-item>
-                  Quản lý nhân
-                  viên
-                </el-dropdown-item>
-              </router-link>
-              <router-link to="/phucloi" style="text-decoration: none;color:black;cursor:pointer width: 100%;">
-                <el-dropdown-item>
-                  Quản lý phúc lợi
-                </el-dropdown-item>
-              </router-link>
+                    <router-link to="/user" style="text-decoration: none;color:#606266;cursor:pointer width: 100%;">
+                      <el-dropdown-item>
+                        Quản lý tài khoản
+                      </el-dropdown-item>
+                    </router-link>
 
-              <router-link to="/user" style="text-decoration: none;color:black;cursor:pointer width: 100%;">
-                <el-dropdown-item>
-                  Quản lý tài khoản
-                </el-dropdown-item>
-              </router-link>
+                    <router-link to="/department"
+                      style="text-decoration: none;color:#606266;cursor:pointer width: 100%;">
+                      <el-dropdown-item>
+                        Quản lý phòng ban
+                      </el-dropdown-item>
+                    </router-link>
 
-              <router-link to="/department" style="text-decoration: none;color:black;cursor:pointer width: 100%;">
-                <el-dropdown-item>
-                  Quản lý phòng ban
-                </el-dropdown-item>
-              </router-link>
+                    <router-link to="/thongke" style="text-decoration: none;color:#606266;cursor:pointer width: 100%;">
+                      <el-dropdown-item>
+                        Thống kê
+                      </el-dropdown-item>
+                    </router-link>
 
-              <router-link to="/thongke" style="text-decoration: none;color:black;cursor:pointer width: 100%;">
-                <el-dropdown-item>
-                  Thống kê
-                </el-dropdown-item>
-              </router-link>
-
-            </el-dropdown-menu>
-          </el-dropdown>
-        </div>
-
-        <div class="header-right__item" v-if="quanly|| lanhdao">
-          <i class="el-icon-s-order"></i>
-          <el-dropdown>
-            <span class="el-dropdown-link" style="cursor: pointer; font-size: 19px; color: black">
-              Xét duyệt<i class="el-icon-arrow-down el-icon--right"></i>
-            </span>
-            <el-dropdown-menu slot="dropdown">
-              <router-link to="/xetduyet" style="text-decoration: none;color:black;cursor:pointer width: 100%;">
-                <el-dropdown-item>
-                  Xét duyệt phúc lợi
-                </el-dropdown-item>
-              </router-link>
-              <router-link to="/accept_money" style="text-decoration: none;color:black;cursor:pointer width: 100%;">
-                <el-dropdown-item>
-                  Xét duyệt tiền phúc lợi
-                </el-dropdown-item>
-              </router-link>
-            </el-dropdown-menu>
-          </el-dropdown>
-        </div>
-
-        <!-- <div class="header-right__item" v-if="quanly || nhansu">
-          <el-badge :value="list.length" :max="99" class="item" style="margin-right: 10px; margin-left: 5px">
-            <i class="el-icon-s-claim"></i>
-            <router-link style="text-decoration: none;
-              color: black;
-              cursor: pointer;
-              font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
-                Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue',
-                sans-serif;
-            " to="/xetduyet">Xét duyệt
-            </router-link>
-          </el-badge>
-        </div> -->
-
-
-        <el-dropdown v-if="quanly">
-          <el-badge :value="listbirthdays.length" :max="10" class="item" style="margin-right: 10px; margin-left: 5px">
-            <span class="el-dropdown-link" style="cursor: pointer; font-size: 19px; color: black">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-gift-fill"
-                viewBox="0 0 16 16">
-                <path
-                  d="M3 2.5a2.5 2.5 0 0 1 5 0 2.5 2.5 0 0 1 5 0v.006c0 .07 0 .27-.038.494H15a1 1 0 0 1 1 1v1a1 1 0 0 1-1 1H1a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h2.038A2.968 2.968 0 0 1 3 2.506V2.5zm1.068.5H7v-.5a1.5 1.5 0 1 0-3 0c0 .085.002.274.045.43a.522.522 0 0 0 .023.07zM9 3h2.932a.56.56 0 0 0 .023-.07c.043-.156.045-.345.045-.43a1.5 1.5 0 0 0-3 0V3zm6 4v7.5a1.5 1.5 0 0 1-1.5 1.5H9V7h6zM2.5 16A1.5 1.5 0 0 1 1 14.5V7h6v9H2.5z" />
-              </svg>
-            </span>
-          </el-badge>
-
-          <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item style="text-decoration: none;color:black;cursor:pointer width: 100%; font-size: 15px">
-              <strong>
-                Có {{ listbirthdays.length }} nhân viên sinh nhật trong tháng này
-              </strong>
-              <hr>
-              <div class="birthday-scroll">
-
-                <div v-for="x in listbirthdays" :key="x.id" style="border: 1px solid; " class="itemTbale">
-                  <div class="item">
-                    <div class="d-flex flex-column">
-                      <div> Nhân viên: <strong> {{ x.name }}</strong></div>
-                      <div> Mã nhân viên: <strong>{{ x.code }}</strong></div>
-                      <div class=""><span class="fas fa-gift">_{{ formatDate(x.date) }}</span></div>
-                      <div class="d-flex flex-column justify-content-center">
-                        <div class="text-muted">{{ x.department.name }}</div>
+                  </el-dropdown-menu>
+                </el-dropdown>
+              </div>
+              <div class="header-right__item" v-if="quanly || nhansu">
+                <el-badge :value="list.length" :max="99" class="item" style="margin-right: 5px; margin-left: 5px">
+                  <router-link to="/xetduyet"
+                    style="text-decoration: none;color:#606266;cursor:pointer width: 100%;font-size: 20px;">
+                    <i class="fa-solid fa-clipboard-check"></i>
+                    Xét duyệt
+                  </router-link>
+                </el-badge>
+              </div>
+              <el-dropdown v-if="quanly">
+                <el-badge :value="listbirthdays.length" :max="10" class="item"
+                  style="margin-right: 5px; margin-left: 5px">
+                  <i class="fa-solid fa-gift"></i>
+                  <span style="font-size: 20px;"> Sinh nhật</span>
+                </el-badge>
+                <el-dropdown-menu slot="dropdown">
+                  <el-dropdown-item
+                    style="text-decoration: none;color:#606266;cursor:pointer width: 100%; font-size: 15px">
+                    <strong>
+                      Có {{ listbirthdays.length }} nhân viên sinh nhật trong tháng này
+                    </strong>
+                    <hr>
+                    <div class="birthday-scroll">
+                      <div v-for="x in listbirthdays" :key="x.id" style="border: 1px solid; " class="itemTbale">
+                        <div class="item">
+                          <div class="d-flex flex-column">
+                            <div> Nhân viên: <strong> {{ x.name }}</strong></div>
+                            <div> Mã nhân viên: <strong>{{ x.code }}</strong></div>
+                            <div class=""><span class="fas fa-gift">_{{ formatDate(x.date)
+                            }}</span></div>
+                            <div class="d-flex flex-column justify-content-center">
+                              <div class="text-muted">{{ x.department.name }}</div>
+                            </div>
+                          </div>
+                        </div>
                       </div>
                     </div>
-                  </div>
+                  </el-dropdown-item>
+                </el-dropdown-menu>
+              </el-dropdown>
+              <div>
+                <div v-if="staffErorr == ''">
                 </div>
+                
+                <div v-else>
+                  <el-dropdown v-if="quanly">
+                    <el-badge :value="staffErorr.length" :max="10" class="item"
+                      style="margin-right: 10px; margin-left: 5px ;">
+                      <span class="el-dropdown-link" style="cursor: pointer; font-size: 19px; color: #606266;">
+                        <div>
 
+                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                            class="bi bi-bell-fill" viewBox="0 0 16 16">
+                            <path style="color: crimson;"
+                              d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2zm.995-14.901a1 1 0 1 0-1.99 0A5.002 5.002 0 0 0 3 6c0 1.098-.5 6-2 7h14c-1.5-1-2-5.902-2-7 0-2.42-1.72-4.44-4.005-4.901z" />
+                          </svg> <span style="color: red;">Thông báo lỗi!</span>
+
+                        </div>
+                      </span>
+                    </el-badge>
+                    <el-dropdown-menu slot="dropdown">
+                      <el-dropdown-item
+                        style="text-decoration: none;color:#606266;cursor:pointer width: 60%; font-size: 15px">
+                        <strong>
+                          <H4>
+                            Có {{ staffErorr.length }} nhân viên đang sử dụng quá số tiền trợ
+                            cấp phúc lợi
+                          </H4>
+                        </strong>
+                        <div class="error-scroll">
+                          <ul v-for="x in staffErorr" :key="x.id" style="border: 1px solid;" class="itemTbale">
+                            <li> Họ tên:<strong> {{ x.name }}</strong> <br>
+                              Mã Nhân viên:<strong>{{ x.code }}</strong>
+                            </li>
+                          </ul>
+                        </div>
+                      </el-dropdown-item>
+                    </el-dropdown-menu>
+                  </el-dropdown>
+                </div>
               </div>
-            </el-dropdown-item>
-          </el-dropdown-menu>
-        </el-dropdown>
+              <div v-if="!quanly && !user && !nhansu">
+                <Strong style="color: red;">
+                  Tài khoản của bạn đã bị khóa!
+                </Strong>
+              </div>
+              <div class="header-right__item">
+                <i class="el-icon-s-custom"></i>
+                <el-dropdown>
+                  <span class="el-dropdown-link" style="cursor: pointer; font-size: 19px">
+                    <span>Hello: <Strong>{{ user.userName }}</Strong><span v-if="quanly">(quản
+                        lý)</span>
+                      <Strong v-if="(!nhanvien && !quanly && !nhansu)" style="color: red;">
+                        Tài khoản của bạn đã bị khóa!
+                      </Strong></span>
+                  </span>
+                  <el-dropdown-menu slot="dropdown">
+                    <el-dropdown-item
+                      style="text-decoration: none;color:#606266;cursor:pointer width: 100%; font-size: 19px">
+                      <button class="btn nav-link" @click="logOut">Đăng Xuất</button>
+                    </el-dropdown-item>
+                  </el-dropdown-menu>
+                </el-dropdown>
+              </div>
+            </div>
+            </div>
+            <div v-else>
+              <el-dropdown :hide-on-click="false" trigger="click">
+                <div class="menu-dropdown">
+                  <i class="fa-solid fa-bars"></i>
+                </div>
+                <el-dropdown-menu>
+                  <el-dropdown-item class="header-right__item" v-if="nhanvien">
+                    <i class="el-icon-s-home"></i>
+                    <button class="btn nav-link">
+                      <router-link to="/home_welfare" style="text-decoration: none; color: #606266; cursor: pointer">
+                        Phúc lợi
+                        của
+                        tôi</router-link>
+                    </button>
+                  </el-dropdown-item>
+                  <el-dropdown-item class="header-right__item" v-if="nhanvien">
+                    <i class="el-icon-s-promotion"></i>
+                    <div class="header-right__item--text">
+                      <router-link to="/register_welfare"
+                        style="text-decoration: none; color: #606266; cursor: pointer">
+                        Đăng Kí
+                        Phúc Lợi</router-link>
+                    </div>
+                    <div class="header-right__item--icon"></div>
+                  </el-dropdown-item>
+                  <el-dropdown-item class="header-right__item" v-if="quanly">
+                    <el-dropdown :hide-on-click="true" :hide-timeout="0" trigger="click">
+                      <span class="el-dropdown-link" style="font-size: 20px;">
+                        <i class="fa-solid fa-table-list"></i>
+                        Quản Lý <i class="el-icon-arrow-down el-icon--right"></i>
+                      </span>
+                      <el-dropdown-menu slot="dropdown">
+                        <el-dropdown-item class="header-right__item">
+                          <router-link to="/hr" style="text-decoration: none;color:#606266;cursor:pointer width: 100%;">
+                            Quản lý nhân viên
+                          </router-link>
+                        </el-dropdown-item>
+                        <el-dropdown-item class="header-right__item">
+                          <router-link to="/phucloi"
+                            style="text-decoration: none;color:#606266;cursor:pointer width: 100%;">
+                            Quản lý phúc lợi
+                          </router-link>
+                        </el-dropdown-item>
+                        <el-dropdown-item class="header-right__item">
+                          <router-link to="/user"
+                            style="text-decoration: none;color:#606266;cursor:pointer width: 100%;">
+                            Quản lý tài khoản
+                          </router-link>
+                        </el-dropdown-item>
+                        <el-dropdown-item class="header-right__item">
+                          <router-link to="/department"
+                            style="text-decoration: none;color:#606266;cursor:pointer width: 100%;">
+                            Quản lý phòng ban
+                          </router-link>
+                        </el-dropdown-item>
+                        <el-dropdown-item>
+                          <router-link to="/thongke"
+                            style="text-decoration: none;color:#606266;cursor:pointer width: 100%;">
+                            Thống kê
+                          </router-link>
+                        </el-dropdown-item>
+                      </el-dropdown-menu>
 
+                    </el-dropdown>
+                  </el-dropdown-item>
+                  <el-dropdown-item class="header-right__item" v-if="quanly || nhansu">
+                    <el-badge :value="list.length" :max="99" class="item">
+                      <router-link to="/xetduyet"
+                        style="text-decoration: none;color:#606266;cursor:pointer width: 100%;font-size: 20px;">
+                        <i class="fa-solid fa-clipboard-check"></i>
+                        Xét duyệt
+                      </router-link>
+                    </el-badge>
+                  </el-dropdown-item>
+                  <el-dropdown-item class="header-right__item" v-if="quanly">
+                    <el-dropdown>
+                      <el-badge :value="listbirthdays.length" :max="10" class="item">
+                        <i class="fa-solid fa-gift"></i>
+                        <span style="font-size: 20px;"> Sinh nhật</span>
+                      </el-badge>
+                      <el-dropdown-menu slot="dropdown">
+                        <el-dropdown-item
+                          style="text-decoration: none;color:#606266;cursor:pointer width: 100%; font-size: 15px">
+                          <strong>
+                            Có {{ listbirthdays.length }} nhân viên sinh nhật trong tháng
+                            này
+                          </strong>
+                          <hr>
+                          <div class="birthday-scroll">
+                            <div v-for="x in listbirthdays" :key="x.id" style="border: 1px solid; " class="itemTbale">
+                              <div class="item">
+                                <div class="d-flex flex-column">
+                                  <div> Nhân viên: <strong> {{ x.name }}</strong>
+                                  </div>
+                                  <div> Mã nhân viên: <strong>{{ x.code }}</strong>
+                                  </div>
+                                  <div class=""><span class="fas fa-gift">_{{
+                                      formatDate(x.date)
+                                  }}</span></div>
+                                  <div class="d-flex flex-column justify-content-center">
+                                    <div class="text-muted">{{ x.department.name }}
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
 
-        <div>
-          <div v-if="staffErorr == ''">
-          </div>
-          <div v-else>
-            <el-dropdown v-if="quanly">
-              <el-badge :value="staffErorr.length" :max="10" class="item"
-                style="margin-right: 10px; margin-left: 5px ;">
-                <span class="el-dropdown-link" style="cursor: pointer; font-size: 19px; color: black;">
-                  <div>
-
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bell-fill" viewBox="0 0 16 16">
-                      <path style="color: crimson;" d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2zm.995-14.901a1 1 0 1 0-1.99 0A5.002 5.002 0 0 0 3 6c0 1.098-.5 6-2 7h14c-1.5-1-2-5.902-2-7 0-2.42-1.72-4.44-4.005-4.901z"/>
-                    </svg>  <span style="color: red;">Thông báo lỗi!</span>                  
-
+                          </div>
+                        </el-dropdown-item>
+                      </el-dropdown-menu>
+                    </el-dropdown>
+                  </el-dropdown-item>
+                  <div v-if="staffErorr == ''">
                   </div>
-                </span>
-              </el-badge>
-              <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item style="text-decoration: none;color:black;cursor:pointer width: 60%; font-size: 15px">
-                  <strong>
-                    <H4>
-                      Có {{ staffErorr.length }} nhân viên đang sử dụng quá số tiền trợ cấp phúc lợi
-                    </H4>
-                  </strong>
-                  <div class="error-scroll">
-                    <ul v-for="x in staffErorr" :key="x.id" style="border: 1px solid;" class="itemTbale">
-                      <li> Họ tên:<strong> {{ x.name }}</strong> <br>
-                        Mã Nhân viên:<strong>{{ x.code }}</strong>
-                      </li>
-                    </ul>
+                  <div v-else>
+                    <el-dropdown v-if="quanly">
+                      <el-badge :value="staffErorr.length" :max="10" class="item"
+                        style="margin-right: 10px; margin-left: 5px ;">
+                        <span class="el-dropdown-link" style="cursor: pointer; font-size: 15px; color: #606266;">
+                          <div>
+
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                              class="bi bi-bell-fill" viewBox="0 0 16 16">
+                              <path style="color: crimson;"
+                                d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2zm.995-14.901a1 1 0 1 0-1.99 0A5.002 5.002 0 0 0 3 6c0 1.098-.5 6-2 7h14c-1.5-1-2-5.902-2-7 0-2.42-1.72-4.44-4.005-4.901z" />
+                            </svg> <span style="color: red;">Thông báo lỗi!</span>
+
+                          </div>
+                        </span>
+                      </el-badge>
+                      <el-dropdown-menu slot="dropdown">
+                        <el-dropdown-item
+                          style="text-decoration: none;color:#606266;cursor:pointer width: 60%; font-size: 15px">
+                          <strong>
+                            <H4>
+                              Có {{ staffErorr.length }} nhân viên đang sử dụng quá số
+                              tiền trợ cấp phúc lợi
+                            </H4>
+                          </strong>
+                          <div class="error-scroll">
+                            <ul v-for="x in staffErorr" :key="x.id" style="border: 1px solid;" class="itemTbale">
+                              <li> Họ tên:<strong> {{ x.name }}</strong> <br>
+                                Mã Nhân viên:<strong>{{ x.code }}</strong>
+                              </li>
+                            </ul>
+                          </div>
+                        </el-dropdown-item>
+                      </el-dropdown-menu>
+                    </el-dropdown>
                   </div>
-                </el-dropdown-item>
-              </el-dropdown-menu>
-            </el-dropdown>
-          </div>
-        </div>
-        <div v-if="!quanly && !user && !nhansu">
-          <Strong style="color: red;">
-            Tài khoản của bạn đã bị khóa!
-          </Strong>
-        </div>
-
-
-        <div class="header-right__item">
-          <i class="el-icon-s-custom"></i>
-          <el-dropdown>
-            <span class="el-dropdown-link" style="cursor: pointer; font-size: 19px">
-              <span>Hello: <Strong>{{ user.name }}</Strong><span v-if="quanly">(quản lý)</span>
-              <Strong v-if="(!nhanvien && !quanly && !nhansu)" style="color: red;">
-            Tài khoản của bạn đã bị khóa!
-          </Strong></span>
-            </span>
-            <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item style="text-decoration: none;color:black;cursor:pointer width: 100%; font-size: 19px">
-                <button class="btn nav-link" @click="logOut">Đăng Xuất</button>
-              </el-dropdown-item>
-            </el-dropdown-menu>
-          </el-dropdown>
-        </div>
-      </div>
+                  <div v-if="!quanly && !user && !nhansu">
+                    <Strong style="color: red;">
+                      Tài khoản của bạn đã bị khóa!
+                    </Strong>
+                  </div>
+                  <el-dropdown-item class="header-right__item">
+                    <el-dropdown>
+                      <span class="el-dropdown-link" style="cursor: pointer; font-size: 20px">
+                        <i class="fa-solid fa-user"></i>
+                        <span>Hello: <Strong>{{ user.userName }}</Strong><span v-if="quanly">(quản lý)</span>
+                          <Strong v-if="(!nhanvien && !quanly && !nhansu)" style="color: red;">
+                            Tài khoản của bạn đã bị khóa!
+                          </Strong></span>
+                      </span>
+                      <el-dropdown-menu slot="dropdown">
+                        <el-dropdown-item
+                          style="text-decoration: none;color:#606266;cursor:pointer width: 100%; font-size: 20px">
+                          <button class="btn nav-link" @click="logOut">Đăng Xuất</button>
+                        </el-dropdown-item>
+                      </el-dropdown-menu>
+                    </el-dropdown>
+                  </el-dropdown-item>
+                </el-dropdown-menu>
+              </el-dropdown>
+            </div>
+          </MatchMedia>
+        </MediaQueryProvider>
+      
+      <!-- Mobile header right -->
     </Transition>
   </div>
 </template>
   
 <script>
 import moment from "moment";
-
-import login from "@/view/PhucLoiLogin.vue";
 import StaffService from "@/service/hrService";
+import { MediaQueryProvider } from "vue-component-media-queries";
+import { MatchMedia } from "vue-component-media-queries";
+const queries = {
+  mobile: '(max-width: 760px)',
+  desktop: '(min-width: 761px)',
+};
 export default {
   name: "app",
+  queries,
   data() {
     return {
       user: {},
@@ -229,13 +392,14 @@ export default {
       nhanvien: false,
       quanly: false,
       nhansu: false,
-      lanhdao: false,
       list: [],
       listbirthdays: [],
-      staffErorr: []
+      staffErorr: [],
     };
   },
-  components: login,
+  components: {
+    MediaQueryProvider, MatchMedia
+  },
   computed: {
     loggedIn() {
       return this.$store.state.auth.status.loggedIn;
@@ -249,6 +413,7 @@ export default {
     }
   },
   methods: {
+
     logOut() {
       this.$store.dispatch("auth/logout");
       this.$router.push("/");
@@ -296,9 +461,6 @@ export default {
         if (this.userExists("ROLE_MODERATOR")) {
           this.nhansu = true;
         }
-        // if(this.userExists("ROLE_PERSONNEL")){
-          
-        // }
       }
     },
     getDataHeader() {
@@ -323,6 +485,23 @@ export default {
 </script>
   
 <style>
+.menu-dropdown {
+  margin: 4px !important;
+}
+
+.menu-dropdown i {
+  font-size: 30px;
+}
+
+.header-logo {
+  width: 100px;
+  height: 100px;
+  margin-left: 35px;
+  margin-top: 10px;
+}
+
+
+
 .birthday-scroll {
   max-height: 348px;
   overflow: auto;
@@ -357,12 +536,7 @@ export default {
     #ebd5e0;
 }
 
-.header-logo {
-  width: 100px;
-  height: 100px;
-  margin-left: 35px;
-  margin-top: 10px;
-}
+
 
 .header-right {
   display: flex;
@@ -407,7 +581,8 @@ export default {
   background: rgba(255, 255, 255, 0.13);
   padding: 6px 0px;
 }
-.title-dialog{
+
+.title-dialog {
   color: red;
   font-size: 30px;
   display: block;
@@ -417,6 +592,35 @@ export default {
 router-link {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
     Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+}
+
+.menu-dropdown {
+  width: 80px;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+
+
+@media only screen and (max-width: 760px) {
+  .el-dropdown-menu__item i {
+    font-size: 20px;
+  }
+
+
+  .header-logo {
+    width: 80px;
+    height: 80px;
+    margin: 4px;
+  }
+
+  .header-logo svg {
+    width: 80px;
+    height: 80px;
+  }
+
 }
 </style>
   

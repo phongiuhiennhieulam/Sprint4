@@ -51,8 +51,7 @@ public interface StaffRepository extends JpaRepository<Staff,Long> {
 
     @Modifying
     @Transactional
-    @Query("select sum(w.price) from WelfareStaff ws join Welfare w on ws.welfare.id = w.id and w.status = 0 " +
-            "where ws.welfare.id = :id GROUP BY ws.staff.id")
+    @Query("select sum(w.price) from WelfareStaff ws join Welfare w on ws.welfare.id = w.id and w.status = 0 where ws.welfare.id = :id GROUP BY ws.staff.id")
     Long getMoney(@Param("id") Long id);
 
     @Query("select s from Staff s order by s.id desc")
@@ -61,7 +60,7 @@ public interface StaffRepository extends JpaRepository<Staff,Long> {
     @Query("select s from Staff s where month(s.date) = :number ")
     public List<Staff> getSinhNhat(int number);
 
-    @Query("select code from Staff")
+    @Query("select LOWER(code) from Staff")
     public List<String> getCode();
 
     @Query(value = "select *  from staff s\n" +
@@ -104,5 +103,10 @@ public interface StaffRepository extends JpaRepository<Staff,Long> {
             "where d.id = s.id_department and s.status = 0\n" +
             "group by s.id_department ", nativeQuery = true)
     public List<CostInterface> getCost();
+
+    @Modifying
+    @Transactional
+    @Query(value = "update Staff s set s.status = :#{#staff.status}, s.name=:#{#staff.name}, s.email=:#{#staff.email}, s.date=:#{#staff.date},s.department=:#{#staff.department} where s.code=:#{#staff.code}")
+    public void updateStaff(Staff staff);
 
 }

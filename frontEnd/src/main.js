@@ -9,6 +9,7 @@ import "element-ui/lib/theme-chalk/index.css";
 import "@/assets/css/main.css";
 import "@/assets/css/base.css";
 import VueSessionStorage from 'vue-sessionstorage'
+
 Vue.config.productionTip = false;
 // import { createApp } from "vue";
 // import VueAwesomePaginate from "vue-awesome-paginate";
@@ -17,6 +18,7 @@ Vue.config.productionTip = false;
 
 Vue.use(components);
 Vue.use(VueSessionStorage)
+
 
 
 Vue.use(ElementUI, { locale });

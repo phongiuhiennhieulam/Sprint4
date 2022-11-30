@@ -3,10 +3,11 @@ import authHeader from './auth-hreader'
 
 class StaffService {
     updateMoney (money,ids) {
-        return  axios.put('http://localhost:8083/api/staff/update-money/' + money + '?ids=' + ids, {headers: authHeader()})
+
+        return  axios.put('http://localhost:8083/api/staff/update-money/' + money + '?ids=' + ids , {headers: authHeader()})
     }
-    updateMoney2 (money,ids) {
-        return  axios.post('http://localhost:8083/api/staff/update-money2/' + money + '?ids=' + ids, {headers: authHeader()})
+    updateMoney2 (money,ids, email) {
+        return  axios.post('http://localhost:8083/api/staff/update-money2/' + money + '?ids=' + ids + '&email=' + email, {headers: authHeader()})
     }
      getAll(params) {
         return  axios.get('http://localhost:8083/api/staffs', {params, headers: authHeader()})
@@ -69,7 +70,7 @@ class StaffService {
      DeleteRegisterWelfare(id) {
         return  axios.put(`http://localhost:8083/api/register-delete/${id}`, { headers: authHeader()})
     }
-     deletes (ids) {
+deletes (ids) {
         return  axios.put(`http://localhost:8083/api/staff-deletes?ids=${ids}`, { headers: authHeader()})
     }
      getErorr () {
@@ -93,6 +94,10 @@ class StaffService {
      GetCost() {
         return  axios.get('http://localhost:8083/api/costs')
     } 
+
+    async ImportExcel(file) {
+        return await axios.post('http://localhost:8083/api/uploadExcel', file, { headers: authHeader() })
+    }
    
    
 }

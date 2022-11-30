@@ -139,14 +139,14 @@
                <td></td>
               <td colspan="3" style="font-weight: bold;  text-align: center;">Phúc Lợi Cá Nhân Hóa</td>
               <td><strong>2</strong></td> -->
-            <!-- </tr> --> 
+            <!-- </tr> -->
             <tr v-for="item in statusRegister" :key="item.id">
               <!-- <td style="font-weight: bold">1.</td> -->
-              <td>{{item.name}}</td>
-              <td>{{item.price}}</td>
-              <td>{{item.quantity}}</td>
+              <td>{{ item.name }}</td>
+              <td>{{ item.price }}</td>
+              <td>{{ item.quantity }}</td>
               <td>
-                {{formatCurrency(item.price * item.quantity)}}
+                {{ formatCurrency(item.price * item.quantity) }}
               </td>
               <td v-if="item.status == 2">Chờ duyệt</td>
               <td v-if="item.status == 1">Hủy bỏ</td>
@@ -161,9 +161,11 @@
 <script>
 /* eslint-disable */
 import WelfareApi from "@/service/phucLoiService";
+
 let welfareApi = new WelfareApi();
 export default {
   name: "PhucLoiList",
+ 
   data() {
     return {
       selected: [],
@@ -180,7 +182,7 @@ export default {
       newVal: '',
       oldVal: '',
       isShowRegisterStatus: false,
-      statusRegister:[]
+      statusRegister: []
     };
   },
   computed: {
@@ -256,20 +258,20 @@ export default {
         };
         //id
         welfare_object.id = this.selected[i].id;
-        console.log(welfare_object.id);
+        
 
         //so luong
         welfare_object.quantity = this.listQuantity[this.selected[i].id];
-        console.log(welfare_object.quantity);
+        
 
         //in ra object
         object.list.push(welfare_object);
-        console.log(welfare_object);
+        
       }
-      console.log(object);
+      
 
       const res = await welfareApi.registerWelfare(object);
-      console.log(res.status)
+      
       if (res.status == 201) {
         this.sum = this.totalMoney;
         this.selected = [];
@@ -333,7 +335,7 @@ export default {
       });
       welfareApi.getOnlyOneWelfareOfUser(this.userId).then((x) => {
         this.listOnlyOne = x.data;
-        console.log(this.listOnlyOne);
+        
       });
       welfareApi.getStatusAcceptWelfareOfUser(this.userId).then((x) => {
         this.statusRegister = x.data;
@@ -341,12 +343,11 @@ export default {
     });
     welfareApi.getTotalMoney(this.userName).then((x) => {
       this.total = x.data;
-      // console.log(this.total);
-      console.log(this.total);
+    
       welfareApi.getTotalMoneyGeneralWelfare().then((res) => {
-        console.log(this.total);
+        
         this.total = this.total - res.data;
-        console.log(this.total);
+        
       });
     });
   }
