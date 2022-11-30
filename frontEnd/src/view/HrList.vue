@@ -2,65 +2,42 @@
   <div class="hr-list">
     <div class="hr-content">
       <div class="hr-title"><strong> QUẢN LÝ NHÂN VIÊN</strong></div>
-
-
       <div class="hr-info mt-2">
         <div class="hr-table">
           <div class="hr-selected"></div>
-          <table>
-            <thead>
-              <tr width="90%">
-                <th>
-                  <div>
-                    <el-form :inline="true" class="demo-form-inline">
-                      <el-form-item>
-                        <el-input style="width: 300px;" v-model="text" placeholder="Nhập tên/ mã nhân viên/ phòng ban">
-                          <i slot="prefix" class="el-input__icon el-icon-search"></i>
-                        </el-input>
-                      </el-form-item>
-                      <span>
-                        <el-button type="warning" @click="onFind">Tìm kiếm </el-button>
-                      </span>
-                    </el-form>
-                  </div>
-                </th>
-                <th width="10%" style="margin-right: 0px;">
-                  <div v-if="selected.length > 0">
-                    <el-form :inline="true" class="demo-form-inline">
-                      <el-form-item>
-                        <el-button class="btn btn-danger" @click="handlDeletes">
-                          <i class="el-icon-lock"></i> Khóa
-                        </el-button>
-                      </el-form-item>
-                    </el-form>
-                  </div>
-                </th>
-                <th width="10%" style="padding-right: 14px;">
-                  <div v-if="selected.length !== 0">
-                    <el-form :inline="true" class="demo-form-inline">
-                      <el-form-item>
-                        <el-button class="btn btn-danger" v-loading.fullscreen.lock="fullscreenLoading"
-                          @click="isUpdateMoney = true">
-                          <i class="el-icon-refresh"></i> Cập nhật tiền hỗ trợ
-                        </el-button>
-                      </el-form-item>
-                    </el-form>
-                  </div>
-                </th>
 
-                <th width="10%">
-                  <div class="d-flex">
-                    <el-button type="erorr" class="btn btn-danger" @click="showAddForm">
-                      <i class="el-icon-plus"></i> Thêm mới
-                    </el-button>
-                    <el-button type="erorr" class="btn btn-success" @click="showImportForm">
-                      <i class="fas fa-file-excel"></i> <span class="pl-3">Nhập từ Excel</span>
-                    </el-button>
-                  </div>
-                </th>
-              </tr>
-            </thead>
-          </table>
+          <el-form :inline="true" class="demo-form-inline d-flex justify-content-between">
+            <span>
+              <el-form-item>
+                <el-input style="width: 300px;" v-model="text" placeholder="Nhập tên/ mã nhân viên/ phòng ban">
+                  <i slot="prefix" class="el-input__icon el-icon-search"></i>
+                </el-input>
+              </el-form-item>
+              <el-form-item>
+                <el-button type="warning" @click="onFind">Tìm kiếm </el-button>
+              </el-form-item>
+              <el-form-item v-if="selected.length !== 0">
+                <el-button class="btn btn-danger" v-loading.fullscreen.lock="fullscreenLoading"
+                  @click="isUpdateMoney = true">
+                  <i class="el-icon-refresh"></i> Cập nhật tiền hỗ trợ
+                </el-button>
+                <el-button class="btn btn-danger" @click="handlDeletes">
+                  <i class="el-icon-lock"></i> Khóa
+                </el-button>
+              </el-form-item>
+            </span>
+            <span>
+              <el-form-item>
+                <el-button type="erorr" class="btn btn-danger" @click="showAddForm">
+                  <i class="el-icon-plus"></i> Thêm mới
+                </el-button>
+                <el-button type="erorr" class="btn btn-success" @click="showImportForm">
+                  <i class="fas fa-file-excel"></i> <span class="pl-3">Nhập từ Excel</span>
+                </el-button>
+              </el-form-item>
+            </span>
+          </el-form>
+
           <div class="hr-table__content">
             <table>
               <thead>
@@ -265,8 +242,8 @@
                 <div>
                   <div class="mb-3">
                     <label class="form-label"><Strong>Phòng ban:</Strong> </label>
-                    <select style="height: 55px;" v-model="staffUpdate.department" placeholder="Chọn phòng ban"
-                      class="form-control" name="department" id="department">
+                    <select v-model="staffUpdate.department" placeholder="Chọn phòng ban" class="form-control"
+                      name="department" id="department">
                       <option v-for="x in departments" :value="x" :key="x.id">
                         {{ x.name }}
                       </option>
@@ -781,10 +758,10 @@ export default {
         }
       )
 
-      .then(() => {
+        .then(() => {
           var username = this.user.userName;
-          console.log(this.user) 
-          console.log(username) 
+          console.log(this.user)
+          console.log(username)
           StaffService.updateMoney2(money, this.selected, username)
           this.loading()
           this.$message({
@@ -803,21 +780,21 @@ export default {
 
     },
 
-    unlockStaff(id){
-    StaffService.unlookStaff(id)
-      .then((response) => {
-         console.log(response)
+    unlockStaff(id) {
+      StaffService.unlookStaff(id)
+        .then((response) => {
+          console.log(response)
         })
         .catch((e) => {
           console.log(e);
         });
-     // this.loading();
+      // this.loading();
       this.$notify({
-            title: "Success",
-            message: "Mở khóa thành công!",
-            type: "success",
-          }); 
-          this.loading()   
+        title: "Success",
+        message: "Mở khóa thành công!",
+        type: "success",
+      });
+      this.loading()
     },
     deleteStaff(id) {
       this.$confirm(
@@ -900,7 +877,6 @@ export default {
       }
 
     },
-
     listCode() {
       StaffService.getCode()
         .then((response) => {
@@ -1193,6 +1169,9 @@ export default {
               type: "success",
             });
             this.reset();
+            this.form = this.staffUpdate;
+            this.form.welfareMoney = this.formatCurrency(this.form.welfareMoney)
+
           })
           .catch((e) => {
             console.log(e);
@@ -1282,9 +1261,9 @@ export default {
     this.listEmail();
     this.formatCurrency();
     StaffService.getUser()
-          .then((response) =>{
-            this.user = response.data;
-          })
+      .then((response) => {
+        this.user = response.data;
+      })
   },
 
 };

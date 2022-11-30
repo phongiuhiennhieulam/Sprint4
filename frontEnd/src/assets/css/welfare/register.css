@@ -43,6 +43,21 @@
     height: 100%;
 }
 
+.registerWelfare-body .el-dialog__body {
+    padding: 0px 20px 30px;
+    color: #606266;
+    font-size: 14px;
+    word-break: break-all;
+    max-height: 600px;
+    overflow: scroll;
+    margin: 30px 0px;
+}
+
+.registerWelfare-body .el-dialog__header{
+    text-align: center;
+    
+}
+
 .money {
     display: flex;
     justify-content: space-between;
@@ -163,7 +178,6 @@ table {
 
 .registerWelfare-table__content table thead th {
     font-size: 16px;
-    font-weight: 600;
 }
 
 .registerWelfare-table__content table tbody tr {

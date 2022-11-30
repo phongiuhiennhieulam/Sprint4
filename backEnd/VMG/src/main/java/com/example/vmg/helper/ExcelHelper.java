@@ -40,102 +40,93 @@ public class ExcelHelper {
     @Autowired
     private DepartmentRepository departmentRepository;
     public static String TYPE = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-    static String[] HEADERs = {"Code","Name","Date","Email","Welfare_money","Status"
-            ,"Department_name"};
+    static String[] HEADERs = {"Code", "Name", "Date", "Email", "Welfare_money", "Status"
+            , "Department_name"};
     static String SHEET = "Staffs";
-    public boolean hasExcelFormat(MultipartFile file){
-        if(!TYPE.equals(file.getContentType()))
+
+    public boolean hasExcelFormat(MultipartFile file) {
+        if (!TYPE.equals(file.getContentType()))
             return false;
         return true;
     }
-    public void excelToTutorials(InputStream is ) {
-        try{
+
+    public void excelToTutorials(InputStream is) {
+        try {
             Workbook workbook = new XSSFWorkbook(is);
             Sheet sheet = workbook.getSheet(SHEET);
             Iterator<Row> rows = sheet.iterator();
             List<Staff> staffs = new ArrayList<Staff>();
+            List<Integer> rowErrors = new ArrayList<>();
             int rowNumber = 0;
-            while(rows.hasNext()){
+            List<String> listCodes = staffRepository.getCode();
+            rows.next(); // bo qua dong 1
+            while (rows.hasNext()) {
                 boolean checkUpdate = false;
                 Row currentRow = rows.next();
-                if(rowNumber == 0){
-                    rowNumber++;
-                    continue;
-                }
+                rowNumber++;
                 Iterator<Cell> cellsInRow = currentRow.iterator();
                 int cellIdx = 0;
                 Staff staff = new Staff();
-                while(cellsInRow.hasNext()){
-                    Cell currentCell = cellsInRow.next();
-                    switch (cellIdx){
-                        case 0:
-                            staff.setCode(currentCell.getStringCellValue());
-                            List<String> listCodes = staffRepository.getCode();
-                            if(listCodes.contains(currentCell.getStringCellValue()))
-                                checkUpdate = true;
-                            System.out.println(staff.getCode());
-                            break;
-                        case 1:
-                            staff.setName(currentCell.getStringCellValue());
-                            System.out.println(staff.getName());
-                            break;
-                        case 2:
-                             staff.setDate(currentCell.getDateCellValue());
-//                            staff.setDate(2000-02-03 08:00:00);
-                            System.out.println(staff.getDate());
-                            break;
-                        case 3:
-                            staff.setEmail(currentCell.getStringCellValue());
-                            System.out.println(staff.getEmail());
-                            break;
-                        case 4:
-                            staff.setWelfareMoney(BigDecimal.valueOf(currentCell.getNumericCellValue()));
-                            System.out.println(staff.getWelfareMoney());
-                            break;
-                        case 5:
-                            staff.setStatus(Integer.parseInt(String.valueOf(currentCell.getNumericCellValue())));
-                            System.out.println(staff.getStatus());
-                            break;
-                        case 6:
-                            staff.setDepartment(departmentRepository.getDepartmentByName(currentCell.getStringCellValue()));
-                            System.out.println(staff.getDepartment());
-                            break;
-                        default:
-                            break;
-
+                try {
+                    while (cellsInRow.hasNext()) {
+                        Cell currentCell = cellsInRow.next();
+                        switch (cellIdx) {
+                            case 0:
+                                staff.setCode(currentCell.getStringCellValue());
+                                if (listCodes.contains(staff.getCode().trim().toLowerCase())) {
+                                    checkUpdate = true;
+                                }
+                                break;
+                            case 1:
+                                staff.setName(currentCell.getStringCellValue());
+                                break;
+                            case 2:
+                                staff.setDate(currentCell.getDateCellValue());
+                                break;
+                            case 3:
+                                staff.setEmail(currentCell.getStringCellValue());
+                                break;
+                            case 4:
+                                staff.setWelfareMoney(BigDecimal.valueOf(currentCell.getNumericCellValue()));
+                                break;
+                            case 5:
+                                staff.setStatus((int) currentCell.getNumericCellValue());
+                                break;
+                            case 6:
+                                staff.setDepartment(departmentRepository.getDepartmentByName(currentCell.getStringCellValue()));
+                                break;
+                            default:
+                                break;
+                        }
+                        cellIdx++;
                     }
-                   cellIdx++;
+                    if (!checkUpdate) {
+                        staffRepository.save(staff);
+                        String pass = "123456";
+                        User user = new User(staff.getEmail(),
+                                passwordEncoder.encode(pass));
+                        Set<Role> roles = new HashSet<>();
+                        Role userRole = roleService.findByName(ERole.ROLE_USER)
+                                .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+                        roles.add(userRole);
+                        user.setName(staff.getName());
+                        user.setRoles(roles);
+                        user.setStatus(0);
+                        userService.save(user);
+                        listCodes.add(staff.getCode().trim().toLowerCase());
+                    } else {
+                        staffRepository.updateStaff(staff);
+                    }
+                } catch (Exception e) {
+                    rowErrors.add(rowNumber);
+                    System.out.println("Error at row: " + rowNumber + " message: " + e.getMessage());
                 }
-                System.out.println(staff.getCode());
-//                if(isExistCode){
-//                     staffRepository.update(staff);
-//                }else{
-//                    staffRepository.save(staff);
-//                }
-
-                if(checkUpdate == false) {
-                    staffRepository.save(staff);
-                    String pass = "123456";
-                    User user = new User(staff.getEmail(),
-                            passwordEncoder.encode(pass));
-                    Set<Role> roles = new HashSet<>();
-                    Role userRole = roleService.findByName(ERole.ROLE_USER)
-                            .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-                    roles.add(userRole);
-                    user.setName(staff.getName());
-                    user.setRoles(roles);
-                    user.setStatus(0);
-                    userService.save(user);
-                }
-                else
-                    staffService.update((long)0,staff);
             }
             workbook.close();
             //return staffs;
-        }catch(IOException e){
-            throw new RuntimeException("File to parse Excel file "+ e.getMessage());
+        } catch (IOException e) {
+            throw new RuntimeException("File to parse Excel file " + e.getMessage());
         }
-
 
 
     }
