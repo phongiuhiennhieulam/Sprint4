@@ -26,6 +26,10 @@ public interface StaffRepository extends JpaRepository<Staff,Long> {
     @Query("update Staff p set p.welfareMoney = :number where p.id in(:longs)")
     void updateMoney(BigDecimal number, List<Long> longs);
 
+    @Modifying
+    @Transactional
+    @Query("select s from Staff s where s.code = :code")
+    List<Staff> findByCode(String code);
 
     @Modifying
     @Transactional
