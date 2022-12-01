@@ -297,8 +297,8 @@ export default {
       })
         .then(() => {
           new AcceptMoneyService().Acceptmoney(id);
-          
-          // this.$router.go();
+          this.loading();
+          this.getAllMoneyUp();
         })
         .catch(() => {
           this.$message({
@@ -318,7 +318,7 @@ export default {
       })
         .then(() => {
           new AcceptMoneyService().Cancelmoney(id);
-          // this.loading();
+          this.loading();
           this.getAllMoneyUp();
         })
         .catch(() => {
@@ -341,7 +341,7 @@ export default {
       )
         .then(() => {
           new AcceptMoneyService().Returnmoney(id);
-          // this.loading();
+          this.loading();
           this.getAllMoneyUp();
         })
         .catch(() => {
@@ -360,6 +360,7 @@ export default {
       })
         .then(() => {
           new AcceptMoneyService().AcceptAll(this.selected);
+          this.loading();
           this.getAllMoneyUp();
           this.$message({
             type: "success",
