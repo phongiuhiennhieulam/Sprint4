@@ -351,7 +351,7 @@ export default {
       for (let i = 0; i < item.roles.length; i++) {
         if (item.roles[i].id == 4) {
           this.editRole.editRolePersonnel = true;
-        } else if (item.roles[i].id == 2) {
+        } else if (item.roles[i].id == 4) {
           this.editRole.editRoleModer = true;
         } else if (item.roles[i].id == 3) {
           this.editRole.editRoleAdmin = true;

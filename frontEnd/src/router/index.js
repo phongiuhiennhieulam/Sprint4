@@ -83,6 +83,12 @@ const routes = [
     meta: { requiresAuth: true }
   },
   {
+    path: "/acceptMoney",
+    name: "acceptMoney",
+    component: () => import("../view/acceptMoney"),
+    meta: { requiresAuth: true }
+  },
+  {
     path: '/logout',
     name: 'logout',
     beforeEnter(to, from, next) {

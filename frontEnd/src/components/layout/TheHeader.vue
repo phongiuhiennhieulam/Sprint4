@@ -264,6 +264,7 @@
                       </router-link>
                     </el-badge>
                   </el-dropdown-item>
+                  
                   <el-dropdown-item class="header-right__item" v-if="quanly">
                     <el-dropdown>
                       <el-badge :value="listbirthdays.length" :max="10" class="item">
