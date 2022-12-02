@@ -40,7 +40,7 @@ public interface MoneyUpdateRepository extends JpaRepository<MoneyUpdate, Long> 
             "                               u.name as nameAdmin,\n" +
             "                               mu.status as status\n" +
             "                        from Staff  s, MoneyUpdate mu, User u, Department d\n" +
-            "                        where s.code = mu.maNV and mu.idStaff = u.id and d.id = s.department.id and mu.maNV  like (:keyWord)")
+            "                        where s.code = mu.maNV and mu.idStaff = u.id and d.id = s.department.id and mu.maNV  like (:keyWord) order by mu.id desc")
     Page<MoneyUpdateInterface> getPage(Pageable pageable, String keyWord);
 
     @Query("select mu.id as id,\n" +
