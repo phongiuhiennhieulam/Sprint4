@@ -1,24 +1,24 @@
 import axios from 'axios';
-// import authHeader from './auth-hreader'
+import authHeader from './auth-hreader'
 
 class AcceptMoneyService{
     async getAllMoneyUp(params) {
-        return await axios.get('http://localhost:8083/api/getList/money', {params});
+        return await axios.get('http://localhost:8083/api/getList/money', {params, headers: authHeader()},);
     }
     async getAllMoney(params) {
-        return await axios.get('http://localhost:8083/api/getPage/money', {params});
+        return await axios.get('http://localhost:8083/api/getPage/money', {params, headers: authHeader()});
     }
     async getmoneyAccept(params) {
-        return await axios.get('http://localhost:8083/api/getList/moneyAccept', {params});
+        return await axios.get('http://localhost:8083/api/getList/moneyAccept', {params, headers: authHeader()});
     }
     async getmoneyCancel(params) {
-        return await axios.get('http://localhost:8083/api/getList/moneyCancel', {params});
+        return await axios.get('http://localhost:8083/api/getList/moneyCancel', {params, headers: authHeader()});
     }
     async getmoneyWaiting(params) {
-        return await axios.get('http://localhost:8083/api/getList/moneyWaiting', {params});
+        return await axios.get('http://localhost:8083/api/getList/moneyWaiting', {params, headers: authHeader()});
     }
     async Sort(params) {
-        return await axios.get('http://localhost:8083/api/sort-NameAdmin', {params});
+        return await axios.get('http://localhost:8083/api/sort-NameAdmin', {params, headers: authHeader()});
     }
     async Cancelmoney(id) {
         return await axios.put(`http://localhost:8083/api/cancel-money/${id}`);

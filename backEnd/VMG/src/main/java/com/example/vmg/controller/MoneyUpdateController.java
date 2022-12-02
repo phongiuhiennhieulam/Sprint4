@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -27,6 +28,7 @@ public class MoneyUpdateController {
     @Autowired
     private StaffService staffService;
 
+    @PreAuthorize("hasRole('ROLE_MODERATOR')")
     @GetMapping("/getPage/money")
     public ResponseEntity<Page<MoneyUpdateInterface>> getPage(@RequestParam(defaultValue = "0") int page
             , @RequestParam(defaultValue = "10") int pageSize, @RequestParam(defaultValue = "") String keyWord) {
@@ -43,17 +45,19 @@ public class MoneyUpdateController {
 //        return new ResponseEntity<Long>(moneyUpdateRepository.validate(id), HttpStatus.OK);
 //    }
 
+    @PreAuthorize("hasRole('ROLE_MODERATOR')")
     @GetMapping("/getList/moneyAccept")
     public ResponseEntity<List<MoneyUpdateInterface>> getMoneyAccept() {
         return new ResponseEntity<List<MoneyUpdateInterface>>(moneyUpdateService.getMoneyAccept(), HttpStatus.OK);
     }
 
-
+    @PreAuthorize("hasRole('ROLE_MODERATOR')")
     @GetMapping("/getList/moneyCancel")
     public ResponseEntity<List<MoneyUpdateInterface>> getMoneyCancel() {
         return new ResponseEntity<List<MoneyUpdateInterface>>(moneyUpdateService.getMoneyCancel(), HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('ROLE_MODERATOR')")
     @GetMapping("/getList/moneyWaiting")
     public ResponseEntity<List<MoneyUpdateInterface>> getMoneyWaiting() {
         return new ResponseEntity<List<MoneyUpdateInterface>>(moneyUpdateService.getMoneyWating(), HttpStatus.OK);

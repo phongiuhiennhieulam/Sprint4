@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -36,12 +37,12 @@ public class UserController {
         return userService.findByUsername(authentication.getName()).get();
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/users")
     public ResponseEntity<Page<User>> getList(@RequestParam(defaultValue = "0") int page
             , @RequestParam(defaultValue = "10") int pageSize, @RequestParam(defaultValue = "") String keyWord) {
         return new ResponseEntity<Page<User>>(userService.getByPage(page, pageSize, keyWord), HttpStatus.OK);
     }
-
     @PutMapping("/add-Role/{id}")
     public ResponseEntity<String> SetRole(@PathVariable Long id, @RequestBody Set<Role> role) {
         User user1 = userRepository.findById(id).get();
