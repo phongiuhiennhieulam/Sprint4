@@ -22,4 +22,5 @@ public interface MoneyUpdateRepository extends JpaRepository<MoneyUpdate, Long> 
             "from staff s, money_update mu, users u, department d\n" +
             "where s.id = mu.manv and mu.id_staff = u.id and d.id = s.id_department", nativeQuery = true)
     public List<MoneyUpdateInterface> getList();
+
 }
