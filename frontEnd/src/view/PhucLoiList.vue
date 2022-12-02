@@ -202,7 +202,7 @@
                     <div class="col-12">
                       <div class="mb-3" v-if="value == 0">
                         <label class="form-label">
-                          <strong>Loại phúc lượng<span style="color:red;">&nbsp;
+                          <strong>Loại phúc lợi<span style="color:red;">&nbsp;
                               (*)</span></strong>
                         </label>
                         <el-select v-model="add.isQuantity">
