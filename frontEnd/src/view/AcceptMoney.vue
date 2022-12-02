@@ -136,7 +136,7 @@
                     circle
                   ></el-button>
                 </span>
-
+                
                 <span class="icon-submit" v-if="item.status === 0">
                   <el-button
                     @click="handleSuccess(item.id, index)"
@@ -297,7 +297,7 @@ export default {
       })
         .then(() => {
           new AcceptMoneyService().Acceptmoney(id);
-          // this.loading();
+          this.loading();
           this.getAllMoneyUp();
         })
         .catch(() => {
@@ -318,7 +318,7 @@ export default {
       })
         .then(() => {
           new AcceptMoneyService().Cancelmoney(id);
-          // this.loading();
+          this.loading();
           this.getAllMoneyUp();
         })
         .catch(() => {
@@ -341,7 +341,7 @@ export default {
       )
         .then(() => {
           new AcceptMoneyService().Returnmoney(id);
-          // this.loading();
+          this.loading();
           this.getAllMoneyUp();
         })
         .catch(() => {
@@ -360,6 +360,7 @@ export default {
       })
         .then(() => {
           new AcceptMoneyService().AcceptAll(this.selected);
+          this.loading();
           this.getAllMoneyUp();
           this.$message({
             type: "success",

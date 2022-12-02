@@ -36,6 +36,10 @@ public class StaffService {
         return staffRepository.getErorr();
     }
 
+    public List<Staff> findByCode(String code){
+        return staffRepository.findByCode(code);
+    }
+
     public Page<Staff> getByPage(int pageNumber, int maxNumber){
         Pageable pageable = PageRequest.of(pageNumber, maxNumber);
         return staffRepository.getPage(pageable);

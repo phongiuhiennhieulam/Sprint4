@@ -60,9 +60,9 @@ public class StatisticalController {
     }
 
 
-    @GetMapping("/getList/money")
-    public ResponseEntity<List<MoneyUpdateInterface>> getList(){
-        return new ResponseEntity<List<MoneyUpdateInterface>>(moneyUpdateRepository.getList(), HttpStatus.OK);
-    }
+//    @GetMapping("/getList/money")
+//    public ResponseEntity<List<MoneyUpdateInterface>> getList(){
+//        return new ResponseEntity<List<MoneyUpdateInterface>>(moneyUpdateRepository.getList(), HttpStatus.OK);
+//    }
 
 }
