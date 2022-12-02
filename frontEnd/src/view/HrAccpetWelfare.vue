@@ -1,6 +1,6 @@
 <template>
-  <div class="pl-body">
-    <div class="pl-content">
+  <div class="">
+    <div class="ap-content">
       <div class="hr-title"><strong>DANH SÁCH XÉT DUYỆT</strong></div>
       <br>
     
@@ -37,13 +37,44 @@
       </div>
     </div>
     <!-- dialog lịch sử xet duyet -->
-
-    <el-dialog title="temp" :visible.sync="isHistory" width="59%" :before-close="handleClose">
+    <el-dialog title="temp" :visible.sync="isHistory" width="58%">
       <span slot="title" class="title-dialog"><strong>Lịch xử xét duyệt</strong> </span>
+      <table style="margin-bottom: 6px;">
+          <thead>
+            <tr>  
+                <th width="40%">
+                    <el-input
+                    placeholder="Nhập mã nhân viên"
+                    prefix-icon="el-icon-search"
+                    v-model="code"
+                   >
+                    </el-input>
+                  
+                </th>     
+                <th>
+                  <el-button type="warning" @click="findByCode(code)" style="margin-left: 5px;">
+                      <strong>
+                        Tìm kiếm
+                      </strong>
+                  </el-button>  
+                </th>        
+                                                                                     
+                <th width="10%" >
+                    <el-button style="margin-left: 20px;"   class="btn btn-danger" @click="handReturnWelfare()">
+                      <strong>
+                        <i class="el-icon-refresh-left"></i>
+                       Hoàn tác
+                      </strong>
+                    </el-button>
+                </th>
+            </tr>     
+          </thead>
+      </table>
       <div label-width="120px" class="hrAccW-table__content">
         <table>
           <thead>
             <tr>
+              <th style="text-align: center;" width="9%" ><input type="checkbox" v-model="selectAll"></th>
               <th width="9%">STT</th>
               <th>Mã NV</th>
               <th>Họ tên NV</th>
@@ -55,7 +86,16 @@
               <th width="13%">Hoàn tác</th>
             </tr>
           </thead>
-          <tr v-for="(item, index) in listHistory" :key="item.name">
+          <tr v-for="(item, index) in listHistory" :key="item.id">
+            <td style="text-align: center;">
+                    <input
+                        type="checkbox"
+                        :value="item.id"
+                        v-model="selected"
+                        :ref="item.id"
+                        required
+                      />
+            </td>
             <td>{{ index + 1 }}</td>
             <td style="text-align: left;">{{ item.code }}</td>
             <td style="text-align: left;">{{ item.userName }}</td>
@@ -89,10 +129,6 @@
             <h5>Nhân viên: {{ staff.name }}</h5>
           </strong>
         </div>
-        <!-- <div class="col-6" style="text-align: right; margin-bottom: 5px;">
-          <el-button @click="handShowHistory()" type="warning"><strong><i class="el-icon-s-order"></i> Lịch
-              sử</strong></el-button>
-        </div> -->
       </div>
       <div label-width="120px" class="hrAccW-table__content">
         <table>
@@ -130,10 +166,28 @@
 /* eslint-disable */
 import StaffService from "../service/hrService";
 import WelfareApi from "@/service/phucLoiService";
+
 let welfareApi = new WelfareApi();
 import _ from 'lodash'
 export default {
   name: "PhucLoiList",
+  computed: {
+        selectAll: {
+            get: function (){
+                return this.listHistory ? this.selected.length == this.listHistory.length : false;
+            },
+            set: function (value) {
+                var selected = [];
+
+                if (value) {
+                    this.listHistory.forEach(function (staff) {  
+                        selected.push(staff.id);
+                    });
+                }
+                this.selected = selected;
+            }
+        }
+    },  
   data() {
     return {
       value: "",
@@ -147,7 +201,9 @@ export default {
       staff: {},
       listRegister: [],
       listHistory: [],
-      isHistory: false
+      isHistory: false,
+      selected: [],
+      code: ''
 
     };
   },
@@ -165,26 +221,15 @@ export default {
           title: 'notification',
           message: 'Từ chối thành công'
         });
-        if (this.listRegister.length < 1) {
-          this.$confirm(
-            "Bạn có chắc sẽ chốt danh sách này không. Continue?",
-            "Warning!",
-            {
-              confirmButtonText: "OK",
-              cancelButtonText: "Cancel",
-              type: "warning",
-            }
-          ).then(() => {
+        if (this.listRegister.length < 1) {        
             this.loading()
-          })
         }
       } catch (error) {
         this.errorMessage = error
       }
     },
-
-      
     handleSuccess(id, index) {
+
       try {
         StaffService.SuccessRegisterWelfare(id)
         this.listRegister.splice(index, 1);
@@ -194,17 +239,8 @@ export default {
           type: 'success'
         });
         if (this.listRegister.length < 1) {
-          this.$confirm(
-            "Bạn có chắc sẽ chốt danh sách này không. Continue?",
-            "Warning!",
-            {
-              confirmButtonText: "OK",
-              cancelButtonText: "Cancel",
-              type: "warning",
-            }
-          ).then(() => {
+     
             this.loading()
-          })
         }
       } catch (error) {
         this.errorMessage = error
@@ -230,7 +266,6 @@ export default {
       welfareApi.getAcceptWelfareOfUser(id)
         .then((response) => {
           this.listRegister = response.data;
-          console.log(response.data);
         });
       StaffService.getStaff(id)
         .then((response) => {
@@ -242,7 +277,6 @@ export default {
       welfareApi.getHistoryAcceptWelfareOfUser()
         .then((response) => {
           this.listHistory = response.data;
-          console.log(response.data);
         });
       StaffService.getStaff(id)
         .then((response) => {
@@ -253,10 +287,7 @@ export default {
       StaffService.getRegisterWelfare()
         .then(response => {
           this.list = response.data
-          console.log(this.list)
           this.listStaff = _.unionBy(this.list, 'staff.id')
-          console.log(this.listStaff)
-
         })
         .catch(e => {
           console.log(e)
@@ -280,6 +311,33 @@ export default {
         this.$router.go()
       }, 1200);
     },
+    findByCode(code){
+        StaffService.GetWelfareofStaffByCode(code)
+        .then(response => {
+          this.listHistory = response.data;
+        })
+      },
+    handReturnWelfare(ids){
+      this.$confirm(
+            "Bạn có chắc sẽ hoàn tác những mục đã chọn không?",
+            "Warning!",
+            {
+              confirmButtonText: "Có",
+              cancelButtonText: "Hủy",
+              type: "warning",
+            }
+          ).then(() => {
+            ids = this.selected
+            console.log(ids)
+            StaffService.GetReturn(ids);
+            this.loading();
+            this.$notify({
+              title: 'Success',
+              message: 'Hoàn tác thành công',
+              type: 'success'
+            });
+          })
+    }  
 
   },
 
@@ -295,6 +353,7 @@ export default {
 </script>
 <style scoped>
 @import "@/assets/css/hr/accept.css";
+
 .hrAccW-table__content table {
   width: 100%;
   border-collapse: collapse;
@@ -327,7 +386,7 @@ export default {
 .hrAccW-table__content table thead th {
   font-size: 14px;
   font-weight: 600;
-  
+
 }
 
 .hrAccW-table__content table tr td {

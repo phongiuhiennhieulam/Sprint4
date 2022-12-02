@@ -37,7 +37,7 @@ class StaffService {
         return  axios.get('http://localhost:8083/api/get-user', { headers: authHeader()})
     }
      getFind(text) {
-        return  axios.get(`http://localhost:8083/api/staffs/=${text}`, { headers: authHeader()})
+        return  axios.get(`http://localhost:8083/api/staffs/find?text=${text}`, { headers: authHeader()})
     }
      getWelfare(id) {
         return  axios.get(`http://localhost:8083/api/staff-show/${id}`, { headers: authHeader()}) ;
@@ -94,11 +94,14 @@ deletes (ids) {
      GetCost() {
         return  axios.get('http://localhost:8083/api/costs')
     } 
-
     async ImportExcel(file) {
         return await axios.post('http://localhost:8083/api/uploadExcel', file, { headers: authHeader() })
     }
-   
-   
+    GetReturn(ids) {
+        return  axios.put(`http://localhost:8083/api/staff/return?ids=${ids}`, { headers: authHeader()})
+    }
+    GetWelfareofStaffByCode(code) {
+        return  axios.get(`http://localhost:8083/api/get-history-accept-welfare-by-code?code=${code}`, { headers: authHeader()})
+    }
 }
 export default new StaffService()

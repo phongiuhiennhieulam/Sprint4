@@ -163,12 +163,15 @@ public class WelfareController {
             Welfare welfare = welfareService.findById(statusFormRequest.getItemID()).get();
             welfare.setStatus(statusFormRequest.getStatus());
             welfareService.update(statusFormRequest.getItemID(), welfare);
-
         }
         return new ResponseEntity<Void>(HttpStatus.OK);
     }
     @GetMapping("/get-welfare-status/{id}")
     public List<WelfareStaffInterface> getStatusWelfareOfUser(@PathVariable Long id){
         return welfareStaffEntityService.getStatusWelfareOfUser(id);
+    }
+    @GetMapping("/get-history-accept-welfare-by-code")
+    public List<WelfareStaffInterface> getHistoryAcceptWelfareOfUserByCode(@RequestParam(name="code") String code){
+        return welfareStaffEntityService.getHistoryAcceptWelfareOfUserByCode(code);
     }
 }

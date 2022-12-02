@@ -19,6 +19,15 @@ import java.util.List;
 public interface MoneyUpdateRepository extends JpaRepository<MoneyUpdate, Long> {
     @Modifying
     @Transactional
+
+    @Query(value = "select s.name as name, s.welfare_money as moneyOld,\n" +
+            "       d.name as department,\n" +
+            "       mu.money_update as moneyNew,\n" +
+            "       u.name as nameAdmin, mu.status\n" +
+            "from staff s, money_update mu, users u, department d\n" +
+            "where s.id = mu.manv and mu.id_staff = u.id and d.id = s.id_department", nativeQuery = true)
+    public List<MoneyUpdateInterface> getList();
+
     @Query("update MoneyUpdate p set p.status = 1 where p.id in(:ids)")
     void MutipartAccept(List<Long> ids);
 
