@@ -48,7 +48,7 @@
                     <td>{{ formatCurrency(item.price) }}</td>
                     <td>
                       <el-input-number v-model="listQuantity[item.id]" :disabled="isDisableNumberic(item)"
-                        :max="preventAdd(item)" :min="1" v-show="!item.isQuantity" @change="handleChange"
+                        :max="maxQuantityCanAdd(item)" :min="1" v-show="!item.isQuantity" @change="handleChange"
                         @blur="handleBlur(item.id)">
                       </el-input-number>
                       <span v-show="item.isQuantity">Chỉ chọn 1</span>
@@ -165,7 +165,7 @@ import WelfareApi from "@/service/phucLoiService";
 let welfareApi = new WelfareApi();
 export default {
   name: "PhucLoiList",
- 
+
   data() {
     return {
       selected: [],
@@ -214,11 +214,11 @@ export default {
         self.$forceUpdate();
       }
     },
-    preventAdd(item) {
+    maxQuantityCanAdd(item) {
       if (this.total - this.totalMoney < 0) {
         return this.listQuantity[item.id] - 1;
       } else {
-        return this.listQuantity[item.id] + 1;
+        return this.listQuantity[item.id] + Math.floor((this.total - this.totalMoney) / item.price);
       }
     },
     showDialogRegister() {
@@ -258,20 +258,20 @@ export default {
         };
         //id
         welfare_object.id = this.selected[i].id;
-        
+
 
         //so luong
         welfare_object.quantity = this.listQuantity[this.selected[i].id];
-        
+
 
         //in ra object
         object.list.push(welfare_object);
-        
+
       }
-      
+
 
       const res = await welfareApi.registerWelfare(object);
-      
+
       if (res.status == 201) {
         this.sum = this.totalMoney;
         this.selected = [];
@@ -335,7 +335,7 @@ export default {
       });
       welfareApi.getOnlyOneWelfareOfUser(this.userId).then((x) => {
         this.listOnlyOne = x.data;
-        
+
       });
       welfareApi.getStatusAcceptWelfareOfUser(this.userId).then((x) => {
         this.statusRegister = x.data;
@@ -343,11 +343,11 @@ export default {
     });
     welfareApi.getTotalMoney(this.userName).then((x) => {
       this.total = x.data;
-    
+
       welfareApi.getTotalMoneyGeneralWelfare().then((res) => {
-        
+
         this.total = this.total - res.data;
-        
+
       });
     });
   }

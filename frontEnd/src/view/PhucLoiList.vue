@@ -537,6 +537,9 @@ export default {
       });
     },
     formatCurrency(value) {
+      if (typeof (value) == 'string') {
+        value = value.replaceAll(',', '');
+      }
       return Intl.NumberFormat("vi-VN", {
         style: "currency",
         currency: "VND",

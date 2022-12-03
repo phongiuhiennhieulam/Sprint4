@@ -1,9 +1,9 @@
 <template>
-  <div class="pl-main">
-    <div class="pl-container">
-      <div class="pl-content">
+  <div class="plHome-main">
+    <div class="plHome-container">
+      <div class="plHome-content">
         <div id="title">Danh Sách Phúc Lợi Của {{ staff.name }}</div>
-        <div label-width="120px" class="pl-table__content">
+        <div label-width="120px" class="plHome-table__content">
           <table>
             <thead>
               <tr>

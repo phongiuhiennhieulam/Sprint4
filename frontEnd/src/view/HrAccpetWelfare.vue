@@ -3,7 +3,6 @@
     <div class="pl-content">
       <div class="hr-title"><strong>DANH SÁCH XÉT DUYỆT</strong></div>
       <br>
-    
       <div class="pl-ele">
         <div class="pl-table">
           <div class="pl-table__content">
