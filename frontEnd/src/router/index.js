@@ -10,7 +10,6 @@ const routes = [
     alias: '/login',
     name: "Login",
     component: () => import("../view/PhucLoiLogin.vue"),
-    meta: { requiresAuth: true }
   },
   {
     path: "/phucloi",
