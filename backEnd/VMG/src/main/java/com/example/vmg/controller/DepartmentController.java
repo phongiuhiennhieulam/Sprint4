@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -57,6 +58,8 @@ public class DepartmentController {
         departmentService.update(id, department1);
         return new ResponseEntity<String>(HttpStatus.OK);
     }
+
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/departmentss")
     public ResponseEntity<Page<Department>> getList(@RequestParam(defaultValue = "0") int page
             , @RequestParam(defaultValue = "10") int pageSize, @RequestParam(defaultValue = "") String keyWord ){
