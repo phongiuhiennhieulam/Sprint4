@@ -11,5 +11,7 @@ public class WelfareForm {
     private String text;
     private BigDecimal price;
     private Boolean isQuantity;
+    private Long year;
+    private Long idStaff;
 
 }

@@ -10,6 +10,7 @@ const routes = [
     alias: '/login',
     name: "Login",
     component: () => import("../view/PhucLoiLogin.vue"),
+    meta: { requiresAuth: true }
   },
   {
     path: "/phucloi",
@@ -32,6 +33,12 @@ const routes = [
     path: "/accept_money",
     name: "AcceptMoney",
     component: () => import("@/view/AcceptMoney.vue"),
+    meta: { requiresAuth: true }
+  },
+  {
+    path: "/welfare-update",
+    name: "WelfareUpdate",
+    component: () => import("@/view/WelfareUpdate.vue"),
     meta: { requiresAuth: true }
   },
   {

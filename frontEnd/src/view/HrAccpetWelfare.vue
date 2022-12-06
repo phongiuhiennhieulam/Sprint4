@@ -38,7 +38,7 @@
     <!-- dialog lịch sử xet duyet -->
 
     <el-dialog title="temp" :visible.sync="isHistory" width="59%" :before-close="handleClose">
-      <span slot="title" class="title-dialog"><strong>Lịch xử xét duyệt</strong> </span>
+      <span slot="title" class="title-dialog"><strong>Lịch sử xét duyệt</strong> </span>
       <div label-width="120px" class="hrAccW-table__content">
         <table>
           <thead>
