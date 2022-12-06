@@ -6,6 +6,7 @@ public interface MoneyUpdateInterface {
     String getId();
     String getName();
     BigDecimal getMoneyOld();
+    String getCode();
     String getDepartment();
     BigDecimal getMoneyNew();
     String getnameAdmin();

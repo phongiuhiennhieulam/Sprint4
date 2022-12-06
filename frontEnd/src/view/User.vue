@@ -770,23 +770,6 @@ textarea {
   padding: 0 9px 17px;
 }
 
-/* .el-input__inner {
-  border-radius: 0px !important;
-  background-blend-mode: saturation;
-  font-style: normal;
-  font-weight: 400;
-  font-size: 20;
-  height: 50px
-} */
-.el-button.is-round {
-  border-radius: 20px;
-  padding: 12px 23px;
-  color: white;
-  background-color: #dc3545;
-}
-.el-button.is-round:hover {
-  color: white;
-  background-color: #bb2d3b;
-}
+
 </style>
       
