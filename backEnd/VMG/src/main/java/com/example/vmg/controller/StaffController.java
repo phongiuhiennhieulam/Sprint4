@@ -65,18 +65,20 @@ public class StaffController {
             ,@RequestParam(defaultValue = "10") int pageSize){
         return new ResponseEntity<Page<Staff>>(staffService.getByPage(page, pageSize), HttpStatus.OK);
     }
+    
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/staffs-new")
     public ResponseEntity<Page<Staff>> getListStaffNew(@RequestParam(defaultValue = "0") int page
             ,@RequestParam(defaultValue = "10") int pageSize){
         return new ResponseEntity<Page<Staff>>(staffService.getByPage2(page, pageSize), HttpStatus.OK);
     }
+    
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/staff-erorr")
     public List<StaffInterface> getErorr(){
         return staffService.getErorr();
     }
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_MODERATOR')")
     @GetMapping("/list")
     public List<Staff> getAlll(){
         return staffService.getList();
@@ -86,7 +88,7 @@ public class StaffController {
     public List<Staff> getByDepartment(@PathVariable Long id){
         return staffService.getListByDepartMent(id);
     }
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_MODERATOR') or hasRole('ROLE_ADMIN')")
     @GetMapping("/staffs/find")
     public ResponseEntity<Page<Staff>> getListText(@RequestParam(name="text") String text,
                                                    @RequestParam(defaultValue = "0") int page
@@ -261,21 +263,53 @@ public class StaffController {
         welfareStaffEntityService.update(id, welfareStaff);
         return ResponseEntity.ok(new MessageResponse("successfully!"));
     }
-    @PutMapping("/staff/return")
-    public ResponseEntity<?> returnWelfare(@RequestParam("ids") List<Long> ids){
-        try {
-            welfareStaffService.returnWelfare(ids);
-            String.join(",", ids.stream()
-                    .map(value ->  Long.toString(value)).collect(Collectors.toList()));
-            return ResponseEntity.ok(new MessageResponse("return welfare successfully!"));
-        }catch (Exception e){
-            e.printStackTrace();
-            return null;
-        }
-    }
+//    @PutMapping("/update-money")
+//    public String updateMoney2(@RequestParam("ids") List<Long> ids, @RequestBody BigDecimal number) {
+//        staffService.updateMoney(number, ids);
+//        return String.join(",", ids.stream()
+//                .map(value ->  Long.toString(value)).collect(Collectors.toList()));
+//    }
+//    @PutMapping("/register-delete/{id}")
+//    public ResponseEntity <?> DeleteRegister(@PathVariable Long id){
+//        RegisterWelfare registerWelfare = registerWelfareService.findById(id).get();
+//        registerWelfare.setStatus(2);
+//        registerWelfareService.update(id, registerWelfare);
+//        return ResponseEntity.ok(new MessageResponse("successfully!"));
+//    }
+//    @GetMapping("/registers")
+//    public ResponseEntity <List<RegisterWelfare>> showRegisterWelfare(){
+//        return new ResponseEntity<List<RegisterWelfare>>(registerWelfareService.getByStatus(), HttpStatus.OK);
+//    }
+//    @PutMapping("/register/{id}")
+//    public ResponseEntity <?> successRegister(@PathVariable Long id){
+//        RegisterWelfare registerWelfare = registerWelfareService.findById(id).get();
+//        Staff staff = staffService.getByEmail(registerWelfare.getEmail());
+//
+//        WelfareStaff welfareStaff = new WelfareStaff();
+//        welfareStaff.setStaff(staff);
+//        welfareStaff.setWelfare(registerWelfare.getWelfare());
+//        welfareStaff.setStatus(0);
+//        welfareStaffService.save(welfareStaff);
+//
+//        registerWelfare.setStatus(1);
+//        registerWelfareService.update(id, registerWelfare);
+//        return ResponseEntity.ok(new MessageResponse("successfully!"));
+//    }
 
 
-    //excell
+//    @PutMapping("/update/{id}")
+//    public ResponseEntity<Void> update2(@PathVariable Long id, @ModelAttribute NhanVienForm nhanVienForm){
+//        NhanVien nhanVien = nhanVienService.findById(id).get();
+//        nhanVien.setHoTen(nhanVienForm.getHoTen());
+//        nhanVien.setNgaySinh(nhanVienForm.getNgaysinh());
+//        nhanVien.setEmail(nhanVienForm.getEmail());
+//        nhanVien.setTienPhucLoi(nhanVienForm.getTienPhucLoi());
+//        nhanVien.setTrangThai(nhanVienForm.getTrangThai());
+//        nhanVien.setPhongBan(nhanVienForm.getPhongBan());
+//        nhanVien.setPhucLoiDangHuong(nhanVienForm.getPhucLoiDangHuong());
+//        nhanVienService.update(id, nhanVien);
+//        return new ResponseEntity<Void>(HttpStatus.OK);
+//    }
     @GetMapping("/staff-name/{email}")
     public Staff getUserNameByEmail(@PathVariable String email){
         return staffService.getUsernameByEmail(email);

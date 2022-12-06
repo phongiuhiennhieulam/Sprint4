@@ -1,4 +1,4 @@
-npm npm i vuex@3.6.2
+npm i vuex@3.6.2
 npm install -g vue
 npm install vue-router
 npm install vuex

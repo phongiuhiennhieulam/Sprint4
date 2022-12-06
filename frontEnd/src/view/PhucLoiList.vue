@@ -36,34 +36,34 @@
                         {{ formatCurrency(item.price) }}
                       </td>
                       <!-- <td>
-                  <span v-if="item.status == 1">
-                    <el-button type="danger">Vô hiệu lực</el-button>
-                  </span>
-                  <span v-if="item.status == 0">
-                    <el-button type="success">Có hiệu lực</el-button>
-                  </span>
-                </td> -->
+                    <span v-if="item.status == 1">
+                      <el-button type="danger">Vô hiệu lực</el-button>
+                    </span>
+                    <span v-if="item.status == 0">
+                      <el-button type="success">Có hiệu lực</el-button>
+                    </span>
+                  </td> -->
                       <td>
                         <el-popover placement="left" width="160" trigger="hover" content="Sửa phúc lợi">
                           <el-button @click="showEditForm(item)" icon="fa fa-edit" slot="reference"
-                            style="padding:3px 3px 3px 3px; margin-right: 3px;"></el-button>
+                            style="padding:3px 3px 3px 3px; margin-right: 8px;width:30%;height:100%"></el-button>
                         </el-popover>
                         <el-popover placement="right" width="160" trigger="hover" content="Xóa phúc lợi">
                           <el-button @click="confirmDeleteDialog(item.id)" type="danger" icon="fa fa-trash"
-                            slot="reference" style="padding:3px 3px 3px 3px"></el-button>
+                            slot="reference" style="padding:3px 3px 3px 3px;width:30%;height:100%"></el-button>
                         </el-popover>
                         <!-- <span v-if="item.status == 0">
-                    <el-popover placement="right" width="160" trigger="hover" content="Khóa phúc lợi">
-                      <el-button @click="statusWelfare(item.id, 1)" type="danger" icon="el-icon-lock" slot="reference"
-                        style="padding:3px 3px 3px 3px"></el-button>
-                    </el-popover>
-                  </span> -->
+                      <el-popover placement="right" width="160" trigger="hover" content="Khóa phúc lợi">
+                        <el-button @click="statusWelfare(item.id, 1)" type="danger" icon="el-icon-lock" slot="reference"
+                          style="padding:3px 3px 3px 3px"></el-button>
+                      </el-popover>
+                    </span> -->
                         <!-- <span v-if="item.status == 1">
-                    <el-popover placement="right" width="160" trigger="hover" content="Mở khóa phúc lợi">
-                      <el-button @click="statusWelfare(item.id, 0)" type="success" icon="el-icon-unlock"
-                        slot="reference" style="padding:3px 3px 3px 3px"></el-button>
-                    </el-popover>
-                  </span> -->
+                      <el-popover placement="right" width="160" trigger="hover" content="Mở khóa phúc lợi">
+                        <el-button @click="statusWelfare(item.id, 0)" type="success" icon="el-icon-unlock"
+                          slot="reference" style="padding:3px 3px 3px 3px"></el-button>
+                      </el-popover>
+                    </span> -->
                       </td>
                     </tr>
                   </tbody>
@@ -73,7 +73,7 @@
             </div>
             <div>
               <el-dialog title="Xác nhận" :visible.sync="centerDialogVisible" width="30%" center>
-                <span>Bạn có chắc chắn muốn xóa phúc lợi này?</span>
+                <div style="text-align: center;"><span>Bạn có chắc chắn muốn xóa?</span></div>    
                 <span slot="footer" class="dialog-footer">
                   <el-button @click="centerDialogVisible = false">Hủy</el-button>
                   <el-button type="primary" @click="showDeleteDialog(idDelete)">Xác nhận</el-button>
@@ -107,7 +107,7 @@
                         </div>
                         <div class="mb-3 col-6" v-if="value == 0">
                           <label class="form-label">
-                            <strong>Loại phúc lượng<span style="color:red;">&nbsp;
+                            <strong>Loại phúc lợi<span style="color:red;">&nbsp;
                                 (*)</span></strong>
                           </label>
                           <el-select v-model="add.isQuantity">
@@ -115,7 +115,26 @@
                             <el-option type="text" :value="false" label="Chọn số lượng"></el-option>
                           </el-select>
                         </div>
+                        <div class="mb-3 col-6" v-if="(value == 1)">
+                          <label class="form-label">
+                            <strong>Năm<span style="color:red;">&nbsp;
+                                (*)</span></strong>
+                          </label>
+                          <el-form-item prop="year" label-width="0px">
+                            <el-input v-model="add.year" type="number"></el-input>
+                          </el-form-item>
+                        </div>
                       </div>
+                    </div>
+                    <div class="col-12" v-if="(value == 0)">
+                      <label class="form-label">
+                        <strong>Năm<span style="color:red;">&nbsp;
+                            (*)</span></strong>
+                      </label>
+                      <el-form-item prop="year" label-width="0px">
+                        <el-input type="number" v-model="add.year"></el-input>
+                      </el-form-item>
+
                     </div>
                     <div class="col-12">
                       <label class="form-label">
@@ -127,6 +146,8 @@
                       </el-form-item>
 
                     </div>
+                    <!-- <el-input type="hidden" v-model="add.idStaff"></el-input> -->
+                    <!-- <pre>{{add.idStaff}}</pre> -->
                   </div>
                   <div slot="footer" class="dialog-footer" style="text-align: center">
                     <el-button class="btn btn-danger" round @click="submitForm('addValidateForm')">{{ buttonName }}
@@ -166,7 +187,7 @@
                 </div>
               </div>
               <el-dialog title="Xác nhận" :visible.sync="centerDialogVisible" width="90%" center>
-                <span>Bạn có chắc chắn muốn xóa phúc lợi này?</span>
+                <div style="text-align: center;"><span>Bạn có chắc chắn muốn xóa?</span></div>    
                 <span slot="footer" class="dialog-footer">
                   <el-button @click="centerDialogVisible = false">Hủy</el-button>
                   <el-button type="primary" @click="showDeleteDialog(idDelete)">Xác nhận</el-button>
@@ -202,13 +223,22 @@
                     <div class="col-12">
                       <div class="mb-3" v-if="value == 0">
                         <label class="form-label">
-                          <strong>Loại phúc lượng<span style="color:red;">&nbsp;
+                          <strong>Loại phúc lợi<span style="color:red;">&nbsp;
                               (*)</span></strong>
                         </label>
                         <el-select v-model="add.isQuantity">
                           <el-option type="text" :value="true" label="Chỉ 1"></el-option>
                           <el-option type="text" :value="false" label="Chọn số lượng"></el-option>
                         </el-select>
+                      </div>
+                      <div class="mb-3" v-if="(value != 0)">
+                        <label class="form-label">
+                          <strong>Năm<span style="color:red;">&nbsp;
+                              (*)</span></strong>
+                        </label>
+                        <el-form-item prop="year" label-width="0px">
+                          <el-input v-model="add.year" type="text"></el-input>
+                        </el-form-item>
                       </div>
                     </div>
                     <div class="col-12">
@@ -221,6 +251,7 @@
                       </el-form-item>
 
                     </div>
+                    <!-- <el-input type="hidden" v-model="add.idStaff"></el-input> -->
                   </div>
                   <div slot="footer" class="dialog-footer" style="text-align: center">
                     <el-button class="btn btn-danger" round @click="submitForm('addValidateForm')">{{ buttonName }}
@@ -236,7 +267,7 @@
 
   </div>
 </template>
-
+  
 <script>
 /* eslint-disable */
 import WelfareApi from "@/service/phucLoiService";
@@ -262,14 +293,20 @@ export default {
         name: "",
         text: "",
         price: "",
-        isQuantity: false
+        isQuantity: false,
+        year: "",
+        idStaff: ""
       },
+      idStaff: "",
       formMode: '',
       list: [],
       listAllWelfare: [],
       nameWelfare: [],
       centerDialogVisible: false,
       addText: "Thêm mới phúc lợi cá nhân hóa",
+      userName: "",
+      duplicateName: false,
+      listCheck: [],
     };
   },
 
@@ -281,12 +318,14 @@ export default {
       return {
         name: [{ validator: this.validateName, trigger: ['blur', 'change'] }],
         price: [{ validator: this.validatePrice, trigger: ['blur', 'change'] }],
-        text: [{ validator: this.validateText, trigger: ['blur', 'change'] }]
+        text: [{ validator: this.validateText, trigger: ['blur', 'change'] }],
+        year: [{ validator: this.validateYear, trigger: ['blur', 'change'] }]
       }
     },
     titleFormName() {
       return this.formMode === 'edit' ? 'Cập nhật phúc lợi' : 'Thêm mới phúc lợi';
     },
+
     buttonName() {
       return this.formMode === 'edit' ? 'Cập nhật' : 'Thêm mới';
     }
@@ -301,6 +340,7 @@ export default {
         this.addText = "Thêm mới phúc lợi chung";
       }
     },
+
     isShowAdd(value) {
       if (!value) {
         this.add = {
@@ -308,11 +348,35 @@ export default {
           name: "",
           text: "",
           price: "",
+          year: "",
           isQuantity: false
         }
         this.resetForm('addValidateForm');
       }
-    }
+    },
+
+    add: {
+      handler: function (val) {
+        if (val.name) {
+          const objectFounded = this.isDuplicateName(val.name);
+          if (objectFounded.length > 0) {
+            this.duplicateName = true;
+            if (val.year && Number(val.year) !== objectFounded[0].year) {
+              this.duplicateName = false;
+              this.$refs.addValidateForm.clearValidate('name');
+            } else {
+              this.duplicateName = true;
+              this.$refs.addValidateForm.validateField('name');
+            }
+          } else {
+            this.duplicateName = false;
+            this.$refs.addValidateForm.clearValidate('name');
+          }
+        }
+      },
+      deep: true
+    },
+
   },
   methods: {
     addCommas(nStr) {
@@ -331,19 +395,20 @@ export default {
       this.add.price = this.add.price.replace(/[^0-9.,]/g, '')
       this.add.price = this.addCommas(this.add.price.replace(/,/g, ''));
     },
-    isDuplicateName(value) {
+    isDuplicateName(name) {
       if (this.formMode === 'edit') {
-        return this.list.filter((x) => format.removeVietnameseTones(x.name).toLowerCase() === (format.removeVietnameseTones(value).toLowerCase()) && x.id !== this.add.id).length > 0
+        return this.listCheck.filter((x) => format.removeVietnameseTones(x.name).toLowerCase().trim() === (format.removeVietnameseTones(name).toLowerCase().trim()) && x.id !== this.add.id)
       } else {
-        return this.list.filter((x) => format.removeVietnameseTones(x.name).toLowerCase() === (format.removeVietnameseTones(value).toLowerCase())).length > 0
+        return this.listCheck.filter((x) => format.removeVietnameseTones(x.name).toLowerCase().trim() === (format.removeVietnameseTones(name).toLowerCase().trim()))
       }
     },
     validateName(rule, value, callback) {
-      if (value === '') {
+
+      if (value.trim() === '') {
         callback(new Error('Tên phúc lợi không được để trống'))
       } else if (value.match("[0-9]")) {
         callback(new Error('Tên phúc lợi không được chứa số'))
-      } else if (this.isDuplicateName(value)) {
+      } else if (this.duplicateName) {
         callback(new Error('Tên phúc lợi đã tồn tại'))
       } else {
         callback()
@@ -365,72 +430,99 @@ export default {
         callback()
       }
     },
+    validateYear(rule, value, callback) {
+      if (value === '') {
+        callback(new Error('Năm không được để trống'))
+      } else if (value < 0) {
+        callback(new Error('Năm không được nhỏ hơn 0'))
+      } else {
+        callback()
+      }
+    },
     submitForm(formName) {
       const self = this;
       let isValid = true
       self.$refs[formName].validate((valid) => {
         if (!valid) isValid = false;
       })
+      self.add.idStaff = this.idStaff;
+
       if (isValid) {
         const qs = require("qs");
         self.add.price = parseInt(self.add.price.replace(/,/g, ''))
+        self.add.name = self.add.name.trim();
         if (self.formMode === 'edit') {
-          if (this.value === 0) {
-            welfareApi.updateWelfare(self.add.id, qs.stringify(self.add)).then((res) => {
-              welfareApi.getAllWelfare().then((res) => {
-                // self.isLoaded = true;
-                this.list = res.data;
-                this.$notify({
-                  title: "Success",
-                  message: "Cập nhật phúc lợi thành công",
-                  type: "success",
-                });
-                this.list = res.data;
-              });
+          // if (this.value === 0) {
+          //   welfareApi.updateWelfare(self.add.id, qs.stringify(self.add)).then((res) => {
+          //     welfareApi.getAllWelfare().then((res) => {
+          //       // self.isLoaded = true;
+          //       this.list = res.data;
+          //       this.$notify({
+          //         title: "Success",
+          //         message: "Đã gửi yêu cầu cập nhật thành công!!\nXin chờ xét duyệt",
+          //         type: "success",
+          //       });
+          //       this.list = res.data;
+          //     });
+          //   });
+          // }
+          // else {
+          //   welfareApi.updateGeneralWelfare(self.add.id, qs.stringify(self.add)).then((res) => {
+          //     welfareApi.getAllGeneralWelfare().then((res) => {
+          //       // self.isLoaded = true;
+          //       this.list = res.data;
+          //       this.$notify({
+          //         title: "Success",
+          //         message: "Đã gửi yêu cầu cập nhật thành công!!\nXin chờ xét duyệt",
+          //         type: "success",
+          //       });
+          //       this.list = res.data;
+          //     });
+          //   });;
+          // }
+          welfareApi.updateWelfare(self.add.id, this.value, qs.stringify(self.add)).then((res) => {
+            this.$notify({
+              title: "Success",
+              message: "Đã gửi yêu cầu cập nhật thành công!!\nXin chờ xét duyệt",
+              type: "success",
             });
-          }
-          else {
-            welfareApi.updateGeneralWelfare(self.add.id, qs.stringify(self.add)).then((res) => {
-              welfareApi.getAllGeneralWelfare().then((res) => {
-                // self.isLoaded = true;
-                this.list = res.data;
-                this.$notify({
-                  title: "Success",
-                  message: "Cập nhật phúc lợi thành công",
-                  type: "success",
-                });
-                this.list = res.data;
-              });
-            });;
-          }
+          });
         } else {
-          if (self.value === 0) {
-            welfareApi.createWelfare(qs.stringify(self.add)).then((res) => {
-              welfareApi.getAllWelfare().then((res) => {
-                // self.isLoaded = true;
-                self.list = res.data;
-                self.$notify({
-                  title: "Success",
-                  message: "Thêm mới phúc lợi thành công",
-                  type: "success",
-                });
-              });
-              self.list = res.data;
+          // if (self.value === 0) {
+          //   welfareApi.createWelfare(qs.stringify(self.add)).then((res) => {
+          //     welfareApi.getAllWelfare().then((res) => {
+          //       // self.isLoaded = true;
+          //       self.list = res.data;
+          //       self.$notify({
+          //         title: "Success",
+          //         message: "Đã gửi yêu cầu thêm mới thành công!!\nXin chờ xét duyệt",
+          //         type: "success",
+          //       });
+          //     });
+          //     self.list = res.data;
+          //   });
+          // } else {
+          //   welfareApi.createGeneralWelfare(qs.stringify(self.add)).then((res) => {
+          //     welfareApi.getAllGeneralWelfare().then((res) => {
+          //       // self.isLoaded = true;
+          //       self.list = res.data;
+          //       self.$notify({
+          //         title: "Success",
+          //         message: "Đã gửi yêu cầu thêm mới thành công!!\nXin chờ xét duyệt",
+          //         type: "success",
+          //       });
+          //       self.list = res.data;
+          //     });
+          //   });
+          // }
+
+          welfareApi.createWelfare(this.value, qs.stringify(self.add)).then((res) => {
+            self.$notify({
+              title: "Success",
+              message: "Đã gửi yêu cầu thêm mới thành công!!\nXin chờ xét duyệt",
+              type: "success",
             });
-          } else {
-            welfareApi.createGeneralWelfare(qs.stringify(self.add)).then((res) => {
-              welfareApi.getAllGeneralWelfare().then((res) => {
-                // self.isLoaded = true;
-                self.list = res.data;
-                self.$notify({
-                  title: "Success",
-                  message: "Thêm mới phúc lợi thành công",
-                  type: "success",
-                });
-                self.list = res.data;
-              });
-            });
-          }
+          });
         }
         self.isShowAdd = false;
         self.resetForm(formName)
@@ -450,11 +542,13 @@ export default {
           welfareApi.getAllWelfare().then((res) => {
             // self.isLoaded = true;
             this.list = res.data;
+
           });
         } else {
           welfareApi.getAllGeneralWelfare().then((res) => {
             // self.isLoaded = true;
             this.list = res.data;
+
           });
         }
       });;
@@ -498,7 +592,6 @@ export default {
             const index = this.list.findIndex((a) => a.id == item);
             // alert(index);
             this.list.splice(index, 1);
-            this.list.splice(index, 1);
             this.$notify({
               title: "Success",
               message: "Xóa phúc lợi thành công",
@@ -514,6 +607,7 @@ export default {
       welfareApi.getAllWelfare().then((res) => {
         // self.isLoaded = true;
         this.list = res.data;
+        this.listCheck = res.data;
       });
     },
     getAllGeneralWelfares() {
@@ -537,6 +631,9 @@ export default {
       });
     },
     formatCurrency(value) {
+      if (typeof (value) == 'string') {
+        value = value.replaceAll(',', '');
+      }
       return Intl.NumberFormat("vi-VN", {
         style: "currency",
         currency: "VND",
@@ -547,12 +644,28 @@ export default {
     // const self = this;
     this.getAllWelfare();
     this.setUpListNameWelfare();
+    if (localStorage.getItem("user")) {
+      // this.getStaff(this.userName)
+      welfareApi.findID(JSON.parse(localStorage.getItem("user")).userName).then((res) => {
+        this.idStaff = res.data;
+      });
+    }
   },
 };
 </script>
-
+  
 <style>
 @import "@/assets/css/phucloi/list.css";
+
+.demo-dynamic input {
+  border-radius: 8px !important;
+  box-shadow: 1px 1px 4px rgb(0 0 0 / 15%);
+  border: 1px solid #23282b8f;
+}
+
+.demo-dynamic .el-select {
+  width: 100%;
+}
 
 @media only screen and (max-width: 760px) {
   .plList-button {
@@ -603,7 +716,5 @@ export default {
   .plList-table {
     margin: 0;
   }
-
-
 }
 </style>

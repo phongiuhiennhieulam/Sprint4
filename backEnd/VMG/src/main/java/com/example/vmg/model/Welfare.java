@@ -21,6 +21,8 @@ public class Welfare implements Serializable {
     private BigDecimal price;
     private Integer status;
     private Boolean isQuantity;
+    private Long year;
+    private Long idStaff;
 
     @JsonIgnore
     @OneToMany(mappedBy = "welfare")

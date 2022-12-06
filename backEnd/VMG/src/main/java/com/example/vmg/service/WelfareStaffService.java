@@ -52,8 +52,4 @@ public class WelfareStaffService {
         return welfareStaffRepository.findByStaffRegisterId(id);
     }
 
-    public void returnWelfare(List<Long> longs) {
-        welfareStaffRepository.MutipartReturn(longs);
-    }
-
 }

@@ -10,6 +10,7 @@ const routes = [
     alias: '/login',
     name: "Login",
     component: () => import("../view/PhucLoiLogin.vue"),
+    meta: { requiresAuth: true }
   },
   {
     path: "/phucloi",
@@ -48,6 +49,12 @@ const routes = [
   },
   
 
+  {
+    path: "/welfare-update",
+    name: "WelfareUpdate",
+    component: () => import("@/view/WelfareUpdate.vue"),
+    meta: { requiresAuth: true }
+  },
   {
     path: "/thongke",
     name: "thongke",

@@ -11,6 +11,9 @@ import "@/assets/css/base.css";
 import VueSessionStorage from 'vue-sessionstorage'
 
 
+// Vue.config.productionTip = false;
+
+
 Vue.config.productionTip = false;
 // import { createApp } from "vue";
 // import VueAwesomePaginate from "vue-awesome-paginate";

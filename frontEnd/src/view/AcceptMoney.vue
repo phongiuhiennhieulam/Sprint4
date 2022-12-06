@@ -27,7 +27,7 @@
 </template>
   
   <script>
-// import AcceptMoneyService from "@/service/acceptMoney";
+import AcceptMoneyService from "@/service/acceptMoney";
 import MoneyUpdateList from "./MoneyUpdateList.vue";
 import NewStaffsList from "./NewStaffsList.vue";
 export default {
@@ -92,6 +92,188 @@ export default {
       }
     },
 
+    handlelistAccept() {
+      new AcceptMoneyService().getmoneyAccept().then((response) => {
+        this.listUpdateMoneys.content= response.data;
+      });
+    },
+    handlelistCancel() {
+      new AcceptMoneyService().getmoneyCancel().then((response) => {
+        this.listUpdateMoneys.content = response.data;
+      });
+    },
+
+    handlelistWaiting() {
+      new AcceptMoneyService().getmoneyWaiting().then((response) => {
+        this.listUpdateMoneys.content = response.data;
+      });
+    },
+
+    getAllMoneyUp() {
+      const params = this.getRequestParams(
+        this.page,
+        this.pageSize,
+        this.keyWord
+      );
+      // console.log(params);
+      new AcceptMoneyService().getAllMoney(params).then((response) => {
+        this.listUpdateMoneys = response.data;
+        this.hasRole = true;
+        this.count = response.data.totalPages;
+        this.itemCount = response.data.totalElements;
+      });
+    },
+
+    getRequestParams(page, pageSize, keyWord) {
+      let params = {};
+      if (page) {
+        params["page"] = page - 1;
+      }
+      if (pageSize) {
+        params["size"] = pageSize;
+      }
+      if (keyWord) {
+        params["keyWord"] = keyWord;
+      }
+      return params;
+    },
+
+    handlePageChange(value) {
+      this.page = value;
+      this.getAllMoneyUp();
+    },
+
+    handleSuccess(id) {
+      this.$confirm("Bạn muốn chấp nhận cho nhân viên này?", "Thông báo", {
+        confirmButtonText: "OK",
+        cancelButtonText: "Cancel",
+        type: "success",
+      })
+        .then(() => {
+          new AcceptMoneyService().Acceptmoney(id);
+          this.loading();
+          this.getAllMoneyUp();
+        })
+        .catch(() => {
+          this.$message({
+            type: "success",
+            message: "Đã chấp nhận",
+            title: "success",
+          });
+          
+        });
+    },
+
+    handleDelete(id) {
+      this.$confirm("Bạn không chấp thuận cho nhân viên này?", "Thông báo", {
+        confirmButtonText: "OK",
+        cancelButtonText: "Cancel",
+        type: "error",
+      })
+        .then(() => {
+          new AcceptMoneyService().Cancelmoney(id);
+          this.loading();
+          this.getAllMoneyUp();
+        })
+        .catch(() => {
+          this.$message({
+            type: "warning",
+            message: "Đã hủy bỏ",
+          });
+        });
+    },
+
+    handleReturn(id) {
+      this.$confirm(
+        "Bạn muốn hoàn tác đánh giá cho nhân viên này?",
+        "Thông báo",
+        {
+          confirmButtonText: "OK",
+          cancelButtonText: "Cancel",
+          type: "",
+        }
+      )
+        .then(() => {
+          new AcceptMoneyService().Returnmoney(id);
+          this.loading();
+          this.getAllMoneyUp();
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "Đã hoàn tác",
+          });
+        });
+    },
+
+    handleSuccessAll() {
+      this.$confirm("Bạn muốn chấp nhận những nhân viên này?", "Thông báo", {
+        confirmButtonText: "OK",
+        cancelButtonText: "Cancel",
+        type: "success",
+      })
+        .then(() => {
+          new AcceptMoneyService().AcceptAll(this.selected);
+          this.loading();
+          this.getAllMoneyUp();
+          this.$message({
+            type: "success",
+            message: "Đã chấp thuận",
+          });
+        })
+        .catch(() => {
+          this.$message({
+            type: "warning",
+            message: "Đã hủy bỏ",
+          });
+        });
+    },
+
+    handleReturnAll() {
+      this.$confirm("Hoàn tác xét duyệt những nhân viên này?", "Thông báo", {
+        confirmButtonText: "OK",
+        cancelButtonText: "Cancel",
+        type: "success",
+      })
+        .then(() => {
+          new AcceptMoneyService().ReturnAll(this.selected);
+          this.loading();
+          this.$message({
+            type: "success",
+            message: "Đã hoàn tác",
+          });
+          //this.$router.go();
+        })
+        .catch(() => {
+          this.$message({
+            type: "warning",
+            message: "Đã hủy bỏ",
+          });
+        });
+    },
+
+    handleCancelAll() {
+      this.$confirm("Hủy xét duyệt những nhân viên này?", "Thông báo", {
+        confirmButtonText: "OK",
+        cancelButtonText: "Cancel",
+        type: "success",
+      })
+        .then(() => {
+          new AcceptMoneyService().CancelAll(this.selected);
+          this.loading();
+          this.$message({
+            type: "success",
+            message: "Đã chấp thuận",
+          });
+          //this.$router.go();
+        })
+        .catch(() => {
+          this.$message({
+            type: "warning",
+            message: "Đã hủy bỏ",
+          });
+        });
+    },
     loading() {
       const loading = this.$loading({
         lock: true,
