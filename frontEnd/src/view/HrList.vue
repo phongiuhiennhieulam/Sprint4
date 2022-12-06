@@ -190,7 +190,7 @@
                   class="btn btn-danger">
                   Sửa thông tin
                 </el-button>
-                <el-button @click="handleShow(form.id)" slot="reference" style="text-align: center; font: 1em sans-serif"
+                <el-button v-if="(form.status===0 || form.status===1)" @click="handleShow(form.id)" slot="reference" style="text-align: center; font: 1em sans-serif"
                   class="btn btn-danger">
                   Kiểm tra phúc lợi
                 </el-button>

@@ -73,11 +73,13 @@ public interface StaffRepository extends JpaRepository<Staff,Long> {
     public List<String> getCode();
 
     @Query(value = "select *  from staff s\n" +
-            "left join (select ws.id_staff as id_staff,  sum(ws.quantity * w.price)  as total from welfare_staff ws\n" +
-            "left join welfare w on ws.id_welfare = w.id and ws.status = 0\n" +
-            "group by ws.id_staff) as n\n" +
-            "on s.id = n.id_staff\n" +
-            "having (IFNULL(n.total,0) + (select sum(price) from general_welfare)) > s.welfare_money",nativeQuery = true)
+            "            left join (select ws.id_staff as id_staff,  sum(ws.quantity * w.price)  as total from welfare_staff ws\n" +
+            "            left join welfare w on ws.id_welfare = w.id and ws.status = 0\n" +
+            "\n" +
+            "            group by ws.id_staff) as n\n" +
+            "            on s.id = n.id_staff\n" +
+            "            where s.status = 1 or s.status = 0\n" +
+            "            having (IFNULL(n.total,0) + (select sum(price) from general_welfare)) > s.welfare_money",nativeQuery = true)
     public List<StaffInterface> getErorr();
 
     @Query("SELECT DISTINCT b FROM Staff b JOIN b.department c " +
