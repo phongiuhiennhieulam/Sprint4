@@ -35,6 +35,20 @@ const routes = [
     component: () => import("@/view/AcceptMoney.vue"),
     meta: { requiresAuth: true }
   },
+
+  
+  {
+    path: "/moneyupdate",
+    name: "MoneyupdateList",
+    component: () => import("@/view/MoneyUpdateList.vue"),
+  },
+  {
+    path: "/newstaffs",
+    name: "NewStaffsList",
+    component: () => import("@/view/NewStaffsList.vue"),
+  },
+  
+
   {
     path: "/welfare-update",
     name: "WelfareUpdate",
@@ -55,8 +69,14 @@ const routes = [
   },
   {
     path: "/hr",
-    name: "HrList",
-    component: () => import("@/view/HrList.vue"),
+    name: "hr",
+    component: () => import("../view/HrList.vue"),
+    meta: { requiresAuth: true }
+  },
+  {
+    path: "/newStaff",
+    name: "NewStaffs",
+    component: () => import("../view/StaffComponent.vue"),
     meta: { requiresAuth: true }
   },
   {

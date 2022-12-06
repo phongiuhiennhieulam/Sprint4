@@ -31,7 +31,7 @@ public class Staff implements Serializable {
     private Date date;
     @NotNull
     private String email;
-    @NotNull
+
     private BigDecimal welfareMoney;
     private Integer status;
     @NotNull

@@ -1,12 +1,12 @@
 import axios from 'axios';
-
+import authHeader from './auth-hreader'
 /**
  * Api lấy ra danh sách toàn bộ phòng ban
  * */
 class DepartmentApi {
 
     async getDepartment(params) {
-        return await axios.get('http://localhost:8083/api/departmentss', {params});
+        return await axios.get('http://localhost:8083/api/departmentss', {params, headers: authHeader()});
     }
 
     async deleteDepartment(id) {

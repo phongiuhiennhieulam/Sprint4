@@ -44,6 +44,10 @@ public class StaffService {
         Pageable pageable = PageRequest.of(pageNumber, maxNumber);
         return staffRepository.getPage(pageable);
     }
+    public Page<Staff> getByPage2(int pageNumber, int maxNumber){
+        Pageable pageable = PageRequest.of(pageNumber, maxNumber);
+        return staffRepository.getPage2(pageable);
+    }
     public List<StatisticalInterface> getStaffByWelfare(Long id){
         return staffRepository.getStaffByWelfare(id);
     }
