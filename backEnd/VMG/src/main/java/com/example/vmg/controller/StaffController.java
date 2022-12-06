@@ -66,6 +66,12 @@ public class StaffController {
         return new ResponseEntity<Page<Staff>>(staffService.getByPage(page, pageSize), HttpStatus.OK);
     }
     @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @GetMapping("/staffs-new")
+    public ResponseEntity<Page<Staff>> getListStaffNew(@RequestParam(defaultValue = "0") int page
+            ,@RequestParam(defaultValue = "10") int pageSize){
+        return new ResponseEntity<Page<Staff>>(staffService.getByPage2(page, pageSize), HttpStatus.OK);
+    }
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/staff-erorr")
     public List<StaffInterface> getErorr(){
         return staffService.getErorr();
@@ -96,7 +102,8 @@ public class StaffController {
     @PostMapping("/staffs")
     public ResponseEntity<?> createStaff(@Valid @RequestBody Staff staff){
         try {
-            staff.setStatus(0);
+            staff.setWelfareMoney(BigDecimal.valueOf(0));
+            staff.setStatus(3);
             //lấy thông tin user
             if (userService.existsByUsername(staff.getEmail())) {
                 return ResponseEntity
@@ -164,10 +171,12 @@ public class StaffController {
            for(Long i : ids) {
                MoneyUpdate moneyUpdate = new MoneyUpdate();
                Staff staff = staffService.getById(i);
+               staff.setStatus(2);
                moneyUpdate.setMaNV(staff.getCode());
                moneyUpdate.setMoneyUpdate(money);
                moneyUpdate.setStatus(0);
                moneyUpdate.setIdStaff(user.getId());
+               staffService.saveOrUpDate(staff);
                moneyUpdateRepository.save(moneyUpdate);
            }
            return ResponseEntity.ok(new MessageResponse("update money staff successfully!"));

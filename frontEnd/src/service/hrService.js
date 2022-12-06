@@ -12,6 +12,9 @@ class StaffService {
      getAll(params) {
         return  axios.get('http://localhost:8083/api/staffs', {params, headers: authHeader()})
     }
+    getAll2(params) {
+        return  axios.get('http://localhost:8083/api/staffs-new', {params, headers: authHeader()})
+    }
      getStaff(id) {
         return  axios.get(`http://localhost:8083/api/staff/${id}`, { headers: authHeader()})
     }
