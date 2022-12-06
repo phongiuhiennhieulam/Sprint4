@@ -96,7 +96,7 @@ public class StaffController {
     @PostMapping("/staffs")
     public ResponseEntity<?> createStaff(@Valid @RequestBody Staff staff){
         try {
-            staff.setStatus(0);
+            staff.setStatus(2);
             //lấy thông tin user
             if (userService.existsByUsername(staff.getEmail())) {
                 return ResponseEntity

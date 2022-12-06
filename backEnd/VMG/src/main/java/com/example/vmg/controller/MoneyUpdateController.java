@@ -31,7 +31,7 @@ public class MoneyUpdateController {
     @PreAuthorize("hasRole('ROLE_MODERATOR')")
     @GetMapping("/getPage/money")
     public ResponseEntity<Page<MoneyUpdateInterface>> getPage(@RequestParam(defaultValue = "0") int page
-            , @RequestParam(defaultValue = "10") int pageSize, @RequestParam(defaultValue = "") String keyWord) {
+            , @RequestParam(defaultValue = "9") int pageSize, @RequestParam(defaultValue = "") String keyWord) {
         if (!(keyWord.equals("undefined") || keyWord == null)) {
             keyWord = keyWord.trim();
             return new ResponseEntity<Page<MoneyUpdateInterface>>(moneyUpdateService.getPage(page, pageSize, keyWord), HttpStatus.OK);
