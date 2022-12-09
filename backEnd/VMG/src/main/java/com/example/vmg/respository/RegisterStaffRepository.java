@@ -15,7 +15,7 @@ public interface RegisterStaffRepository extends JpaRepository<Staff,Long> {
 
 
     @Query(value = "select s.id,m.id as moneyId,s.code,s.date,s.email,s.name,s.status,m.money_update,s.id_department,d.name as dname from staff s,money_update m,department d\n" +
-            "            where (s.status = 2 or  s.status = 3 )  and s.code = m.manv and s.id_department = d.id order by s.id desc", nativeQuery = true)
+            "            where (s.status = 2 or  s.status = 3 )  and s.code = m.manv and s.id_department = d.id and s.code like (:keyWord) order by s.id desc", nativeQuery = true)
     Page<NewStaffInterface> getRegister(Pageable pageable, String keyWord);
 
     @Modifying
