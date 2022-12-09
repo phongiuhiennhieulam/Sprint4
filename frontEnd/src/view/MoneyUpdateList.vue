@@ -80,6 +80,9 @@
                       <el-dropdown-item command="waiting"
                         ><strong>Chờ Duyệt</strong></el-dropdown-item
                       >
+                      <el-dropdown-item command="all"
+                        ><strong>Tất cả</strong></el-dropdown-item
+                      >
                     </el-dropdown-menu>
                   </template>
                 </el-dropdown>
@@ -114,19 +117,19 @@
                 {{ formatCurrency(item.moneyNew - item.moneyOld) }}
               </td>
               <td style="text-align: center">
-                <span v-show="item.status == 0">
+                <span v-show="(item.status == 0)">
                   <Strong style="color: orange">Chờ duyệt</Strong>
                 </span>
-                <span v-show="item.status == 2">
+                <span v-show="(item.status == 2)">
                   <Strong style="color: red">Hủy bỏ</Strong>
                 </span>
-                <span v-show="item.status == 1">
+                <span v-show="(item.status == 1)">
                   <Strong style="color: #5db830">Chấp thuận</Strong>
                 </span>
               </td>
 
               <td style="text-align: center">
-                <span v-if="item.status === 2 || item.status === 1">
+                <span v-if="(item.status === 1 || item.status === 2)">
                   <el-button
                     @click="handleReturn(item.id, index)"
                     type="warning"
@@ -135,7 +138,7 @@
                   ></el-button>
                 </span>
 
-                <span class="icon-submit" v-if="item.status === 0">
+                <span class="icon-submit" v-if="(item.status === 0)">
                   <el-button
                     @click="handleSuccess(item.id, index)"
                     type="success"
@@ -227,6 +230,9 @@ export default {
       if (command === "waiting") {
         this.handlelistWaiting();
       }
+      if (command === "all") {
+        this.handlelistAll();
+      }
     },
     handlelistAccept() {
       new AcceptMoneyService().getmoneyAccept().then((response) => {
@@ -242,6 +248,11 @@ export default {
     handlelistWaiting() {
       new AcceptMoneyService().getmoneyWaiting().then((response) => {
         this.listUpdateMoneys.content = response.data;
+      });
+    },
+    handlelistAll() {
+      new AcceptMoneyService().getAllMoney().then((response) => {
+        this.listUpdateMoneys = response.data;
       });
     },
     getAllMoneyUp() {
@@ -431,9 +442,9 @@ export default {
 </script>
 
 <style>
-.money-table_content {
+/* .money-table_content {
   height: 70vh;
-}
+} */
 .money-table table tbody tr:hover {
   background-color: rgb(255, 255, 255);
 }

@@ -70,4 +70,5 @@ public class MoneyUpdateService {
     public List<MoneyUpdateInterface> getMoneyCancel() {
         return moneyUpdateRepository.getMonneyCancel();
     }
+    public void delete(Long id){moneyUpdateRepository.deleteById(id);}
 }

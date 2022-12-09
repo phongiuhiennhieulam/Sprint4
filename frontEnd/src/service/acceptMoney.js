@@ -43,11 +43,11 @@ class AcceptMoneyService{
         return await axios.put(`http://localhost:8083/api/return-all?ids=${ids}`);
     }
     //xét duyệt nhân viên
-    async AcceptStaff(id) {
-        return await axios.put(`http://localhost:8083/api/accept-register/${id}`);
+    async AcceptStaff(id,money,moneyId) {
+        return await axios.put(`http://localhost:8083/api/accept-register/${id}/${money}/${moneyId}`);
     }
-    async CancelStaff(id) {
-        return await axios.put(`http://localhost:8083/api/cancel-register/${id}`);
+    async CancelStaff(id,moneyId) {
+        return await axios.put(`http://localhost:8083/api/cancel-register/${id}/${moneyId}`);
     }
     async AcceptAllStaff(ids) {
         return await axios.put(`http://localhost:8083/api/accept-all-register?ids=${ids}`);
