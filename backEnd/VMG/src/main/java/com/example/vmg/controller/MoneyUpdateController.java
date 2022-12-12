@@ -75,8 +75,6 @@ public class MoneyUpdateController {
         moneyUpdate.setStatus(1);
         moneyUpdateService.update(id, moneyUpdate);
         return ResponseEntity.ok(new MessageResponse("successfully!"));
-
-//        }
     }
 
     @PutMapping("/cancel-money/{id}")

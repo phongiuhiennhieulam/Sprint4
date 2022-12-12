@@ -28,20 +28,21 @@ public class AutoController {
     private static final SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
 
 
-    @Scheduled(fixedRate =30000)
-    public void reportCurrentTime() {
-        List<MoneyUpdate> moneyUpdates = moneyUpdateService.findAll();
+//    @Scheduled(fixedRate =30000)
+//    public void reportCurrentTime() {
+//        List<MoneyUpdate> moneyUpdates = moneyUpdateService.findAll();
+//
+//        for (int i = 0; i<moneyUpdates.size();i++){
+//            if(moneyUpdates.get(i).getStatus() == `1`)
+//            {
+//                Staff staff = staffService.findByCode(moneyUpdates.get(i).getMaNV()).get(0);
+//                staff.setWelfareMoney(moneyUpdates.get(i).getMoneyUpdate());
+//                staffService.saveOrUpDate(staff);
+//                moneyUpdateRepository.deleteAll();
+//            }
+//        }
+//
+//    }
 
-        for (int i = 0; i<moneyUpdates.size();i++){
-            if(moneyUpdates.get(i).getStatus() == 1)
-            {
-                Staff staff = staffService.findByCode(moneyUpdates.get(i).getMaNV()).get(0);
-                staff.setWelfareMoney(moneyUpdates.get(i).getMoneyUpdate());
-                staffService.saveOrUpDate(staff);
-                moneyUpdateRepository.deleteAll();
-            }
-        }
-
-    }
 
 }

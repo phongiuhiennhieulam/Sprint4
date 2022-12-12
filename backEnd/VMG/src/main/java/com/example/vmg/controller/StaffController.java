@@ -173,13 +173,23 @@ public class StaffController {
            for(Long i : ids) {
                MoneyUpdate moneyUpdate = new MoneyUpdate();
                Staff staff = staffService.getById(i);
-               staff.setStatus(2);
-               moneyUpdate.setMaNV(staff.getCode());
-               moneyUpdate.setMoneyUpdate(money);
-               moneyUpdate.setStatus(0);
-               moneyUpdate.setIdStaff(user.getId());
-               staffService.saveOrUpDate(staff);
-               moneyUpdateRepository.save(moneyUpdate);
+               if (staff.getWelfareMoney() != null && staff.getWelfareMoney().doubleValue() == 0D){
+                   staff.setStatus(2);
+                   moneyUpdate.setMaNV(staff.getCode());
+                   moneyUpdate.setMoneyUpdate(money);
+                   moneyUpdate.setStatus(0);
+                   moneyUpdate.setIdStaff(user.getId());
+                   staffService.saveOrUpDate(staff);
+                   moneyUpdateRepository.save(moneyUpdate);
+               }else {
+                   staff.setStatus(0);
+                   moneyUpdate.setMaNV(staff.getCode());
+                   moneyUpdate.setMoneyUpdate(money);
+                   moneyUpdate.setStatus(0);
+                   moneyUpdate.setIdStaff(user.getId());
+                   staffService.saveOrUpDate(staff);
+                   moneyUpdateRepository.save(moneyUpdate);
+               }
            }
            return ResponseEntity.ok(new MessageResponse("update money staff successfully!"));
        }catch (Exception e){

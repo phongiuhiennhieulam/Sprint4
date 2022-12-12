@@ -21,6 +21,7 @@
       <div class="accept-component">
         <MoneyUpdateList v-if="check === 1"></MoneyUpdateList>
         <NewStaffsList v-if="check === 2"></NewStaffsList>
+        <WelfareUpdate v-if="(check === 3)"></WelfareUpdate>
       </div>
     </div>
   </div>
@@ -29,6 +30,7 @@
   <script>
 import AcceptMoneyService from "@/service/acceptMoney";
 import MoneyUpdateList from "./MoneyUpdateList.vue";
+import WelfareUpdate from "./WelfareUpdate.vue";
 import NewStaffsList from "./NewStaffsList.vue";
 export default {
   name: "AcceptMoney",
@@ -53,6 +55,7 @@ export default {
   components: {
     MoneyUpdateList,
     NewStaffsList,
+    WelfareUpdate,
   },
   mounted() {},
   data() {
@@ -79,6 +82,10 @@ export default {
           value: "NewStaffsList",
           label: "Xét duyệt cho nhân viên mới",
         },
+        {
+          value: "WelfareUpdate",
+          label: "Xét duyệt phúc lợi",
+        },
       ],
     };
   },
@@ -90,6 +97,10 @@ export default {
       if (event === "NewStaffsList") {
         this.check = 2;
       }
+      if (event === "WelfareUpdate") {
+        this.check = 3;
+      }
+
     },
 
     handlelistAccept() {
@@ -338,6 +349,7 @@ export default {
 .accept-money {
   background: linear-gradient(90deg, #fad1a5 0%, rgba(255, 255, 255, 0) 100%),
     #f3cce1;
+    height: 100%;
 }
 .moneyup-drop {
   width: 260px;

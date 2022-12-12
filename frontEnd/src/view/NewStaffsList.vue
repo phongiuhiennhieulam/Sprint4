@@ -71,27 +71,24 @@
               <td>{{ index + 1 }}</td>
               <td style="text-align: left">{{ item.name }}</td>
               <td style="text-align: left">{{ item.code }}</td>
-              <td style="text-align: left">{{ item.department.name }}</td>
+              <td style="text-align: left">{{ item.dname }}</td>
               <td style="text-align: right">
-                {{ formatCurrency(item.welfareMoney) }}
+                {{ formatCurrency(item.money_update) }}
               </td>
 
               <td style="text-align: center">
-                <span v-show="item.status == 2">
+                <span v-if="(item.status == 2)">
                   <Strong style="color: orange">Chờ duyệt</Strong>
                 </span>
-                <span v-show="item.status == 1">
-                  <Strong style="color: red">Hủy bỏ</Strong>
-                </span>
-                <span v-show="item.status == 0">
+                <!-- <span v-if="(item.status == 1)">
                   <Strong style="color: #5db830">Chấp thuận</Strong>
-                </span>
+                </span> -->
               </td>
 
               <td style="text-align: center">
-                <span class="icon-submit" v-if="item.status === 2">
+                <span class="icon-submit" v-if="(item.status == 2 )">
                   <el-button
-                    @click="handleSuccess(item.id, index)"
+                    @click="handleSuccess(item.id, index,item.money_update,item.moneyId)"
                     type="success"
                     icon="el-icon-check"
                     circle
@@ -99,7 +96,7 @@
                   </el-button>
                   &ensp;
                   <el-button
-                    @click="handleDelete(item.id, index)"
+                    @click="handleDelete(item.id, index,item.moneyId)"
                     type="danger"
                     icon="el-icon-close"
                     circle
@@ -160,6 +157,7 @@ export default {
       isIndeterminate: true,
       content: "",
       keyComponent: 0,
+
     };
   },
   methods: {
@@ -184,7 +182,8 @@ export default {
       );
       new AcceptMoneyService().getNewStaffs(params).then((response) => {
         this.listNewStaffs = response.data;
-        console.log(response);
+        console.log(1, response.data)
+        console.log(11, this.listNewStaffs.content);
         this.hasRole = true;
         this.count = response.data.totalPages;
         this.itemCount = response.data.totalElements;
@@ -194,14 +193,15 @@ export default {
       this.page = value;
       this.getNewStaff();
     },
-    handleSuccess(id) {
+    handleSuccess(id,index,money,moneyId) {
+      console.log(index);
       this.$confirm("Bạn muốn chấp nhận cho nhân viên này?", "Thông báo", {
         confirmButtonText: "OK",
         cancelButtonText: "Cancel",
         type: "success",
       }).then(() => {
         new AcceptMoneyService()
-          .AcceptStaff(id)
+          .AcceptStaff(id,money,moneyId)
           .then(() => {
             this.getNewStaff();
             this.$message({
@@ -215,14 +215,15 @@ export default {
           });
       });
     },
-    handleDelete(id) {
+    handleDelete(id,index,moneyId) {
+      console.log(index);
       this.$confirm("Bạn muốn chấp nhận cho nhân viên này?", "Thông báo", {
         confirmButtonText: "OK",
         cancelButtonText: "Cancel",
         type: "success",
       }).then(() => {
         new AcceptMoneyService()
-          .CancelStaff(id)
+          .CancelStaff(id,moneyId)
           .then(() => {
             this.getNewStaff();
             this.$message({
