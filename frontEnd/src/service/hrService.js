@@ -10,13 +10,16 @@ class StaffService {
         return  axios.post('http://localhost:8083/api/staff/update-money2/' + money + '?ids=' + ids + '&email=' + email, {headers: authHeader()})
     }
     updateMoney3 (money,ids, email) {
-        return  axios.post('http://localhost:8083/api/staff/update-money3/' + money + '?ids=' + ids + '&email=' + email, {headers: authHeader()})
+        return  axios.post('http://localhost:8083/api/staff/create-money/' + money + '?ids=' + ids + '&email=' + email, {headers: authHeader()})
+    }
+    push(ids) {
+        return  axios.post('http://localhost:8083/api/staff/push?ids=' + ids, {headers: authHeader()})
     }
      getAll(params) {
         return  axios.get('http://localhost:8083/api/staffs', {params, headers: authHeader()})
     }
-    getAll2(params) {
-        return  axios.get('http://localhost:8083/api/staffs-new', {params, headers: authHeader()})
+    getAll2(params, status) {
+        return  axios.get('http://localhost:8083/api/staffs-new?status=' + status, {params, headers: authHeader()})
     }
      getStaff(id) {
         return  axios.get(`http://localhost:8083/api/staff/${id}`, { headers: authHeader()})
@@ -100,7 +103,13 @@ deletes (ids) {
      GetCost() {
         return  axios.get('http://localhost:8083/api/costs')
     } 
-
+    getOder(params) {
+        return  axios.get('http://localhost:8083/api/oders', {params, headers: authHeader()})
+    }
+    retunrOder(id) {
+        return  axios.put(`http://localhost:8083/api/return/oder/${id}`, {headers: authHeader()})
+    }
+   
     async ImportExcel(file) {
         return await axios.post('http://localhost:8083/api/uploadExcel', file, { headers: authHeader() })
     }

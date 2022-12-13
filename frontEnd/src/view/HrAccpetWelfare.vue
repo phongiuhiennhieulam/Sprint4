@@ -7,8 +7,7 @@
         <div class="pl-table">
           <div class="pl-table__content">
             <form id="form" label-width="100px">
-              <el-button style="float: left; margin-bottom: 5px;" @click="handShowHistory()" type="warning"><i class="el-icon-s-order"><Strong>Lịch sử</Strong></i>
-              </el-button>
+           
               <table>
                 <thead>
                   <tr>
@@ -102,6 +101,7 @@
               <th width="12%">Đơn giá</th>
               <th width="10%">Số lượng</th>
               <th width="15%">Tổng tiền</th>
+              <th width="15%">Trạng thái</th>
               <th width="15%">Thao tác</th>
             </tr>
           </thead>
@@ -112,14 +112,38 @@
             <td>{{ item.quantity }}</td>
             <td>{{ formatCurrency(item.price * item.quantity) }} </td>
             <td>
-              <div class="d-flex">
-                <el-button @click="handleSuccess(item.id, index)" type="success" icon="el-icon-check" circle>
+              <span style="color: seagreen;" v-if="item.status==0">
+                <Strong>Chấp nhận </Strong>
+              </span>
+              <span style="color: red;" v-if="item.status==1">
+                <Strong>Từ chối </Strong>
+              </span>
+              <span style="color: goldenrod;" v-if="item.status==2">
+                <Strong>Đang chờ </Strong>
+              </span>
+            </td>
+            <td>
+              <div class="d-flex" v-if="item.status==2">
+                <el-button @click="handleSuccess(item.id, staff.id)" type="success" icon="el-icon-check" circle>
                 </el-button>
-                <el-button @click="handleDelete(item.id, index)" type="danger" icon="el-icon-close" circle></el-button>
+           
+                  <el-button @click="handleDelete(item.id, staff.id)" type="danger" icon="el-icon-close" circle></el-button>
+              </div>
+              <div class="d-flex" v-if="item.status==0||item.status==1">
+                  <el-button @click="handleReturn(item.id, staff.id)" type="warning" icon="el-icon-refresh-left" circle> </el-button>
               </div>
             </td>
           </tr>
         </table>
+        <div style="text-align: center; margin-top: 5px;">
+          <el-button @click="ok()" type="danger" circle>
+          <i class="
+                    el-icon-folder-checked"></i> <Strong> OK </Strong>       
+        </el-button>
+        </div>
+
+
+      
       </div>
     </el-dialog>
   </div>
@@ -156,65 +180,71 @@ export default {
       this.edit = {};
       this.isShowAdd = true;
     },
-    handleDelete(id, index) {
+    handleDelete(id, idStaff) {
       try {
         StaffService.DeleteRegisterWelfare(id)
-        this.listRegister.splice(index, 1);
+        .then((response)=>{
+              console.log(response.data);
+              this.handShow(idStaff);
+            })   
         this.$notify.info({
           title: 'notification',
           message: 'Từ chối thành công'
         });
-        if (this.listRegister.length < 1) {
-          this.$confirm(
-            "Bạn có chắc sẽ chốt danh sách này không. Continue?",
-            "Warning!",
-            {
-              confirmButtonText: "OK",
-              cancelButtonText: "Cancel",
-              type: "warning",
-            }
-          ).then(() => {
-            this.loading()
-          })
-        }
       } catch (error) {
         this.errorMessage = error
       }
     },
 
-      
-    handleSuccess(id, index) {
+      ok(){
+        this.$confirm(
+          "Bạn có ok? danh sách này?",
+          "Warning",
+          {
+            confirmButtonText: "Có",
+            cancelButtonText: "Hủy",
+            type: "warning",
+          }
+        )
+          .then(() => {
+            this.isWelfare = false    
+            this.getAll()  
+            this.$message({
+              type: "success",
+              message: "ok!",
+            });
+          })
+          .catch(() => {
+            this.$message({
+              type: "info",
+              message: "!",
+            });
+          });
+      },
+    handleSuccess(id,idStaff) {
       try {
         StaffService.SuccessRegisterWelfare(id)
-        this.listRegister.splice(index, 1);
+        .then((response)=>{
+              console.log(response.data);
+              this.handShow(idStaff);
+            })       
         this.$notify({
           title: 'Success',
           message: 'Xét duyệt',
           type: 'success'
         });
-        if (this.listRegister.length < 1) {
-          this.$confirm(
-            "Bạn có chắc sẽ chốt danh sách này không. Continue?",
-            "Warning!",
-            {
-              confirmButtonText: "OK",
-              cancelButtonText: "Cancel",
-              type: "warning",
-            }
-          ).then(() => {
-            this.loading()
-          })
-        }
       } catch (error) {
         this.errorMessage = error
       }
 
     },
-    handleReturn(id, index) {
+    handleReturn(id,idStaff) {
       try {
         StaffService.ReturnRegisterWelfare(id)
-        this.listHistory.splice(index, 1);
-        // this.loading()
+        .then((response)=>{
+              console.log(response.data);
+              this.handShow(idStaff);
+            })   
         this.$notify({
           title: 'Success',
           message: 'Hoàn tác thành công',
@@ -284,11 +314,8 @@ export default {
 
   created() {
     this.getAll()
-  },
-  mounted() {
-    this.getAll()
-
   }
+
 
 };
 </script>

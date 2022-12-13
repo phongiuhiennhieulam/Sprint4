@@ -3,8 +3,6 @@ package com.example.vmg.controller;
 
 import com.example.vmg.dto.respose.MessageResponse;
 import com.example.vmg.dto.respose.ResponseMessage;
-import com.example.vmg.form.StaffForm;
-import com.example.vmg.form.WelfareForm;
 import com.example.vmg.helper.ExcelHelper;
 import com.example.vmg.model.ERole;
 import com.example.vmg.model.Role;
@@ -17,23 +15,17 @@ import com.example.vmg.service.StaffService;
 import com.example.vmg.service.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import com.example.vmg.model.*;
 import com.example.vmg.service.*;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.math.BigDecimal;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -56,6 +48,8 @@ public class StaffController {
 
     @Autowired private MoneyUpdateRepository moneyUpdateRepository;
 
+    @Autowired private StaffRepository staffRepository;
+
     @Autowired
     private ExcelHelper excelHelper;
 
@@ -65,14 +59,15 @@ public class StaffController {
             ,@RequestParam(defaultValue = "10") int pageSize){
         return new ResponseEntity<Page<Staff>>(staffService.getByPage(page, pageSize), HttpStatus.OK);
     }
-    
+
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/staffs-new")
     public ResponseEntity<Page<Staff>> getListStaffNew(@RequestParam(defaultValue = "0") int page
-            ,@RequestParam(defaultValue = "10") int pageSize){
-        return new ResponseEntity<Page<Staff>>(staffService.getByPage2(page, pageSize), HttpStatus.OK);
+            ,@RequestParam(defaultValue = "10") int pageSize
+            , @RequestParam(defaultValue = "3") Integer status){
+        return new ResponseEntity<Page<Staff>>(staffService.getByPage2(page, pageSize,status), HttpStatus.OK);
     }
-    
+
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/staff-erorr")
     public List<StaffInterface> getErorr(){
@@ -198,6 +193,42 @@ public class StaffController {
            return ResponseEntity.ok(new MessageResponse("loi"));
        }
     }
+    @PostMapping("/staff/create-money/{money}")
+    public ResponseEntity<?> CreateMoney(@RequestParam("ids") List<Long> ids,@RequestParam("email") String email,
+                                          @PathVariable BigDecimal money ){
+        User user = userService.findByUsername(email).get();
+        try {
+            for(Long i : ids) {
+                MoneyUpdate moneyUpdate = new MoneyUpdate();
+                Staff staff = staffService.getById(i);
+                staff.setStatus(2);
+                moneyUpdate.setMaNV(staff.getCode());
+                moneyUpdate.setMoneyUpdate(money);
+                moneyUpdate.setStatus(5);
+                moneyUpdate.setIdStaff(user.getId());
+                staffService.saveOrUpDate(staff);
+                moneyUpdateRepository.save(moneyUpdate);
+            }
+            return ResponseEntity.ok(new MessageResponse("update money staff successfully!"));
+        }catch (Exception e){
+            e.printStackTrace();
+            return ResponseEntity.ok(new MessageResponse("loi"));
+        }
+    }
+    @PostMapping("/staff/push")
+    public ResponseEntity<?> pushMoney(@RequestParam("ids") List<Long> ids){
+        try {
+            for(Long i : ids) {
+                MoneyUpdate moneyUpdate = moneyUpdateRepository.getById(i);
+                moneyUpdate.setStatus(0);
+                moneyUpdateRepository.save(moneyUpdate);
+            }
+            return ResponseEntity.ok(new MessageResponse("push money staff successfully!"));
+        }catch (Exception e){
+            e.printStackTrace();
+            return ResponseEntity.ok(new MessageResponse("loi"));
+        }
+    }
     @PutMapping("/staff-deletes")
     public ResponseEntity<?> mutilpartDelete(@RequestParam("ids") List<Long> ids){
         staffService.mutipartDelete(ids);
@@ -272,6 +303,20 @@ public class StaffController {
         WelfareStaffEntity welfareStaff = welfareStaffEntityService.findById(id).get();
         welfareStaff.setStatus(2);
         welfareStaffEntityService.update(id, welfareStaff);
+        return ResponseEntity.ok(new MessageResponse("successfully!"));
+    }
+    @GetMapping("/oders")
+    public  List<OderMoneyInterface> GetOders(){
+        List<OderMoneyInterface> moneyUpdates =  staffService.getOders();
+     return moneyUpdates;
+    }
+    @PutMapping("/return/oder/{id}")
+    public ResponseEntity <?> ReturnOder(@PathVariable Long id     ){
+        MoneyUpdate moneyUpdate = moneyUpdateRepository.getById(id);
+        Staff staff = staffService.findbyoneCode(moneyUpdate.getMaNV());
+        staff.setStatus(3);
+        staffService.saveOrUpDate(staff);
+        moneyUpdateRepository.delete(moneyUpdate);
         return ResponseEntity.ok(new MessageResponse("successfully!"));
     }
 //    @PutMapping("/update-money")

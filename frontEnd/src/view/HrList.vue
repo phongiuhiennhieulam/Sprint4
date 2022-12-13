@@ -1,11 +1,10 @@
   <template >
     <div class="hr-list">
       <div class="hr-content">
-        <div class="hr-title"><strong> QUẢN LÝ NHÂN VIÊN</strong></div>
-
+        <div class="hr-title"><strong> QUẢN LÝ NHÂN VIÊN 
+</strong></div>
         <div class="hr-info mt-2">
           <div class="hr-table">
-            <div class="hr-selected"></div>
 
             <el-form :inline="true" class="demo-form-inline d-flex justify-content-between">
               <span v-if="staffStatus===0">
@@ -17,32 +16,24 @@
                 <el-form-item>
                   <el-button type="warning" @click="onFind">Tìm kiếm </el-button>
                 </el-form-item>
+
                 <el-form-item v-if="selected.length !== 0">
-                  <el-button class="btn btn-danger" v-loading.fullscreen.lock="fullscreenLoading"
-                    @click="isUpdateMoney = true">
-                    <i class="el-icon-refresh"></i> Cập nhật tiền hỗ trợ
-                  </el-button>
                   <el-button class="btn btn-danger" @click="handlDeletes">
                     <i class="el-icon-lock"></i> Khóa
                   </el-button>
                 </el-form-item>
               </span>
-              <span v-if="staffStatus===1">
-                <el-button class="btn btn-danger" v-loading.fullscreen.lock="fullscreenLoading"
-                    @click="isUpdateMoney = true">
-                    <i class="el-icon-top"></i> Gửi yêu cầu xét duyệt tiền hỗ trợ
-                  </el-button>
-              </span>
+            
               <span>
                 <el-form-item>
-                  <el-select v-model="staffStatus" placeholder="Loại Nhân viên" style="width: auto; margin-right: 10px;">
-                    <el-option label="Nhân viên"  :value="0" >  </el-option>
-                    <el-option label="Nhân viên mới"  :value="1"> </el-option>
-                  </el-select>
-
+            
                   <el-button type="erorr" class="btn btn-danger" @click="showAddForm">
                     <i class="el-icon-plus"></i> Thêm mới
                   </el-button>
+
+                  <button type="erorr" class="btn btn-success" @click="showImportForm" style="margin: 10px;">
+                      <i class="fas fa-file-excel"></i> <span class="pl-3"><Strong>Nhập từ Excel</Strong></span>
+                  </button>
                 
                 </el-form-item>
               </span>
@@ -74,7 +65,7 @@
                       <!-- <span class="icon-delete" @click="deleteStaff(item.id)">
                         <i class="fa fa-trash" aria-hidden="true"></i>
                       </span> -->
-                      <span v-if="item.status == 0">
+                      <span v-if="item.status == 0||item.status == 2||item.status == 3">
 
                         <el-button @click="deleteStaff(item.id, index)" type="danger" icon="el-icon-lock" circle>
                         </el-button>
@@ -89,8 +80,10 @@
                     <td style="text-align: left">{{ item.department.name }}</td>
                     <!-- <td style="text-align: right;">{{formatCurrency(item.welfareMoney)}}</td> -->
                     <td style="text-align: left">
-                      <div v-if="item.status == 0">Đang làm việc</div>
-                      <div v-if="item.status == 1">Tạm ngưng</div>
+                      <div style="color: seagreen;" v-if="item.status == 0">Đang hoạt động</div>
+                      <div style="color: red;" v-if="item.status == 1">Tạm ngưng</div>
+                      <div style="color: goldenrod;" v-if="item.status == 2">Đang xét duyệt tiền</div>
+                      <div style="color: goldenrod;" v-if="item.status == 3">Chưa cập nhật tiền</div>
                     </td>
                     <td>
                       <span class="icon-edit" @click="showInfo(item)">
@@ -397,9 +390,7 @@
                   <strong>Thêm mới</strong>
                 </button>
 
-                <button type="erorr" class="btn btn-success" @click="showImportForm" style="margin: 10px;">
-                    <i class="fas fa-file-excel"></i> <span class="pl-3"><Strong>Nhập từ Excel</Strong></span>
-                </button>
+                
               </div>
             
             </form>
