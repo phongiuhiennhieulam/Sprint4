@@ -75,7 +75,9 @@ public class StaffController {
     
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/staff-erorr")
-    public List<StaffInterface> getErorr(){
+    public List<StaffInterface> getErorr(
+
+    ){
         return staffService.getErorr();
     }
 
