@@ -78,6 +78,7 @@ public class StaffController {
     public List<StaffInterface> getErorr(){
         return staffService.getErorr();
     }
+
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_MODERATOR')")
     @GetMapping("/list")
     public List<Staff> getAlll(){

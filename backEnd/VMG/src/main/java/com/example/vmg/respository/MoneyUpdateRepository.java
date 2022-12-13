@@ -79,6 +79,8 @@ public interface MoneyUpdateRepository extends JpaRepository<MoneyUpdate, Long> 
             "                        where s.code = mu.maNV and mu.idStaff = u.id and d.id = s.department.id and mu.status = 0")
     List<MoneyUpdateInterface> getMonneyWaiting();
 
+//    String getNotification();
+
 //    @Query("select count(mu) from MoneyUpdate mu where mu.status = 1 and mu.idStaff = :idStaff ")
 //    Long validate(Long idStaff);
 }
