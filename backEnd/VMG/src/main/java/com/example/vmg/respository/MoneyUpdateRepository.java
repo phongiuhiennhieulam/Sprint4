@@ -2,17 +2,15 @@ package com.example.vmg.respository;
 
 import com.example.vmg.model.MoneyUpdate;
 import com.example.vmg.model.MoneyUpdateInterface;
-import com.example.vmg.model.StatisticalInterface;
+import com.example.vmg.model.OderMoneyInterface;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 @Repository
@@ -81,4 +79,5 @@ public interface MoneyUpdateRepository extends JpaRepository<MoneyUpdate, Long> 
 
 //    @Query("select count(mu) from MoneyUpdate mu where mu.status = 1 and mu.idStaff = :idStaff ")
 //    Long validate(Long idStaff);
+
 }

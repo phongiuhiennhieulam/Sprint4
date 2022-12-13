@@ -73,12 +73,6 @@ const routes = [
     meta: { requiresAuth: true }
   },
   {
-    path: "/newStaff",
-    name: "NewStaffs",
-    component: () => import("../view/StaffComponent.vue"),
-    meta: { requiresAuth: true }
-  },
-  {
     path: "/user",
     name: "UserList",
     component: () => import("../view/User.vue"),
@@ -123,6 +117,12 @@ const routes = [
     path: "/welcome_page",
     name: "WelcomePage",
     component: () => import("../view/WelcomePage.vue"),
+    meta: { requiresAuth: true }
+  },
+  {
+    path: "/staff",
+    name: "Staff",
+    component: () => import("../view/StaffComponent.vue"),
     meta: { requiresAuth: true }
   },
   {
