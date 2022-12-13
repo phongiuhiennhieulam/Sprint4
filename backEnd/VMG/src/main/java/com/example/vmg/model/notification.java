@@ -14,6 +14,7 @@ public class notification {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
+    Long idStaff;
     String message;
     Date date;
     Integer link;
