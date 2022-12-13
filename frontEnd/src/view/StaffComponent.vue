@@ -46,7 +46,7 @@
 
                       <el-button style="margin-left: 6px;" type="danger"  v-loading.fullscreen.lock="fullscreenLoading"
                       @click.prevent="handlUpdateMoney2()">
-                        <strong>Thêm -></strong>
+                        <strong>Thêm <i class="el-icon-right"></i></strong>
                       </el-button>
                     </el-form-item>
                     
@@ -334,6 +334,11 @@ export default {
    goCretae(){
     this.retrieveStaff(3);
     this.isCreate = true
+    this.isAll = false
+    this.isUpdate = false
+
+    this.isList = false
+
    },
     retrieveStaff(a) {
         const params = this.getRequestParams(this.page, this.pageSize);
@@ -477,8 +482,8 @@ export default {
             StaffService.updateMoney3(money, this.selected, username)
             .then((response)=>{
               console.log(response.data);
-              this.getAll2()
               this.retrieveStaff(3)
+              this.getAll2()
               this.selected = [];
               this.moneyUpdate = ''
               
