@@ -38,7 +38,7 @@ public interface MoneyUpdateRepository extends JpaRepository<MoneyUpdate, Long> 
             "                               u.name as nameAdmin,\n" +
             "                               mu.status as status\n" +
             "                        from Staff  s, MoneyUpdate mu, User u, Department d\n" +
-            "                        where s.code = mu.maNV and mu.idStaff = u.id and d.id = s.department.id and mu.maNV  like (:keyWord) order by mu.id desc")
+            "                        where s.code = mu.maNV and mu.idStaff = u.id and d.id = s.department.id and s.status = 0 and mu.maNV  like (:keyWord) order by mu.id desc")
     Page<MoneyUpdateInterface> getPage(Pageable pageable, String keyWord);
 
     @Query("select mu.id as id,\n" +
@@ -76,6 +76,8 @@ public interface MoneyUpdateRepository extends JpaRepository<MoneyUpdate, Long> 
             "                        from Staff  s, MoneyUpdate mu, User u, Department d\n" +
             "                        where s.code = mu.maNV and mu.idStaff = u.id and d.id = s.department.id and mu.status = 0")
     List<MoneyUpdateInterface> getMonneyWaiting();
+
+//    String getNotification();
 
 //    @Query("select count(mu) from MoneyUpdate mu where mu.status = 1 and mu.idStaff = :idStaff ")
 //    Long validate(Long idStaff);

@@ -1,5 +1,6 @@
 package com.example.vmg.service;
 
+import com.example.vmg.model.NewStaffInterface;
 import com.example.vmg.model.Staff;
 import com.example.vmg.respository.RegisterStaffRepository;
 import com.example.vmg.respository.StaffRepository;
@@ -16,7 +17,7 @@ public class RegisterStaffService {
     @Autowired
     private RegisterStaffRepository registerStaffRepository;
 
-    public Page<Staff> getRegister(int pageNumber, int maxNumber, String keyWord) {
+    public Page<NewStaffInterface> getRegister(int pageNumber, int maxNumber, String keyWord) {
         Pageable pageable = PageRequest.of(pageNumber, maxNumber);
         keyWord = "%" + keyWord.trim() ;
         return registerStaffRepository.getRegister(pageable,keyWord);

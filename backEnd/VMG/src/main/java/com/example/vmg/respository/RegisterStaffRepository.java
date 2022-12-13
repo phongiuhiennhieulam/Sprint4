@@ -1,5 +1,6 @@
 package com.example.vmg.respository;
 
+import com.example.vmg.model.NewStaffInterface;
 import com.example.vmg.model.Staff;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -13,8 +14,9 @@ import java.util.List;
 public interface RegisterStaffRepository extends JpaRepository<Staff,Long> {
 
 
-    @Query(value = "select s from Staff s  where s.status = 2 and s.code like (:keyWord) order by s.id desc ")
-    Page<Staff> getRegister(Pageable pageable, String keyWord);
+    @Query(value = "select s.id,m.id as moneyId,s.code,s.date,s.email,s.name,s.status,m.money_update,s.id_department,d.name as dname from staff s,money_update m,department d\n" +
+            "            where (s.status = 2 or  s.status = 3 )  and s.code = m.manv and s.id_department = d.id and s.code like (:keyWord) order by s.id desc", nativeQuery = true)
+    Page<NewStaffInterface> getRegister(Pageable pageable, String keyWord);
 
     @Modifying
     @Transactional
@@ -23,6 +25,6 @@ public interface RegisterStaffRepository extends JpaRepository<Staff,Long> {
 
     @Modifying
     @Transactional
-    @Query(value = "update Staff p set p.status = 1 , p.welfareMoney = 0.0  where p.id in(:ids)")
+    @Query(value = "update Staff p set p.status = 3 , p.welfareMoney = 0.0  where p.id in(:ids)")
     void MutipartCancel(List<Long> ids);
 }

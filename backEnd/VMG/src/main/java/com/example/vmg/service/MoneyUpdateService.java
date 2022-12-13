@@ -10,6 +10,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -70,4 +71,9 @@ public class MoneyUpdateService {
     public List<MoneyUpdateInterface> getMoneyCancel() {
         return moneyUpdateRepository.getMonneyCancel();
     }
+    public void delete(Long id){moneyUpdateRepository.deleteById(id);}
+
+//    public String getNotification(Long id, String status, BigDecimal welfareMoney) {
+//        return moneyUpdateRepository.getNotification();
+//    }
 }

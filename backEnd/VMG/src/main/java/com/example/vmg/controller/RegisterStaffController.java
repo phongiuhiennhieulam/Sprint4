@@ -2,9 +2,11 @@ package com.example.vmg.controller;
 
 import com.example.vmg.dto.respose.MessageResponse;
 import com.example.vmg.model.MoneyUpdateInterface;
+import com.example.vmg.model.NewStaffInterface;
 import com.example.vmg.model.Staff;
 import com.example.vmg.model.WelfareStaffEntity;
 import com.example.vmg.respository.StaffRepository;
+import com.example.vmg.service.MoneyUpdateService;
 import com.example.vmg.service.RegisterStaffService;
 import com.example.vmg.service.StaffService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,24 +26,27 @@ import java.util.stream.Collectors;
 public class RegisterStaffController {
     @Autowired private StaffService staffService;
     @Autowired private RegisterStaffService registerStaffService;
+    @Autowired private MoneyUpdateService moneyUpdateService;
 
 //    @PreAuthorize("hasRole('ROLE_MODERATOR')")
     @GetMapping("/list-register")
-    public ResponseEntity<Page<Staff>> getListRegister(@RequestParam(defaultValue = "0") int page
-            , @RequestParam(defaultValue = "9") int pageSize,@RequestParam(defaultValue = "") String keyWord){
+    public ResponseEntity<Page<NewStaffInterface>> getListRegister(@RequestParam(defaultValue = "0") int page
+            , @RequestParam(defaultValue = "9") int pageSize, @RequestParam(defaultValue = "") String keyWord){
         if (!(keyWord.equals("undefined") || keyWord == null)) {
             keyWord = keyWord.trim();
-            return new ResponseEntity<Page<Staff>>(registerStaffService.getRegister(page, pageSize,keyWord), HttpStatus.OK);
+            return new ResponseEntity<Page<NewStaffInterface>>(registerStaffService.getRegister(page, pageSize,keyWord), HttpStatus.OK);
         } else {
             return null;
         }
     }
 
-    @PutMapping("/accept-register/{id}")
-    public ResponseEntity <?> AcceptRegisters(@PathVariable Long id){
+    @PutMapping("/accept-register/{id}/{money}/{moneyId}")
+    public ResponseEntity <?> AcceptRegisters(@PathVariable Long id,@PathVariable BigDecimal money,@PathVariable Long moneyId){
         try {
             Staff staff = staffService.getById(id);
             staff.setStatus(0);
+            staff.setWelfareMoney(money);
+            moneyUpdateService.delete(moneyId);
             staffService.update(id, staff);
             return ResponseEntity.ok(new MessageResponse("successfully!"));
         }catch (Exception e){
@@ -50,12 +55,13 @@ public class RegisterStaffController {
         }
     }
 
-    @PutMapping("/cancel-register/{id}")
-    public ResponseEntity <?> CancelRegisters(@PathVariable Long id){
+    @PutMapping("/cancel-register/{id}/{money}")
+    public ResponseEntity <?> CancelRegisters(@PathVariable Long id,@PathVariable Long money){
         try {
             Staff staff = staffService.getById(id);
-            staff.setStatus(1);
+            staff.setStatus(3);
             staff.setWelfareMoney(BigDecimal.valueOf(0.0));
+            moneyUpdateService.delete(money);
             staffService.update(id, staff);
             return ResponseEntity.ok(new MessageResponse("successfully!"));
         }catch (Exception e){
