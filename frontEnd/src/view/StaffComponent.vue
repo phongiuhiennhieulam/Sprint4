@@ -420,10 +420,11 @@ export default {
               this.moneyUpdate = ''
 
             })          
-            this.$message({
-              type: "success",
-              message: "Đã gửi yêu cầu!",
-            });
+            this.$notify({
+            title: "success",
+            message: "Gửi yêu cầu thành công!",
+            type: "warning",
+          });
 
           })
           .catch(() => {
