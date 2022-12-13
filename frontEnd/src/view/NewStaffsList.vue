@@ -204,7 +204,7 @@ export default {
           .AcceptStaff(id,money,moneyId)
           .then(() => {
             this.getNewStaff();
-            this.$message({
+            this.$notify({
               type: "success",
               message: "Đã chấp thuận",
               title: "Thông báo",
@@ -226,7 +226,7 @@ export default {
           .CancelStaff(id,moneyId)
           .then(() => {
             this.getNewStaff();
-            this.$message({
+            this.$notify({
               type: "success",
               message: "Đã hủy bỏ",
               title: "Thông báo",
@@ -248,7 +248,7 @@ export default {
           .AcceptAllStaff(this.selected)
           .then(() => {
             this.getNewStaff();
-            this.$message({
+            this.$notify({
               type: "success",
               message: "Đã chấp thuận",
               title: "Thông báo",
@@ -270,7 +270,7 @@ export default {
           .CancelAllStaff(this.selected)
           .then(() => {
             this.getNewStaff();
-            this.$message({
+            this.$notify({
               type: "success",
               message: "Đã Hủy Bỏ",
               title: "Thông báo",

@@ -301,7 +301,7 @@ export default {
           .Acceptmoney(id)
           .then(() => {
             this.getAllMoneyUp();
-            this.$message({
+            this.$notify({
               type: "success",
               message: "Đã chấp nhận",
               title: "Thông báo",
@@ -323,7 +323,7 @@ export default {
           .Cancelmoney(id)
           .then(() => {
             this.getAllMoneyUp();
-            this.$message({
+            this.$notify({
               type: "warning",
               message: "Đã Hủy Bỏ",
               title: "Thông báo",
@@ -349,7 +349,7 @@ export default {
           .Returnmoney(id)
           .then(() => {
             this.getAllMoneyUp();
-            this.$message({
+            this.$notify({
               type: "warning",
               message: "Đã hoàn tác",
               title: "Thông báo",
@@ -370,7 +370,7 @@ export default {
           .AcceptAll(this.selected)
           .then(() => {
             this.getAllMoneyUp();
-            this.$message({
+            this.$notify({
               type: "success",
               message: "Đã chấp thuận",
               title: "Thông báo",
@@ -392,7 +392,7 @@ export default {
           .ReturnAll(this.selected)
           .then(() => {
             this.getAllMoneyUp();
-            this.$message({
+            this.$notify({
               type: "warning",
               message: "Đã hoàn tác",
               title: "Thông báo",
@@ -414,7 +414,7 @@ export default {
           .CancelAll(this.selected)
           .then(() => {
             this.getAllMoneyUp();
-            this.$message({
+            this.$notify  ({
               type: "warning",
               message: "Đã Hủy Bỏ",
               title: "success",

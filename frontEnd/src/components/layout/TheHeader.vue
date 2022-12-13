@@ -148,7 +148,11 @@
                 >
                   <router-link
                     to="/accept_money"
-                    style="text-decoration: none; color: #606266; cursor: pointer"
+                    style="
+                      text-decoration: none;
+                      color: #606266;
+                      cursor: pointer;
+                    "
                   >
                     <!-- <i class="fa-solid fa-clipboard-check"></i> -->
                     Xét duyệt tiền phúc lợi
@@ -160,11 +164,7 @@
                   :value="listbirthdays.length"
                   :max="10"
                   class="item"
-                  style="
-                        text-decoration: none;
-                        color: #606266;
-                        cursor: pointer;
-                      "
+                  style="text-decoration: none; color: #606266; cursor: pointer"
                 >
                   <!-- <i class="fa-solid fa-gift"></i> -->
                   <span style="font-size: 18px"> Sinh nhật</span>
@@ -213,6 +213,7 @@
                 </el-dropdown-menu>
               </el-dropdown>
               &ensp;
+              &nbsp;
               <div>
                 <div v-if="staffErorr == ''"></div>
 
@@ -274,7 +275,11 @@
                     style="cursor: pointer; font-size: 19px"
                   >
                     <span>
-                      | <Strong>{{ user.name }}</Strong
+                      |  &nbsp;
+                      <Strong
+                        >{{ user.name }}
+                        &nbsp;
+                        <i class="fa-solid fa-user"></i> </Strong
                       ><span v-if="quanly"></span>
                       <Strong
                         v-if="!nhanvien && !quanly && !nhansu"

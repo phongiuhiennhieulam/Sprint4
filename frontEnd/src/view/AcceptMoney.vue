@@ -166,7 +166,7 @@ export default {
           this.getAllMoneyUp();
         })
         .catch(() => {
-          this.$message({
+          this.$notify({
             type: "success",
             message: "Đã chấp nhận",
             title: "success",
@@ -187,7 +187,7 @@ export default {
           this.getAllMoneyUp();
         })
         .catch(() => {
-          this.$message({
+          this.$notify({
             type: "warning",
             message: "Đã hủy bỏ",
           });
@@ -210,7 +210,7 @@ export default {
           this.getAllMoneyUp();
         })
         .catch(() => {
-          this.$message({
+          this.$notify({
             type: "info",
             message: "Đã hoàn tác",
           });
@@ -227,13 +227,13 @@ export default {
           new AcceptMoneyService().AcceptAll(this.selected);
           this.loading();
           this.getAllMoneyUp();
-          this.$message({
+          this.$notify({
             type: "success",
             message: "Đã chấp thuận",
           });
         })
         .catch(() => {
-          this.$message({
+          this.$notify({
             type: "warning",
             message: "Đã hủy bỏ",
           });
@@ -249,14 +249,14 @@ export default {
         .then(() => {
           new AcceptMoneyService().ReturnAll(this.selected);
           this.loading();
-          this.$message({
+          this.$notify({
             type: "success",
             message: "Đã hoàn tác",
           });
           //this.$router.go();
         })
         .catch(() => {
-          this.$message({
+          this.$notify({
             type: "warning",
             message: "Đã hủy bỏ",
           });
@@ -272,14 +272,14 @@ export default {
         .then(() => {
           new AcceptMoneyService().CancelAll(this.selected);
           this.loading();
-          this.$message({
+          this.$notify({
             type: "success",
             message: "Đã chấp thuận",
           });
           //this.$router.go();
         })
         .catch(() => {
-          this.$message({
+          this.$notify({
             type: "warning",
             message: "Đã hủy bỏ",
           });

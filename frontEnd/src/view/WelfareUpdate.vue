@@ -166,7 +166,7 @@ export default {
               welfareApi.getAllWelfareUpdate().then((res) => {
                 this.list = res.data;
               });
-              this.$message({
+              this.$notify({
                 type: "success",
                 message: "Đã chấp nhận",
                 title: "Thông báo",
@@ -180,7 +180,7 @@ export default {
             .acceptUpdateWelfare(item.id, item)
             .then(() => {
               // this.getAllMoneyUp();
-              this.$message({
+              this.$notify({
                 type: "success",
                 message: "Đã từ chối",
                 title: "Thông báo",
@@ -202,7 +202,7 @@ export default {
           .Acceptmoney(id)
           .then(() => {
             this.getAllMoneyUp();
-            this.$message({
+            this.$notify({
               type: "success",
               message: "Đã từ chối",
               title: "Thông báo",

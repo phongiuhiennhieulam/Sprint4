@@ -37,16 +37,18 @@ public class StaffService {
     }
 
     public List<Staff> findByCode(String code){
+        return staffRepository.findByListCode(code);
+    }
+    public Staff findbyoneCode(String code){
         return staffRepository.findByCode(code);
     }
-
     public Page<Staff> getByPage(int pageNumber, int maxNumber){
         Pageable pageable = PageRequest.of(pageNumber, maxNumber);
         return staffRepository.getPage(pageable);
     }
-    public Page<Staff> getByPage2(int pageNumber, int maxNumber){
+    public Page<Staff> getByPage2(int pageNumber, int maxNumber, Integer status){
         Pageable pageable = PageRequest.of(pageNumber, maxNumber);
-        return staffRepository.getPage2(pageable);
+        return staffRepository.getPage2(pageable, status);
     }
     public List<StatisticalInterface> getStaffByWelfare(Long id){
         return staffRepository.getStaffByWelfare(id);
@@ -135,6 +137,9 @@ public class StaffService {
         } catch (IOException e) {
             throw new RuntimeException("fail to store data "+e.getMessage());
         }
+    }
+    public  List<OderMoneyInterface> getOders(){
+        return staffRepository.getOder();
     }
 
 }

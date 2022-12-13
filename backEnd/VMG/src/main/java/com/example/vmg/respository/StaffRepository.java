@@ -1,9 +1,6 @@
 package com.example.vmg.respository;
 
-import com.example.vmg.model.CostInterface;
-import com.example.vmg.model.Staff;
-import com.example.vmg.model.StaffInterface;
-import com.example.vmg.model.StatisticalInterface;
+import com.example.vmg.model.*;
 import lombok.Data;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -29,8 +26,8 @@ public interface StaffRepository extends JpaRepository<Staff,Long> {
     @Modifying
     @Transactional
     @Query("select s from Staff s where s.code = :code")
-    List<Staff> findByCode(String code);
-
+    List<Staff> findByListCode(String code);
+    Staff findByCode(String code);
     @Modifying
     @Transactional
     @Query("update Staff p set p.status = 1 where p.id in(:longs)")
@@ -52,6 +49,8 @@ public interface StaffRepository extends JpaRepository<Staff,Long> {
 
     Staff findByEmail(String email);
 
+
+
     List<Staff> findByDepartment_Id(Long id);
 
     @Modifying
@@ -61,10 +60,10 @@ public interface StaffRepository extends JpaRepository<Staff,Long> {
 
 
 
-    @Query("select s from Staff s where s.status = 0 or s.status = 1 order by s.id desc")
+    @Query("select s from Staff s where s.status = 0 or s.status = 1 or s.status =2 or s.status =3  order by s.id desc")
     public Page<Staff> getPage(Pageable pageable);
-    @Query("select s from Staff s where s.status = 3 or s.status= 2 order by s.id  desc")
-    public Page<Staff> getPage2(Pageable pageable);
+    @Query("select s from Staff s where s.status = :status order by s.id  desc")
+    public Page<Staff> getPage2(Pageable pageable, Integer status);
 
     @Query("select s from Staff s where month(s.date) = :number ")
     public List<Staff> getSinhNhat(int number);
@@ -119,4 +118,9 @@ public interface StaffRepository extends JpaRepository<Staff,Long> {
     @Transactional
     @Query(value = "update Staff s set s.status = :#{#staff.status}, s.name=:#{#staff.name}, s.email=:#{#staff.email}, s.date=:#{#staff.date},s.department=:#{#staff.department} where s.code=:#{#staff.code}")
     public void updateStaff(Staff staff);
+
+    @Query(value = "select m.id, s.id as idStaff, s.name as name, s.code, d.name as department, m.money_update as money \n" +
+            "from staff s, department d, money_update m\n" +
+            "where s.code = m.manv and d.id = s.id_department and m.status = 5", nativeQuery = true)
+    public List<OderMoneyInterface> getOder();
 }
