@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -117,6 +118,12 @@ public class MoneyUpdateController {
                 .map(value -> Long.toString(value)).collect(Collectors.toList()));
         return ResponseEntity.ok(new MessageResponse("update success"));
     }
+
+//    @GetMapping("/notification-accept/{id}")
+//    public ResponseEntity<String> notificationAccept(@RequestParam Long id, @RequestParam String status, @RequestParam BigDecimal welfareMoney, @RequestParam Long idStaff) {
+//        return new ResponseEntity<String>(moneyUpdateService.getNotification(id,status,welfareMoney), HttpStatus.OK);
+//    }
+
 
 
 }
