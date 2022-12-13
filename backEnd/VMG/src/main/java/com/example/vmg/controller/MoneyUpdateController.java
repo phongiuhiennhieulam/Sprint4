@@ -91,6 +91,7 @@ public class MoneyUpdateController {
         MoneyUpdate moneyUpdate = moneyUpdateService.findById(id).get();
         moneyUpdate.setStatus(0);
         moneyUpdateService.update(id, moneyUpdate);
+        
         return ResponseEntity.ok(new MessageResponse("successfully!"));
     }
 

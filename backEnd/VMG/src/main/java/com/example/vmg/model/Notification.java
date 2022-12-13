@@ -10,10 +10,11 @@ import java.util.Date;
 
 @Entity
 @Data
-public class notification {
+public class Notification {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
+    Long idStaff;
     String message;
     Date date;
     Integer link;
