@@ -11,6 +11,9 @@ class WelfareApi {
     async getAllWelfareByStatus() {
         return await axios.get('http://localhost:8083/api/welfares-user');
     }
+    async getAllWelfareWaitToUpdate() {
+        return await axios.get('http://localhost:8083/api/get-welfare-waiting-update');
+    }
 
     async deleteWelfare(id) {
         return await axios.delete('http://localhost:8083/api/welfare/' + id)

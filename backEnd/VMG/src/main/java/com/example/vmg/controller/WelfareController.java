@@ -122,14 +122,39 @@ public class WelfareController {
         return new ResponseEntity<Void>(HttpStatus.OK);
     }
 
+//    @PutMapping("/welfare/{id}")
+//    public ResponseEntity<Void> update(@PathVariable Long id, @ModelAttribute WelfareForm welfareForm){
+//        Welfare phucLoi = welfareService.findById(id).get();
+//        phucLoi.setName(welfareForm.getName());
+//        phucLoi.setText(welfareForm.getText());
+//        phucLoi.setPrice(welfareForm.getPrice());
+//        phucLoi.setIsQuantity(welfareForm.getIsQuantity());
+//        welfareService.update(id, phucLoi);
+//        return new ResponseEntity<Void>(HttpStatus.OK);
+//    }
     @PutMapping("/welfare/{id}")
-    public ResponseEntity<Void> update(@PathVariable Long id, @ModelAttribute WelfareForm welfareForm){
-        Welfare phucLoi = welfareService.findById(id).get();
-        phucLoi.setName(welfareForm.getName());
-        phucLoi.setText(welfareForm.getText());
-        phucLoi.setPrice(welfareForm.getPrice());
-        phucLoi.setIsQuantity(welfareForm.getIsQuantity());
-        welfareService.update(id, phucLoi);
+    public ResponseEntity<Void> update(@PathVariable Long id, @RequestBody WelfareUpdate welfareUpdate){
+        welfareUpdateService.updateWelfareApproval(0,welfareUpdate.getId());
+        if(welfareUpdate.getIsGeneral() == 1) {
+            GeneralWelfare generalWelfare = generalWelfareService.getById(welfareUpdate.getIdWelfare());
+            generalWelfare.setName(welfareUpdate.getName());
+            generalWelfare.setText(welfareUpdate.getText());
+            generalWelfare.setPrice(welfareUpdate.getMoneyUpdate());
+            generalWelfare.setQuantity(welfareUpdate.getIsQuantity());
+            generalWelfare.setIdStaff(welfareUpdate.getIdStaff());
+            generalWelfare.setYear(welfareUpdate.getYear());
+            generalWelfareService.update(welfareUpdate.getIdWelfare(),generalWelfare);
+        }else{
+            Welfare welfare = welfareService.getById(welfareUpdate.getIdWelfare());
+            welfare.setName(welfareUpdate.getName());
+            welfare.setText(welfareUpdate.getText());
+            welfare.setPrice(welfareUpdate.getMoneyUpdate());
+            welfare.setIsQuantity(welfareUpdate.getIsQuantity());
+            welfare.setIdStaff(welfareUpdate.getIdStaff());
+            welfare.setYear(welfareUpdate.getYear());
+            welfareService.saveOrUpdate(welfare);
+        }
+
         return new ResponseEntity<Void>(HttpStatus.OK);
     }
     @PutMapping("/welfare-approval/{id}/{status}")
@@ -218,6 +243,10 @@ public class WelfareController {
     @GetMapping("/get-welfare-update-approval")
     public List<WelfareUpdateInterface> getAllWelfareUpdateApproval(){
         return welfareUpdateService.getAllWelfareUpdateInterfaces();
+    }
+    @GetMapping("/get-welfare-waiting-update")
+    public List<Integer> getAllWelfareWaitToUpdate(){
+        return welfareUpdateService.getWelfareWaitToUpdate();
     }
 
 }

@@ -2,7 +2,7 @@
     <div class="hr-list">
       <div class="hr-content">
         <div class="hr-title"><strong> QUẢN LÝ NHÂN VIÊN 
-</strong></div>
+        </strong></div>
         <div class="hr-info mt-2">
           <div class="hr-table">
 
@@ -31,7 +31,7 @@
                     <i class="el-icon-plus"></i> Thêm mới
                   </el-button>
 
-                  <button type="erorr" class="btn btn-success" @click="showImportForm" style="margin: 10px;">
+                  <button type="erorr" class="btn btn-success" @click.prevent="showImportForm" style="margin: 10px;">
                       <i class="fas fa-file-excel"></i> <span class="pl-3"><Strong>Nhập từ Excel</Strong></span>
                   </button>
                 
@@ -192,7 +192,9 @@
             </div>
           </transition>
         </div>
+
         <div class="hr-image"></div>
+        <!-- dialog them moi excel -->
         <el-dialog :visible.sync="isShowImport" width="500px" label-width="100px" top="5vh" title="temp">
           <span slot="title" class="title-dialog"> <Strong>Nhập danh sách nhân viên</Strong></span>
           <div class="row">
@@ -1389,7 +1391,6 @@
     mounted() {
       // this.staff.date = this.formatDate(this.staff.date)
       this.retrieveStaff();
-      this.retrieveStaff2();
       this.getDepartments();
       this.listCode();
       this.listEmail();
