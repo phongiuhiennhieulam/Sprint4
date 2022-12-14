@@ -591,7 +591,8 @@ export default {
     StaffService.getUser()
         .then((response) => {
           this.user = response.data;
-        })
+        })  
+       
   },
   computed: {
       selectAll: {
