@@ -226,7 +226,13 @@
                           <i class="fa-brands fa-github"></i>
                         </div>
                         <div>
-                          <span class="item-detail__text" style="color: palevioletred;">Hôm nay</span>
+                          <div v-if="formatDay(x.date) <= 24">
+                            <span class="item-detail__text" style="color: palevioletred;">Hôm nay</span>
+                          </div>
+                          <div v-if="formatDay(x.date) > 24">
+                            <span class="item-detail__text" style="color: palevioletred;"> {{(formatDay(x.date)/24).toFixed(0)}} Ngày trước</span>
+                          </div>
+        
                         </div>
                       </div>
                     </div>
@@ -506,6 +512,18 @@ export default {
     },
   },
   methods: {
+    formatDay(date){
+      if(date){
+        var d1 = new Date();
+        
+         //"now"
+        var d2 = new Date(date);  // some date
+        var diff = Math.abs(d1-d2);
+        var time = diff/3600000
+        return Math.round(time)
+      }
+       
+    },
     getLoad(){
       this.isLoad=true;
     },
@@ -541,6 +559,11 @@ export default {
     formatDate(value) {
       if (value) {
         return moment(String(value)).format("DD/MM/yyyy");
+      }
+    },
+    formatDate2(value) {
+      if (value) {
+        return moment(String(value)).format("yyyy/MM/DD");
       }
     },
     getAll() {
@@ -605,11 +628,7 @@ export default {
         .then((response) => {
           this.userData = response.data;
         })
-        var d1 = new Date(); //"now"
-        var d2 = new Date("2022/12/13");  // some date
-        var diff = Math.abs(d1-d2);
-        var time = diff/86400000
-        console.log(Math.round(time))    
+         
   }
 
 };
