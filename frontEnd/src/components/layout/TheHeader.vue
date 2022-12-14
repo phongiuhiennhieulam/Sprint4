@@ -92,7 +92,7 @@
               </div>
 
               <div class="header-right__item" v-if="lanhdao">
-                <el-badge :value="list.length" :max="99" class="item" style="margin-right: 5px; margin-left: 5px">
+                <el-badge  class="item" style="margin-right: 5px; margin-left: 5px">
                   <router-link to="/accept_money" style="text-decoration: none; color: #606266; cursor: pointer">
                     <!-- <i class="fa-solid fa-clipboard-check"></i> -->
                     Xét duyệt tiền phúc lợi
@@ -175,17 +175,17 @@
                   </el-dropdown>
                 </div>
               </div>
-              <el-dropdown trigger="click" v-if="quanly">
-                <el-badge :value="listbirthdays.length" :max="10" class="item" style="
+              <el-dropdown trigger="click" v-if="quanly || nhanvien ">
+                <el-badge :value="listNew.length" :max="9" class="item" style="
                         text-decoration: none;
                         color: #606266;
                         cursor: pointer;
                       ">
                   <!-- <i class="fa-solid fa-gift"></i> -->
-                  <span style="font-size: 18px" class="nowrap"> Thông báo</span>
+                  <span style="font-size: 18px" class="nowrap"  @click="getSeen()"> Thông báo</span>
                 </el-badge>
-                <el-dropdown-menu slot="dropdown" style="width: 300px;" class="item-list">
-                  <el-dropdown-item v-for="x in listbirthdays" :key="x.id"
+                <el-dropdown-menu slot="dropdown" style="width: 300px;" class="item-list" >
+                  <el-dropdown-item v-for="x in listNew" :key="x.id"
                     style="text-decoration: none;color:#606266;cursor:pointer width: 100%; font-size: 15px"
                     class="item-container">
                     <div class="item">
@@ -195,11 +195,7 @@
                           <i class="fa-sharp fa-solid fa-bell"></i>
                         </div>
                         <div>
-                          Tổng tiền phúc lợi nhận được của bạn đã
-                          <strong>tăng lên 2 triệu</strong>
-                          <p>
-                            Do gói phúc lợi bảo hiểm giảm từ 5 triệu xuống còn 3 triệu
-                          </p>
+                          {{x.message}}
                         </div>
                       </div>
                       <div class="item-detail d-flex align-items-start">
@@ -207,7 +203,30 @@
                           <i class="fa-brands fa-github"></i>
                         </div>
                         <div>
-                          <span class="item-detail__text">Nhanh tay đăng ký ngay</span>
+                          <span class="item-detail__text" style="color: palevioletred;">New</span>
+                        </div>
+                      </div>
+                    </div>
+                  </el-dropdown-item>
+                  <el-dropdown-item v-for="x in listOld" :key="x.id"
+                    style="text-decoration: none;color:#606266;cursor:pointer width: 100%; font-size: 15px"
+                    class="item-container">
+                    <div class="item">
+                      <div class="item-detail__text">{{ formatDate(x.date) }}</div>
+                      <div class="item-detail d-flex align-items-start">
+                        <div class="item-icon">
+                          <i class="fa-sharp fa-solid fa-bell"></i>
+                        </div>
+                        <div>
+                          {{x.message}}
+                        </div>
+                      </div>
+                      <div class="item-detail d-flex align-items-start">
+                        <div class="item-icon">
+                          <i class="fa-brands fa-github"></i>
+                        </div>
+                        <div>
+                          <span class="item-detail__text" style="color: palevioletred;">Hôm nay</span>
                         </div>
                       </div>
                     </div>
@@ -243,15 +262,6 @@
               </div>
             </div>
           </div>
-
-
-
-
-
-
-
-
-
           <div v-else>
             <el-dropdown :hide-on-click="false" trigger="click">
               <div class="menu-dropdown">
@@ -451,6 +461,8 @@
 <script>
 import moment from "moment";
 import StaffService from "@/service/hrService";
+import NftService from "@/service/NftService";
+
 import { MediaQueryProvider } from "vue-component-media-queries";
 import { MatchMedia } from "vue-component-media-queries";
 const queries = {
@@ -468,10 +480,13 @@ export default {
       quanly: false,
       nhansu: false,
       lanhdao: false,
-
       list: [],
       listbirthdays: [],
       staffErorr: [],
+      listNew: [],
+      listOld: [],
+      userData: {},
+      isLoad: false
     };
   },
   components: {
@@ -491,6 +506,33 @@ export default {
     },
   },
   methods: {
+    getLoad(){
+      this.isLoad=true;
+    },
+    getNft(){
+      NftService.getNew()
+      .then((response) => {
+          this.listNew = response.data;
+
+        })
+        NftService.getOld()
+      .then((response) => {
+          this.listOld = response.data;
+        })
+    },
+    getSeen(){
+      NftService.Seen().then((response) => {
+        console.log(response)
+
+        this.getNft()
+      this.isLoad = false
+        })
+      
+      // .then((response) => {
+      //     console.log(response)
+      //     this.getNft();
+      //   })
+    },
     logOut() {
       this.$store.dispatch("auth/logout");
       this.$router.push("/");
@@ -558,7 +600,18 @@ export default {
   },
   created() {
     this.getDataHeader();
-  },
+    this.getNft();
+    StaffService.getUser()
+        .then((response) => {
+          this.userData = response.data;
+        })
+        var d1 = new Date(); //"now"
+        var d2 = new Date("2022/12/13");  // some date
+        var diff = Math.abs(d1-d2);
+        var time = diff/86400000
+        console.log(Math.round(time))    
+  }
+
 };
 </script>
   

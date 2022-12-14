@@ -14,13 +14,11 @@ public interface NotificationRepository extends JpaRepository<Notification, Long
 
     @Modifying
     @Transactional
-    @Query("select s from Notification s where s.status = 0 and s.idStaff = :idStaff")
+    @Query("select s from Notification s where s.status = 0 and s.idStaff = :idStaff order by s.id desc ")
     List<Notification> getNewNTF(Long idStaff);
 
     @Modifying
     @Transactional
-    @Query("select s from Notification s where s.status = 1 and s.idStaff = :idStaff")
+    @Query("select s from Notification s where s.status = 1 and s.idStaff = :idStaff order by s.id desc")
     List<Notification> getOldNTF(Long idStaff);
-
-
 }

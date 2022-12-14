@@ -1,5 +1,6 @@
 package com.example.vmg.controller;
 
+import com.example.vmg.dto.respose.MessageResponse;
 import com.example.vmg.model.Notification;
 import com.example.vmg.model.Staff;
 import com.example.vmg.model.User;
@@ -8,6 +9,9 @@ import com.example.vmg.service.NotificationService;
 import com.example.vmg.service.StaffService;
 import com.example.vmg.service.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -26,26 +30,30 @@ public class NotificationController {
     @Autowired private NotificationRepository notificationRepository;
 
     @GetMapping("/nft-new")
-    public List<Notification> getNew(@RequestParam("email") String email){
-        User user = userService.findByUsername(email).get();
+    public List<Notification> getNew(){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        User user = userService.findByUsername(authentication.getName()).get();
         Staff staff = staffService.getByEmail(user.getUserName());
         List<Notification> notifications = notificationService.getNewNTF(staff.getId());
         return notifications;
     }
 
     @GetMapping("/nft-old")
-    public List<Notification> getold(@RequestParam("email") String email){
-        User user = userService.findByUsername(email).get();
-        System.out.println(user.getUserName());
+    public List<Notification> getold(){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        User user = userService.findByUsername(authentication.getName()).get();
         Staff staff = staffService.getByEmail(user.getUserName());
-        System.out.println(staff.getId());
         List<Notification> notifications = notificationService.getOldNTF(staff.getId());
         return notifications;
     }
 
-    @PutMapping("/seen")
-    public String Senn(@RequestParam("email") String email){
-        User user = userService.findByUsername(email).get();
+    @GetMapping("/seen")
+    public ResponseEntity<?> Senn(){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = userService.findByUsername(authentication.getName()).get();
+
         Staff staff = staffService.getByEmail(user.getUserName());
         List<Notification> notifications = notificationService.getNewNTF(staff.getId());
         for (Notification n : notifications){
@@ -53,6 +61,6 @@ public class NotificationController {
             notification.setStatus(1);
             notificationRepository.save(notification);
         }
-     return "Seen";
+        return ResponseEntity.ok(new MessageResponse("seen"));
     }
 }
