@@ -22,4 +22,5 @@ public class WelfareUpdateService {
     public void updateWelfareApproval(int status,Long id){
         welfareUpdateRepository.updateStatus(status,id);
     }
+    public List<Integer> getWelfareWaitToUpdate(){return welfareUpdateRepository.getIdOfWelfareWaitToUpdate();}
 }
