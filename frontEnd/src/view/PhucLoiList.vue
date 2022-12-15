@@ -504,6 +504,7 @@ export default {
               message: "Đã gửi yêu cầu cập nhật thành công!!\nXin chờ xét duyệt",
               type: "success",
             });
+            self.getAllWelfareWaitToUpdate();
           });
         } else {
           // if (self.value === 0) {
@@ -542,11 +543,7 @@ export default {
             });
           });
         }
-        // welfareApi.getAllWelfareWaitToUpdate().then((res) => {
-        //   this.listWelfareWaitToUpdate = res.data;
-        //   console.log(this.listWelfareWaitToUpdate);
-        // });
-
+        
         self.isShowAdd = false;
         self.resetForm(formName)
       }
