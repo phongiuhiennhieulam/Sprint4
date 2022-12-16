@@ -1,37 +1,39 @@
 <template>
-  <div class="accept-money">
-    <div class="money-title">
-      <span><strong>DANH SÁCH XÉT DUYỆT TIỀN PHÚC LỢI</strong></span>
-    </div>
-    <el-select
-      v-model="value"
-      placeholder="Loại xét duyệt"
-      class="moneyup-drop"
-      @change="selectApprove($event)"
-    >
-      <el-option
-        v-for="item in options"
-        :key="item.value"
-        :label="item.label"
-        :value="item.value"
-        :disabled="item.disabled"
-      />
-    </el-select>
-    <div class="money-table">
-      <div class="accept-component">
-        <MoneyUpdateList v-if="check === 1"></MoneyUpdateList>
-        <NewStaffsList v-if="check === 2"></NewStaffsList>
-        <WelfareUpdate v-if="(check === 3)"></WelfareUpdate>
+    <div class="accept-money" >
+      <div class="money-title">
+        <span><strong>DANH SÁCH XÉT DUYỆT TIỀN PHÚC LỢI</strong></span>
+      </div>
+      <el-select
+        v-model="value"
+        placeholder="Loại xét duyệt"
+        class="moneyup-drop"
+        @change="selectApprove($event)"
+      >
+        <el-option
+          v-for="item in options"
+          :key="item.value"
+          :label="item.label"
+          :value="item.value"
+          :disabled="item.disabled"
+        />
+      </el-select>
+      <div class="money-table">
+        <div class="accept-component">
+          <MoneyUpdateList v-if="check === 1"></MoneyUpdateList>
+          <NewStaffsList v-if="check === 2"></NewStaffsList>
+          <WelfareUpdate v-if="check === 3"></WelfareUpdate>
+        </div>
       </div>
     </div>
-  </div>
 </template>
   
   <script>
+  /* eslint-disable */
 import AcceptMoneyService from "@/service/acceptMoney";
 import MoneyUpdateList from "./MoneyUpdateList.vue";
 import WelfareUpdate from "./WelfareUpdate.vue";
 import NewStaffsList from "./NewStaffsList.vue";
+import Error401 from "./401-error.vue";
 export default {
   name: "AcceptMoney",
   computed: {
@@ -100,12 +102,11 @@ export default {
       if (event === "WelfareUpdate") {
         this.check = 3;
       }
-
     },
 
     handlelistAccept() {
       new AcceptMoneyService().getmoneyAccept().then((response) => {
-        this.listUpdateMoneys.content= response.data;
+        this.listUpdateMoneys.content = response.data;
       });
     },
     handlelistCancel() {
@@ -129,10 +130,9 @@ export default {
       // console.log(params);
       new AcceptMoneyService().getAllMoney(params).then((response) => {
         this.listUpdateMoneys = response.data;
-        this.hasRole = true;
         this.count = response.data.totalPages;
         this.itemCount = response.data.totalElements;
-      });
+      }); 
     },
 
     getRequestParams(page, pageSize, keyWord) {
@@ -171,7 +171,6 @@ export default {
             message: "Đã chấp nhận",
             title: "success",
           });
-          
         });
     },
 
@@ -349,7 +348,7 @@ export default {
 .accept-money {
   background: linear-gradient(90deg, #fad1a5 0%, rgba(255, 255, 255, 0) 100%),
     #f3cce1;
-    height: 100%;
+  height: 100%;
 }
 .moneyup-drop {
   width: 260px;

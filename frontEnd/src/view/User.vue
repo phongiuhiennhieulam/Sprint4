@@ -1,282 +1,310 @@
 <template>
-  <div class="us-main">
-    <div class="us-content">
-      <div class="us-title"><strong>QUẢN LÍ TÀI KHOẢN</strong></div>
-      <br />
+  <div>
+      <div class="us-main" v-if="hasRole">
+        <div class="us-content">
+          <div class="us-title"><strong>QUẢN LÍ TÀI KHOẢN</strong></div>
+          <br />
 
-      <div class="us-ele">
-        <div class="us-table">
-          <div class="us-table__content">
-            <tr width="100%">
-              <th>
-                <div>
-                  <el-form :inline="true" class="demo-form-inline">
-                    <el-form-item>
-                      <el-input
-                        v-model="keyWord"
-                        placeholder="Nhập tên hoặc nhập email"
-                        style="width: 500px"
+          <div class="us-ele">
+            <div class="us-table">
+              <div class="us-table__content">
+                <tr width="100%">
+                  <th>
+                    <div>
+                      <el-form :inline="true" class="demo-form-inline">
+                        <el-form-item>
+                          <el-input
+                            v-model="keyWord"
+                            placeholder="Nhập tên hoặc nhập email"
+                            style="width: 500px"
+                          >
+                            <i
+                              slot="prefix"
+                              class="el-input__icon el-icon-search"
+                            ></i
+                          ></el-input>
+                        </el-form-item>
+                        <el-form-item>
+                          <el-button type="warning" @click="onFind()"
+                            >Tìm kiếm</el-button
+                          >
+                        </el-form-item>
+                      </el-form>
+                    </div>
+                  </th>
+                </tr>
+
+                <div class="us-table_content">
+                  <table>
+                    <thead>
+                      <tr class="us-table_row">
+                        <th width="20px">STT</th>
+                        <th width="400px">Họ và tên</th>
+                        <th width="440px">Email</th>
+                        <th width="150px">Quyền Lãnh Đạo</th>
+                        <th width="150px">Quyền Admin</th>
+                        <th width="150px">Quyền Nhân Sự</th>
+                        <th width="150px">Phân Quyền</th>
+                        <th width="150px">Đổi mật khẩu</th>
+                      </tr>
+                    </thead>
+
+                    <tbody>
+                      <tr
+                        v-for="(item, index) in listUser.content"
+                        :key="index"
                       >
-                        <i
-                          slot="prefix"
-                          class="el-input__icon el-icon-search"
-                        ></i
-                      ></el-input>
-                    </el-form-item>
-                    <el-form-item>
-                      <el-button type="warning" @click="onFind()"
-                        >Tìm kiếm</el-button
-                      >
-                    </el-form-item>
-                  </el-form>
+                        <td style="width: 50px">{{ index + 1 }}</td>
+                        <td style="text-align: left">{{ item.name }}</td>
+                        <td style="text-align: left">{{ item.userName }}</td>
+
+                        <td>
+                          <template>
+                            <div
+                              v-for="(roles, index) in item.roles"
+                              :key="index"
+                            >
+                              <el-checkbox
+                                v-if="roles.id === 2"
+                                checked
+                                disabled
+                              />
+                            </div>
+                          </template>
+                        </td>
+
+                        <td>
+                          <template>
+                            <div
+                              v-for="(roles, index) in item.roles"
+                              :key="index"
+                            >
+                              <div v-if="roles.id === 3">
+                                <el-checkbox checked disabled />
+                              </div>
+                            </div>
+                          </template>
+                        </td>
+
+                        <td>
+                          <template>
+                            <div
+                              v-for="(roles, index) in item.roles"
+                              :key="index"
+                            >
+                              <el-checkbox
+                                v-if="roles.id === 4"
+                                checked
+                                disabled
+                              />
+                            </div>
+                          </template>
+                        </td>
+
+                        <td v-if="currentUser.userName == item.userName">
+                          <span class="icon-user">
+                            <i class="fa fa-user" style="color: gray"></i>
+                          </span>
+                        </td>
+
+                        <td v-if="currentUser.userName != item.userName">
+                          <span
+                            class="icon-user"
+                            @click="showEditRole(item, index)"
+                          >
+                            <i class="fa fa-user"></i>
+                          </span>
+                        </td>
+
+                        <span class="icon-edit">
+                          <span
+                            class="icon-role"
+                            @click="showEditForm(item, index)"
+                          >
+                            <i class="fa fa-key"></i>
+                          </span>
+                        </span>
+                      </tr>
+                    </tbody>
+                  </table>
                 </div>
-              </th>
-            </tr>
-
-            <div class="us-table_content">
-              <table>
-                <thead>
-                  <tr class="us-table_row">
-                    <th width="20px">STT</th>
-                    <th width="400px">Họ và tên</th>
-                    <th width="440px">Email</th>
-                    <th width="150px">Quyền Lãnh Đạo</th>
-                    <th width="150px">Quyền Admin</th>
-                    <th width="150px">Quyền Nhân Sự</th>
-                    <th width="150px">Phân Quyền</th>
-                    <th width="150px">Đổi mật khẩu</th>
-                  </tr>
-                </thead>
-
-                <tbody>
-                  <tr v-for="(item, index) in listUser.content" :key="index">
-                    <td style="width: 50px">{{ index + 1 }}</td>
-                    <td style="text-align: left">{{ item.name }}</td>
-                    <td style="text-align: left">{{ item.userName }}</td>
-
-                    <td>
-                      <template>
-                        <div v-for="(roles, index) in item.roles" :key="index">
-                          <el-checkbox v-if="roles.id === 2" checked disabled />
-                        </div>
-                      </template>
-                    </td>
-
-                    <td>
-                      <template>
-                        <div v-for="(roles, index) in item.roles" :key="index">
-                          <div v-if="roles.id === 3">
-                            <el-checkbox checked disabled />
-                          </div>
-                        </div>
-                      </template>
-                    </td>
-
-                    <td>
-                      <template>
-                        <div v-for="(roles, index) in item.roles" :key="index">
-                          <el-checkbox v-if="roles.id === 4" checked disabled />
-                        </div>
-                      </template>
-                    </td>
-
-                    <td v-if="currentUser.userName == item.userName">
-                      <span class="icon-user">
-                        <i class="fa fa-user" style="color: gray"></i>
-                      </span>
-                    </td>
-
-                    <td v-if="currentUser.userName != item.userName">
-                      <span
-                        class="icon-user"
-                        @click="showEditRole(item, index)"
-                      >
-                        <i class="fa fa-user"></i>
-                      </span>
-                    </td>
-
-                    <span class="icon-edit">
-                      <span
-                        class="icon-role"
-                        @click="showEditForm(item, index)"
-                      >
-                        <i class="fa fa-key"></i>
-                      </span>
-                    </span>
-                  </tr>
-                </tbody>
-              </table>
+                <!-- phân trang -->
+                <el-pagination
+                  style="text-align: right"
+                  background
+                  layout="prev, pager, next"
+                  :page-count="count"
+                  :page-size="pageSize"
+                  :page-sizes="pageSizes"
+                  @current-change="handlePageChange"
+                >
+                </el-pagination>
+              </div>
             </div>
-            <!-- phân trang -->
-            <el-pagination
-              style="text-align: right"
-              background
-              layout="prev, pager, next"
-              :page-count="count"
-              :page-size="pageSize"
-              :page-sizes="pageSizes"
-              @current-change="handlePageChange"
-            >
-            </el-pagination>
           </div>
         </div>
-      </div>
-    </div>
 
-    <!-- Cập nhật thông tin tài khoản -->
-    <el-dialog
-      title="Cập nhật thông tin tài khoản"
-      :visible.sync="isShowEdit"
-      width="500px"
-      label-width="100px"
-      top="5vh"
-    >
-      <ValidationObserver ref="observer" v-slot="{ handleSubmit }">
-        <el-form
-          :model="edit"
-          ref="edit"
-          label-width="120px"
-          label-position="top"
+        <!-- Cập nhật thông tin tài khoản -->
+        <el-dialog
+          title="Cập nhật thông tin tài khoản"
+          :visible.sync="isShowEdit"
+          width="500px"
+          label-width="100px"
+          top="5vh"
         >
-          <el-row>
-            <el-col>
-              <el-form-item prop="name">
-                <strong>Email:</strong>
-                <el-input
-                  type="text"
-                  v-model="edit.userName"
-                  :disabled="true"
-                ></el-input>
-              </el-form-item>
-            </el-col>
+          <ValidationObserver ref="observer" v-slot="{ handleSubmit }">
+            <el-form
+              :model="edit"
+              ref="edit"
+              label-width="120px"
+              label-position="top"
+            >
+              <el-row>
+                <el-col>
+                  <el-form-item prop="name">
+                    <strong>Email:</strong>
+                    <el-input
+                      type="text"
+                      v-model="edit.userName"
+                      :disabled="true"
+                    ></el-input>
+                  </el-form-item>
+                </el-col>
 
-            <el-col>
-              <ValidationProvider
-                v-slot="{ errors }"
-                name="userName"
-                :rules="{
-                  required: true,
-                  regex: /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{6,20}$/,
-                }"
-              >
-                <el-form-item
-                  prop="password"
-                  :error="messageError(loginFields.password, errors[0])"
-                >
-                  <strong>Mật khẩu mới:</strong>
+                <el-col>
+                  <ValidationProvider
+                    v-slot="{ errors }"
+                    name="userName"
+                    :rules="{
+                      required: true,
+                      regex: /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{6,20}$/,
+                    }"
+                  >
+                    <el-form-item
+                      prop="password"
+                      :error="messageError(loginFields.password, errors[0])"
+                    >
+                      <strong>Mật khẩu mới:</strong>
+                      <el-input
+                        type="password"
+                        @input="checkpass"
+                        v-model="newPassword"
+                        v-validate="'required'"
+                        placeholder="Mật khẩu mới"
+                      ></el-input>
+                    </el-form-item>
+                  </ValidationProvider>
+                </el-col>
+
+                <el-col>
+                  <ValidationProvider
+                    v-slot="{ errors }"
+                    name="userName"
+                    :rules="{
+                      required: true,
+                      regex: /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{6,20}$/,
+                    }"
+                  >
+                    <el-form-item
+                      prop="password"
+                      :error="messageError(loginFields.password, errors[0])"
+                    >
+                      <strong>Xác nhận lại mật khẩu:</strong>
+                      <el-input
+                        type="password"
+                        @input="checkpass"
+                        v-model="rePassword"
+                        placeholder="Xác nhận mật khẩu"
+                      ></el-input>
+                    </el-form-item>
+                  </ValidationProvider>
+                </el-col>
+              </el-row>
+            </el-form>
+
+            <span
+              slot="footer"
+              class="dialog-footer"
+              style="text-align: center"
+            >
+              <el-button
+                class="us-detail__button"
+                round
+                @click="handleSubmit(submit)"
+                ><strong>Cập nhật</strong>
+              </el-button>
+            </span>
+          </ValidationObserver>
+        </el-dialog>
+
+        <!-- Cập nhật phân quyền -->
+        <el-dialog
+          title="Cập nhật phân quyền"
+          :visible.sync="isShowEditRole"
+          width="500px"
+          label-width="100px"
+          top="5vh"
+        >
+          <el-form
+            :model="editRole"
+            ref="edit"
+            label-width="120px"
+            label-position="top"
+          >
+            <el-row>
+              <el-col>
+                <el-form-item style="text-align: left" prop="name">
+                  <strong>Email:</strong>
                   <el-input
-                    type="password"
-                    @input="checkpass"
-                    v-model="newPassword"
-                    v-validate="'required'"
-                    placeholder="Mật khẩu mới"
+                    type="text"
+                    v-model="edit.userName"
+                    :disabled="true"
                   ></el-input>
                 </el-form-item>
-              </ValidationProvider>
-            </el-col>
-
-            <el-col>
-              <ValidationProvider
-                v-slot="{ errors }"
-                name="userName"
-                :rules="{
-                  required: true,
-                  regex: /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{6,20}$/,
-                }"
-              >
-                <el-form-item
-                  prop="password"
-                  :error="messageError(loginFields.password, errors[0])"
-                >
-                  <strong>Xác nhận lại mật khẩu:</strong>
-                  <el-input
-                    type="password"
-                    @input="checkpass"
-                    v-model="rePassword"
-                    placeholder="Xác nhận mật khẩu"
-                  ></el-input>
+              </el-col>
+              <el-col>
+                <el-form-item>
+                  <div>
+                    <el-checkbox
+                      v-model="editRole.editRoleModer"
+                      label="Quyền Lãnh Đạo"
+                      size="large"
+                    />
+                  </div>
                 </el-form-item>
-              </ValidationProvider>
-            </el-col>
-          </el-row>
-        </el-form>
-
-        <span slot="footer" class="dialog-footer" style="text-align: center">
-          <el-button
-            class="us-detail__button"
-            round
-            @click="handleSubmit(submit)"
-            ><strong>Cập nhật</strong>
-          </el-button>
-        </span>
-      </ValidationObserver>
-    </el-dialog>
-
-    <!-- Cập nhật phân quyền -->
-    <el-dialog
-      title="Cập nhật phân quyền"
-      :visible.sync="isShowEditRole"
-      width="500px"
-      label-width="100px"
-      top="5vh"
-    >
-      <el-form
-        :model="editRole"
-        ref="edit"
-        label-width="120px"
-        label-position="top"
-      >
-        <el-row>
-          <el-col>
-            <el-form-item style="text-align: left" prop="name">
-              <strong>Email:</strong>
-              <el-input
-                type="text"
-                v-model="edit.userName"
-                :disabled="true"
-              ></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col>
-            <el-form-item>
-              <div>
-                <el-checkbox
-                  v-model="editRole.editRoleModer"
-                  label="Quyền Lãnh Đạo"
-                  size="large"
-                />
-              </div>
-            </el-form-item>
-            <el-form-item>
-              <div>
-                <el-checkbox
-                  v-model="editRole.editRoleAdmin"
-                  label="Quyền Admin"
-                  size="large"
-                />
-              </div>
-            </el-form-item>
-            <el-form-item>
-              <div>
-                <el-checkbox
-                  v-model="editRole.editRolePersonnel"
-                  label="Quyền Nhân Sự"
-                  size="large"
-                />
-              </div>
-            </el-form-item>
-          </el-col>
-        </el-row>
-      </el-form>
-      <span slot="footer" class="dialog-footer">
-        <el-button
-          class="us-detail__button"
-          round
-          @click="editURole(edit.id, editRole)"
-          ><strong>Cập nhật</strong>
-        </el-button>
-      </span>
-    </el-dialog>
+                <el-form-item>
+                  <div>
+                    <el-checkbox
+                      v-model="editRole.editRoleAdmin"
+                      label="Quyền Admin"
+                      size="large"
+                    />
+                  </div>
+                </el-form-item>
+                <el-form-item>
+                  <div>
+                    <el-checkbox
+                      v-model="editRole.editRolePersonnel"
+                      label="Quyền Nhân Sự"
+                      size="large"
+                    />
+                  </div>
+                </el-form-item>
+              </el-col>
+            </el-row>
+          </el-form>
+          <span slot="footer" class="dialog-footer">
+            <el-button
+              class="us-detail__button"
+              round
+              @click="editURole(edit.id, editRole)"
+              ><strong>Cập nhật</strong>
+            </el-button>
+          </span>
+        </el-dialog>
+      </div>
+    
+    <Error401 v-if="!hasRole"></Error401>
   </div>
 </template>
     
@@ -285,15 +313,18 @@
 import { ValidationObserver, ValidationProvider } from "vee-validate";
 import BaseValidate from "@/utils/BaseValidate";
 import UserService from "@/service/userService";
+import Error401 from "./401-error.vue";
+
 let userService = new UserService();
 export default {
   name: "UserList",
-  components: { ValidationObserver, ValidationProvider },
+  components: { ValidationObserver, ValidationProvider,Error401 },
   mixins: [BaseValidate],
   data() {
     return {
       listUser: [],
       roles: [],
+      hasRole: false,
       name: "",
       userName: "",
       status: "",
@@ -395,8 +426,6 @@ export default {
       this.getAllUser();
     },
 
-    
-
     getAllUser() {
       const params = this.getRequestParams(
         this.page,
@@ -406,6 +435,7 @@ export default {
       console.log(params);
       new UserService().getAllUser(params).then((response) => {
         this.listUser = response.data;
+        this.hasRole =true;
         console.log(response);
         this.count = response.data.totalPages;
         this.itemCount = response.data.totalElements;
@@ -769,7 +799,5 @@ textarea {
   text-align: left;
   padding: 0 9px 17px;
 }
-
-
 </style>
       

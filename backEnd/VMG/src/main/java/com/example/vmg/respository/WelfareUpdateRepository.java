@@ -25,5 +25,8 @@ public interface WelfareUpdateRepository extends JpaRepository<WelfareUpdate,Lon
     @Query(value = "update welfare_update set status = ?1 where welfare_update.id = ?2",nativeQuery = true)
     public void updateStatus(int status,Long id);
 
+    @Query(value="select distinct w.id_welfare from welfare_update w where w.id_welfare is not null and w.status = 2",nativeQuery = true)
+    public List<Integer> getIdOfWelfareWaitToUpdate();
+
 
 }

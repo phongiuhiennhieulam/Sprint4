@@ -9,6 +9,7 @@ import com.example.vmg.model.Role;
 import com.example.vmg.model.Staff;
 import com.example.vmg.model.User;
 import com.example.vmg.respository.MoneyUpdateRepository;
+import com.example.vmg.respository.NotificationRepository;
 import com.example.vmg.respository.StaffRepository;
 import com.example.vmg.service.RoleServiceImpl;
 import com.example.vmg.service.StaffService;
@@ -26,6 +27,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.math.BigDecimal;
+import java.text.NumberFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -49,6 +51,8 @@ public class StaffController {
     @Autowired private MoneyUpdateRepository moneyUpdateRepository;
 
     @Autowired private StaffRepository staffRepository;
+    @Autowired private NotificationRepository notificationRepository;
+
 
     @Autowired
     private ExcelHelper excelHelper;
@@ -224,7 +228,35 @@ public class StaffController {
                 MoneyUpdate moneyUpdate = moneyUpdateRepository.getById(i);
                 moneyUpdate.setStatus(0);
                 moneyUpdateRepository.save(moneyUpdate);
+                //gui thong bao
+                Locale loc = Locale.getDefault();
+                NumberFormat nf = NumberFormat.
+                        getCurrencyInstance(loc);
+
+                Staff staff = staffService.findbyoneCode(moneyUpdate.getMaNV());
+                Notification notification = new Notification();
+                notification.setIdStaff(staff.getId());
+                notification.setMessage("Số tiền hỗ trợ phúc lợi của bạn là: " + nf.format(moneyUpdate.getMoneyUpdate())  + " vnđ và đang chờ xét duyệt");
+                Date date = new Date();
+                notification.setDate(date);
+                notification.setStatus(0);
+                notification.setCategory(0);
+                notificationRepository.save(notification);
+
+                List<Long> listid = staffService.getId();
+                for (Long x : listid){
+
+                    Notification notification2 = new Notification();
+                    notification2.setIdStaff(x);
+                    notification2.setMessage( "Có 1 yêu cầu xét duyệt tiền hỗ trợ phúc lợi của nhân viên:  "+ staff.getName()+ " Số tiền: " + nf.format(moneyUpdate.getMoneyUpdate()));
+                    Date date2 = new Date();
+                    notification2.setDate(date);
+                    notification2.setStatus(0);
+                    notification2.setCategory(0);
+                    notificationRepository.save(notification2);
+                }
             }
+
             return ResponseEntity.ok(new MessageResponse("push money staff successfully!"));
         }catch (Exception e){
             e.printStackTrace();
@@ -320,6 +352,10 @@ public class StaffController {
         staffService.saveOrUpDate(staff);
         moneyUpdateRepository.delete(moneyUpdate);
         return ResponseEntity.ok(new MessageResponse("successfully!"));
+    }
+    @GetMapping("/getid")
+    public List<Long> getid() {
+        return staffService.getId();
     }
 //    @PutMapping("/update-money")
 //    public String updateMoney2(@RequestParam("ids") List<Long> ids, @RequestBody BigDecimal number) {

@@ -32,7 +32,7 @@
                   </el-form>
               </th>
               <th>
-                  <el-form :inline="true" class="demo-form-inline" style="margin-left: 300px;">
+                  <el-form :inline="true" class="demo-form-inline" style="margin-left: 428px;">
                     <span v-if="isCreate">
                       <el-form-item>
                         <el-input
@@ -169,7 +169,7 @@
               </table>
             </div>
             <!-- phân trang -->
-            <el-pagination v-if="staffs.content.length > 10"
+            <el-pagination 
               style="text-align: right"
               background
               layout="prev, pager, next"
@@ -179,6 +179,7 @@
               @current-change="handlePageChange"
             >
             </el-pagination>
+            
           </div>
         </div>
       </div>
@@ -591,7 +592,8 @@ export default {
     StaffService.getUser()
         .then((response) => {
           this.user = response.data;
-        })
+        })  
+       
   },
   computed: {
       selectAll: {

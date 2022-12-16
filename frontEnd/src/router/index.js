@@ -35,19 +35,6 @@ const routes = [
     meta: { requiresAuth: true }
   },
 
-  
-  {
-    path: "/moneyupdate",
-    name: "MoneyupdateList",
-    component: () => import("@/view/MoneyUpdateList.vue"),
-  },
-  {
-    path: "/newstaffs",
-    name: "NewStaffsList",
-    component: () => import("@/view/NewStaffsList.vue"),
-  },
-  
-
   {
     path: "/welfare-update",
     name: "WelfareUpdate",

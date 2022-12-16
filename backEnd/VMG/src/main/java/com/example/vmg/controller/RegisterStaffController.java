@@ -1,10 +1,8 @@
 package com.example.vmg.controller;
 
 import com.example.vmg.dto.respose.MessageResponse;
-import com.example.vmg.model.MoneyUpdateInterface;
-import com.example.vmg.model.NewStaffInterface;
-import com.example.vmg.model.Staff;
-import com.example.vmg.model.WelfareStaffEntity;
+import com.example.vmg.model.*;
+import com.example.vmg.respository.NotificationRepository;
 import com.example.vmg.respository.StaffRepository;
 import com.example.vmg.service.MoneyUpdateService;
 import com.example.vmg.service.RegisterStaffService;
@@ -17,7 +15,10 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
+import java.text.NumberFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.stream.Collectors;
 
 @RestController
@@ -27,8 +28,10 @@ public class RegisterStaffController {
     @Autowired private StaffService staffService;
     @Autowired private RegisterStaffService registerStaffService;
     @Autowired private MoneyUpdateService moneyUpdateService;
+    @Autowired private NotificationRepository notificationRepository;
 
-//    @PreAuthorize("hasRole('ROLE_MODERATOR')")
+
+    //    @PreAuthorize("hasRole('ROLE_MODERATOR')")
     @GetMapping("/list-register")
     public ResponseEntity<Page<NewStaffInterface>> getListRegister(@RequestParam(defaultValue = "0") int page
             , @RequestParam(defaultValue = "9") int pageSize, @RequestParam(defaultValue = "") String keyWord){
@@ -48,6 +51,17 @@ public class RegisterStaffController {
             staff.setWelfareMoney(money);
             moneyUpdateService.delete(moneyId);
             staffService.update(id, staff);
+
+            //gui thong bao
+            Notification notification = new Notification();
+
+            notification.setIdStaff(staff.getId());
+            notification.setMessage("Bạn đã đc xét duyệt số tiền hỗ trợ phúc lợi"  );
+            Date date = new Date();
+            notification.setDate(date);
+            notification.setStatus(0);
+            notification.setCategory(0);
+            notificationRepository.save(notification);
             return ResponseEntity.ok(new MessageResponse("successfully!"));
         }catch (Exception e){
             e.printStackTrace();

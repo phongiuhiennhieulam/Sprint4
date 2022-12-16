@@ -6,7 +6,6 @@
           <el-form :inline="true" class="input">
             <el-form-item>
               <el-input
-                v-model="keyWord"
                 placeholder="Nhập tên người cập nhật"
                 style="width: 350px"
               >
@@ -150,6 +149,7 @@ export default {
         year: item.year,
         isGeneral: item.is_general,
         idStaff: item.id_staff,
+        idWelfare: item.id_welfare
       };
       console.log(item.is_general);
       console.log(item.money_update);
@@ -177,12 +177,12 @@ export default {
             });
         } else {
           welfareApi
-            .acceptUpdateWelfare(item.id, item)
+            .acceptUpdateWelfare(item.id, object)
             .then(() => {
               // this.getAllMoneyUp();
               this.$notify({
                 type: "success",
-                message: "Đã từ chối",
+                message: "Đã chấp nhận",
                 title: "Thông báo",
               });
             })

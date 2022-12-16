@@ -23,8 +23,11 @@
                       <th>Tên phúc lợi</th>
                       <th>Mô tả</th>
                       <th>Thành Tiền(VNĐ)</th>
+                      <th>Loại phúc lợi</th>
                       <!-- <th>Trạng thái</th> -->
+                      <th>Trạng thái</th>
                       <th>Thao tác</th>
+
                     </tr>
                   </thead>
                   <tbody>
@@ -35,6 +38,18 @@
                       <td style="text-align: right">
                         {{ formatCurrency(item.price) }}
                       </td>
+                      <td v-if="item.isQuantity">
+                        Chỉ chọn 1
+
+                      </td>
+                      <td v-if="!item.isQuantity">
+                        Chọn số lượng
+
+                      </td>
+                      <td v-if="!(listWelfareWaitToUpdate.includes(item.id))" style="color: seagreen;">Đang được sử dụng
+                      </td>
+                      <td v-if="(listWelfareWaitToUpdate.includes(item.id))" style="color: goldenrod;">Chờ duyệt thay
+                        đổi</td>
                       <!-- <td>
                     <span v-if="item.status == 1">
                       <el-button type="danger">Vô hiệu lực</el-button>
@@ -46,8 +61,10 @@
                       <td>
                         <el-popover placement="left" width="160" trigger="hover" content="Sửa phúc lợi">
                           <el-button @click="showEditForm(item)" icon="fa fa-edit" slot="reference"
-                            style="padding:3px 3px 3px 3px; margin-right: 8px;width:30%;height:100%"></el-button>
+                            style="padding:3px 3px 3px 3px; margin-right: 8px;width:30%;height:100%"
+                            v-if="!(listWelfareWaitToUpdate.includes(item.id))"></el-button>
                         </el-popover>
+
                         <el-popover placement="right" width="160" trigger="hover" content="Xóa phúc lợi">
                           <el-button @click="confirmDeleteDialog(item.id)" type="danger" icon="fa fa-trash"
                             slot="reference" style="padding:3px 3px 3px 3px;width:30%;height:100%"></el-button>
@@ -73,7 +90,7 @@
             </div>
             <div>
               <el-dialog title="Xác nhận" :visible.sync="centerDialogVisible" width="30%" center>
-                <div style="text-align: center;"><span>Bạn có chắc chắn muốn xóa?</span></div>    
+                <div style="text-align: center;"><span>Bạn có chắc chắn muốn xóa?</span></div>
                 <span slot="footer" class="dialog-footer">
                   <el-button @click="centerDialogVisible = false">Hủy</el-button>
                   <el-button type="primary" @click="showDeleteDialog(idDelete)">Xác nhận</el-button>
@@ -187,7 +204,7 @@
                 </div>
               </div>
               <el-dialog title="Xác nhận" :visible.sync="centerDialogVisible" width="90%" center>
-                <div style="text-align: center;"><span>Bạn có chắc chắn muốn xóa?</span></div>    
+                <div style="text-align: center;"><span>Bạn có chắc chắn muốn xóa?</span></div>
                 <span slot="footer" class="dialog-footer">
                   <el-button @click="centerDialogVisible = false">Hủy</el-button>
                   <el-button type="primary" @click="showDeleteDialog(idDelete)">Xác nhận</el-button>
@@ -275,6 +292,8 @@ import format from "@/utils/format"
 let welfareApi = new WelfareApi();
 import { MediaQueryProvider } from "vue-component-media-queries";
 import { MatchMedia } from "vue-component-media-queries";
+import Error401 from "./401-error.vue";
+
 const queries = {
   mobile: '(max-width: 760px)',
   desktop: '(min-width: 761px)'
@@ -285,6 +304,7 @@ export default {
   data() {
     return {
       value: 0,
+      hasRole: false,
       isShowDialog: false,
       isShowAdd: false,
       idDelete: "",
@@ -307,6 +327,7 @@ export default {
       userName: "",
       duplicateName: false,
       listCheck: [],
+      listWelfareWaitToUpdate: []
     };
   },
 
@@ -524,6 +545,11 @@ export default {
             });
           });
         }
+        // welfareApi.getAllWelfareWaitToUpdate().then((res) => {
+        //   this.listWelfareWaitToUpdate = res.data;
+        //   console.log(this.listWelfareWaitToUpdate);
+        // });
+
         self.isShowAdd = false;
         self.resetForm(formName)
       }
@@ -607,6 +633,7 @@ export default {
       welfareApi.getAllWelfare().then((res) => {
         // self.isLoaded = true;
         this.list = res.data;
+        this.hasRole =true;
         this.listCheck = res.data;
       });
     },
@@ -614,6 +641,7 @@ export default {
       welfareApi.getAllGeneralWelfare().then((res) => {
         // self.isLoaded = true;
         this.list = res.data;
+        
       });
     },
     setUpListNameWelfare() {
@@ -639,6 +667,12 @@ export default {
         currency: "VND",
       }).format(value);
     },
+    getAllWelfareWaitToUpdate() {
+      welfareApi.getAllWelfareWaitToUpdate().then((res) => {
+        this.listWelfareWaitToUpdate = res.data;
+        console.log(this.listWelfareWaitToUpdate);
+      });
+    }
   },
   created() {
     // const self = this;
@@ -650,6 +684,10 @@ export default {
         this.idStaff = res.data;
       });
     }
+
+
+    this.getAllWelfareWaitToUpdate();
+
   },
 };
 </script>
