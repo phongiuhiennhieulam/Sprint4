@@ -11,14 +11,17 @@
               }}</span>
             </div>
             <div>
-              Tổng tiền được đăng ký:&nbsp;<span style="color: red">{{
+              Tổng tiền được đăng ký:&nbsp;<span style="color: red" v-if="isNewStaff == false">{{
                   formatCurrency(total)
-              }}&nbsp;</span>(Đã trừ tiền phúc lợi chung)
+              }}&nbsp;</span><span  v-if="isNewStaff == false">(Đã trừ tiền phúc lợi chung)</span>
+              <span style="color: red"  v-if="isNewStaff == true">Chưa được cấp tiền</span>
             </div>
             <div>
-              Tiền còn lại:&nbsp;<span style="color: green">{{
+              Tiền còn lại:&nbsp;<span style="color: green"  v-if="isNewStaff == false">{{
                   formatCurrency(total - totalMoney)
-              }}&nbsp;<span style="color: red" v-show="sum > total">(Lỗi)</span></span>
+              }}&nbsp;<span style="color: red" v-show="(sum > total) && isNewStaff == false">(Lỗi)</span></span><span v-if="isNewStaff == true" style="color: green">{{
+                  formatCurrency(0)
+              }}</span>
             </div>
           </div>
           <div class="registerWelfare-table__content">
@@ -161,6 +164,7 @@
 <script>
 /* eslint-disable */
 import WelfareApi from "@/service/phucLoiService";
+import StaffService from "@/service/hrService";
 
 let welfareApi = new WelfareApi();
 export default {
@@ -182,7 +186,8 @@ export default {
       newVal: '',
       oldVal: '',
       isShowRegisterStatus: false,
-      statusRegister: []
+      statusRegister: [],
+      isNewStaff: false
     };
   },
   computed: {
@@ -310,7 +315,7 @@ export default {
     // }
     if (localStorage.getItem("user")) {
       this.userName = JSON.parse(localStorage.getItem("user")).userName;
-
+      console.log(this.userName)
     }
     welfareApi.getAllWelfareByStatus().then((res) => {
       this.list = res.data;
@@ -350,6 +355,12 @@ export default {
 
       });
     });
+    StaffService.getStaffByEmail(this.userName)
+      .then(Response => {
+        console.log(Response.data.status);
+        if(Response.data.status == 3)
+          this.isNewStaff = true;
+      })
   }
 
 };

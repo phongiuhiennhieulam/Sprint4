@@ -5,8 +5,8 @@ import axios from 'axios';
  * */
 class WelfareApi {
 
-    async getAllWelfare() {
-        return await axios.get('http://localhost:8083/api/welfares');
+    async getAllWelfare(year) {
+        return await axios.get('http://localhost:8083/api/welfares/'+year);
     }
     async getAllWelfareByStatus() {
         return await axios.get('http://localhost:8083/api/welfares-user');
@@ -37,8 +37,8 @@ class WelfareApi {
     async findID(username) {
         return await axios.get('http://localhost:8083/api/find_id/'+username)
     }
-    async getAllGeneralWelfare() {
-        return await axios.get('http://localhost:8083/api/general-welfanes');
+    async getAllGeneralWelfare(year) {
+        return await axios.get('http://localhost:8083/api/general-welfanes/'+year);
     }
     async deleteGeneralWelfare(id) {
         return await axios.delete('http://localhost:8083/api/general-welfane/'+id);
@@ -87,6 +87,15 @@ class WelfareApi {
     }
     async getAllWelfareUpdate() {
         return await axios.get('http://localhost:8083/api/get-welfare-update-approval');
+    }
+    async denyWelfareUpdate(id) {
+        return await axios.put('http://localhost:8083/api/deny-welfare-update-approval/'+id);
+    }
+    async acceptAllWelfare(list) {
+        return await axios.post('http://localhost:8083/api/accept-all-welfare',list);
+    }
+    async denyAllWelfare(ids) {
+        return await axios.put(`http://localhost:8083/api/deny-all-welfare?ids=${ids}`);
     }
     
 

@@ -1,4 +1,3 @@
-
 <template>
   <div class="header">
     <div class="header-logo">
@@ -33,6 +32,7 @@
                   </button>
                 </div>
               </div>
+              &ensp;
               <div class="header-right__item" v-if="nhanvien">
                 <!-- <i class="el-icon-s-promotion"></i> -->
                 <div class="header-right__item--text">
@@ -45,6 +45,7 @@
                 </div>
                 <div class="header-right__item--icon"></div>
               </div>
+              &ensp;
               <div class="header-right__item" v-if="quanly" style="margin-right: 5px; margin-left: 5px">
                 <!-- <i class="el-icon-s-order"></i> -->
                 <el-dropdown trigger="click">
@@ -78,6 +79,7 @@
                   </el-dropdown-menu>
                 </el-dropdown>
               </div>
+              &ensp;
               <div class="header-right__item" v-if="quanly || nhansu">
                 <el-badge :value="list.length" :max="99" class="item" style="margin-right: 5px; margin-left: 5px">
                   <router-link to="/xetduyet" style="
@@ -92,13 +94,14 @@
               </div>
 
               <div class="header-right__item" v-if="lanhdao">
-                <el-badge :value="list.length" :max="99" class="item" style="margin-right: 5px; margin-left: 5px">
+                <el-badge  class="item" style="margin-right: 5px; margin-left: 5px">
                   <router-link to="/accept_money" style="text-decoration: none; color: #606266; cursor: pointer">
                     <!-- <i class="fa-solid fa-clipboard-check"></i> -->
                     Xét duyệt tiền phúc lợi
                   </router-link>
                 </el-badge>
               </div>
+              &ensp;
               <el-dropdown trigger="click" v-if="quanly">
                 <el-badge :value="listbirthdays.length" :max="10" class="item" style="
                         text-decoration: none;
@@ -108,6 +111,7 @@
                   <!-- <i class="fa-solid fa-gift"></i> -->
                   <span style="font-size: 18px" class="nowrap"> Sinh nhật</span>
                 </el-badge>
+                &ensp;
                 <el-dropdown-menu slot="dropdown" style="width: 300px;" class="item-list">
                   <p class="text-center border-bottom item-list__header">
                     Có <strong>{{ listbirthdays.length }}</strong> nhân viên sinh nhật trong
@@ -175,17 +179,17 @@
                   </el-dropdown>
                 </div>
               </div>
-              <el-dropdown trigger="click" v-if="quanly">
-                <el-badge :value="listbirthdays.length" :max="10" class="item" style="
+              <el-dropdown trigger="click" v-if="quanly || nhanvien ">
+                <el-badge :value="listNew.length" :max="9" class="item" style="
                         text-decoration: none;
                         color: #606266;
                         cursor: pointer;
                       ">
                   <!-- <i class="fa-solid fa-gift"></i> -->
-                  <span style="font-size: 18px" class="nowrap"> Thông báo</span>
+                  <span style="font-size: 18px" class="nowrap"  @click="getSeen()"> Thông báo</span>
                 </el-badge>
-                <el-dropdown-menu slot="dropdown" style="width: 300px;" class="item-list">
-                  <el-dropdown-item v-for="x in listbirthdays" :key="x.id"
+                <el-dropdown-menu slot="dropdown" style="width: 300px;" class="item-list" >
+                  <el-dropdown-item v-for="x in listNew" :key="x.id"
                     style="text-decoration: none;color:#606266;cursor:pointer width: 100%; font-size: 15px"
                     class="item-container">
                     <div class="item">
@@ -195,11 +199,7 @@
                           <i class="fa-sharp fa-solid fa-bell"></i>
                         </div>
                         <div>
-                          Tổng tiền phúc lợi nhận được của bạn đã
-                          <strong>tăng lên 2 triệu</strong>
-                          <p>
-                            Do gói phúc lợi bảo hiểm giảm từ 5 triệu xuống còn 3 triệu
-                          </p>
+                          {{x.message}}
                         </div>
                       </div>
                       <div class="item-detail d-flex align-items-start">
@@ -207,7 +207,36 @@
                           <i class="fa-brands fa-github"></i>
                         </div>
                         <div>
-                          <span class="item-detail__text">Nhanh tay đăng ký ngay</span>
+                          <span class="item-detail__text" style="color: palevioletred;">New</span>
+                        </div>
+                      </div>
+                    </div>
+                  </el-dropdown-item>
+                  <el-dropdown-item v-for="x in listOld" :key="x.id"
+                    style="text-decoration: none;color:#606266;cursor:pointer width: 100%; font-size: 15px"
+                    class="item-container">
+                    <div class="item">
+                      <div class="item-detail__text">{{ formatDate(x.date) }}</div>
+                      <div class="item-detail d-flex align-items-start">
+                        <div class="item-icon">
+                          <i class="fa-sharp fa-solid fa-bell"></i>
+                        </div>
+                        <div>
+                          {{x.message}}
+                        </div>
+                      </div>
+                      <div class="item-detail d-flex align-items-start">
+                        <div class="item-icon">
+                          <i class="fa-brands fa-github"></i>
+                        </div>
+                        <div>
+                          <div v-if="formatDay(x.date) <= 24">
+                            <span class="item-detail__text" style="color: palevioletred;">Hôm nay</span>
+                          </div>
+                          <div v-if="formatDay(x.date) > 24">
+                            <span class="item-detail__text" style="color: palevioletred;"> {{(formatDay(x.date)/24).toFixed(0)}} Ngày trước</span>
+                          </div>
+        
                         </div>
                       </div>
                     </div>
@@ -243,15 +272,6 @@
               </div>
             </div>
           </div>
-
-
-
-
-
-
-
-
-
           <div v-else>
             <el-dropdown :hide-on-click="false" trigger="click">
               <div class="menu-dropdown">
@@ -451,6 +471,7 @@
 <script>
 import moment from "moment";
 import StaffService from "@/service/hrService";
+import NftService from "@/service/NftService";
 import { MediaQueryProvider } from "vue-component-media-queries";
 import { MatchMedia } from "vue-component-media-queries";
 const queries = {
@@ -468,10 +489,13 @@ export default {
       quanly: false,
       nhansu: false,
       lanhdao: false,
-
       list: [],
       listbirthdays: [],
       staffErorr: [],
+      listNew: [],
+      listOld: [],
+      userData: {},
+      isLoad: false
     };
   },
   components: {
@@ -491,6 +515,43 @@ export default {
     },
   },
   methods: {
+    formatDay(date){
+      if(date){
+        var d1 = new Date();
+        
+         //"now"
+        var d2 = new Date(date);  // some date
+        var diff = Math.abs(d1-d2);
+        var time = diff/3600000
+        return Math.round(time)
+      }
+       
+    },
+    getLoad(){
+      this.isLoad=true;
+    },
+    getNft(){
+      NftService.getNew()
+      .then((response) => {
+          this.listNew = response.data;
+        })
+        NftService.getOld()
+      .then((response) => {
+          this.listOld = response.data;
+        })
+    },
+    getSeen(){
+      NftService.Seen().then((response) => {
+        console.log(response)
+        this.getNft()
+      this.isLoad = false
+        })
+      
+      // .then((response) => {
+      //     console.log(response)
+      //     this.getNft();
+      //   })
+    },
     logOut() {
       this.$store.dispatch("auth/logout");
       this.$router.push("/");
@@ -499,6 +560,11 @@ export default {
     formatDate(value) {
       if (value) {
         return moment(String(value)).format("DD/MM/yyyy");
+      }
+    },
+    formatDate2(value) {
+      if (value) {
+        return moment(String(value)).format("yyyy/MM/DD");
       }
     },
     getAll() {
@@ -558,7 +624,13 @@ export default {
   },
   created() {
     this.getDataHeader();
-  },
+    this.getNft();
+    StaffService.getUser()
+        .then((response) => {
+          this.userData = response.data;
+        })
+         
+  }
 };
 </script>
   
@@ -572,71 +644,57 @@ export default {
   box-sizing: border-box !important;
   overflow: auto !important;
 }
-
 .item-list__header {
   background: #FFF0E6 !important;
   position: sticky;
   top: 0px;
-
 }
-
 .item-container {
   border-radius: 8px;
   margin: 8px 0px !important;
   background: #FFE0CC;
 }
-
 .item-icon {
   margin-right: 14px;
   font-size: 14px;
 }
-
 .item-detail__text {
   font-weight: 600;
   display: block;
 }
-
 .nowrap {
   white-space: nowrap;
 }
-
 .menu-dropdown {
   margin: 4px !important;
 }
-
 .menu-dropdown i {
   font-size: 30px;
 }
-
 .header-logo {
   width: 100px;
   height: 100px;
   margin-left: 35px;
   margin-top: 10px;
 }
-
 .birthday-scroll {
   max-height: 348px;
   overflow: auto;
   padding: 0 12px;
 }
-
 .error-scroll {
   max-height: 224px;
   overflow: auto;
   padding: 0 12px;
 }
-
 .fade-enter-active,
 .fade-leave-active {
   transition: opacity 0.5s ease;
 }
-
 .fade-enter-from,
 .fade-leave-to {
   opacity: 0;
 }
-
 .header {
   display: flex;
   align-items: center;
@@ -648,40 +706,33 @@ export default {
   background: linear-gradient(90deg, #ece1e8 0%, rgba(235, 227, 210, 0) 100%),
     #f1d3a4;
 }
-
 .header-right {
   display: flex;
   margin-right: 100px;
   align-items: center;
 }
-
 .header-right__item {
   margin: 0px 15px 0 15px;
   display: flex;
   align-items: center;
 }
-
 .header-right__item--icon svg {
   width: 14px;
   height: 7px;
 }
-
 .header .user-image {
   width: 40px;
   height: 40px;
   border-radius: 50%;
   background: #f2f2f2;
 }
-
 .header-right__item--text {
   margin-right: 6px;
 }
-
 .itemTbale:hover {
   background-color: rgba(255, 0, 0, 0.1) !important;
   border-color: rgba(240, 0, 0, 0.1) !important;
 }
-
 .hr-title {
   text-align: center;
   font-size: 34px;
@@ -691,19 +742,16 @@ export default {
   background: rgba(255, 255, 255, 0.13);
   padding: 6px 0px;
 }
-
 .title-dialog {
   color: red;
   font-size: 30px;
   display: block;
   text-align: center;
 }
-
 router-link {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
     Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
 }
-
 .menu-dropdown {
   width: 80px;
   height: 80px;
@@ -711,22 +759,18 @@ router-link {
   align-items: center;
   justify-content: center;
 }
-
 @media only screen and (max-width: 760px) {
   .el-dropdown-menu__item i {
     font-size: 20px;
   }
-
   .header-logo {
     width: 80px;
     height: 80px;
     margin: 4px;
   }
-
   .header-logo svg {
     width: 80px;
     height: 80px;
   }
 }
 </style>
-  

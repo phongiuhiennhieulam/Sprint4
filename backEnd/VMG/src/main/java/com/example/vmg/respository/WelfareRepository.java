@@ -25,9 +25,10 @@ public interface WelfareRepository extends JpaRepository<Welfare, Long> {
             "            ORDER BY quantity desc",nativeQuery = true)
     List<WelfareSatistic> getAllStatistic();
 
-    List<Welfare> findAllByOrderByIdDesc();
+    @Query(value = "select * from welfare where welfare.year = ?",nativeQuery = true)
+    List<Welfare> findAllByOrderByIdDesc(Long year);
 
-    @Query("select x from Welfare x where x.status = 0")
+    @Query(value = "select * from welfare x where x.status = 0 and x.year = year(CURDATE())",nativeQuery = true)
     List<Welfare> getListWelfareByStatus();
 
 

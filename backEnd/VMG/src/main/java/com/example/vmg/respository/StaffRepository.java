@@ -123,4 +123,16 @@ public interface StaffRepository extends JpaRepository<Staff,Long> {
             "from staff s, department d, money_update m\n" +
             "where s.code = m.manv and d.id = s.id_department and m.status = 5", nativeQuery = true)
     public List<OderMoneyInterface> getOder();
+
+    @Query(value = "select s.id from staff s,users u,user_roles ur\n" +
+            "         where ur.user_id = u.id\n" +
+            "           and u.user_name = s.email\n" +
+            "            and ur.role_id = 2",nativeQuery = true)
+    public List<Long> getIDLD();
+
+    @Query(value = "select s.id from staff s,users u,user_roles ur\n" +
+            "         where ur.user_id = u.id\n" +
+            "           and u.user_name = s.email\n" +
+            "            and ur.role_id = 1",nativeQuery = true)
+    public List<Long> getAllIdStaff();
 }

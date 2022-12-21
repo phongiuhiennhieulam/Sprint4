@@ -23,4 +23,5 @@ public class WelfareUpdateService {
         welfareUpdateRepository.updateStatus(status,id);
     }
     public List<Integer> getWelfareWaitToUpdate(){return welfareUpdateRepository.getIdOfWelfareWaitToUpdate();}
+
 }

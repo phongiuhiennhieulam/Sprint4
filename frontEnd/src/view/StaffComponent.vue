@@ -155,7 +155,7 @@
                       <span v-if="x.status===0 || x.status ===1" style="color: seagreen;">
                         Đã cập nhật tiền
                       </span>
-                      <span v-if="x.status===3" style="color: red; text-decoration: underline;" @click="goCretae()">
+                      <span v-if="x.status===3" style="color: red; text-decoration: none;cursor: pointer;" @click="goCretae()">
                         Chưa cập nhật tiền
                       </span>
                       <span v-if="x.status===2" style="color: darkgoldenrod;">

@@ -1,31 +1,25 @@
 <template>
   <div>
-    <tr >
+    <tr>
       <th>
         <div>
           <el-form :inline="true" class="input">
             <el-form-item>
-              <el-input
-                placeholder="Nhập tên người cập nhật"
-                style="width: 350px"
-              >
-                <i slot="prefix" class="el-input__icon el-icon-search"></i
-              ></el-input>
+              <el-input placeholder="Nhập tên người cập nhật" style="width: 350px">
+                <i slot="prefix" class="el-input__icon el-icon-search"></i></el-input>
             </el-form-item>
 
             <el-form-item>
               <el-button type="warning">Tìm kiếm</el-button>
             </el-form-item>
 
-            <el-form-item >
-              <el-button round class="acceptMoney"
-                ><strong>Chấp thuận</strong>
+            <el-form-item>
+              <el-button round class="acceptMoney" @click="acceptAll"><strong>Chấp thuận</strong>
               </el-button>
             </el-form-item>
 
             <el-form-item>
-              <el-button round class="cancelMoney"
-                ><strong>Hủy bỏ</strong>
+              <el-button round class="cancelMoney" @click="denyAll"><strong>Hủy bỏ</strong>
               </el-button>
             </el-form-item>
 
@@ -38,71 +32,58 @@
         <thead>
           <tr class="welfare-table_row">
             <th width="50px">
-              <input type="checkbox" />
+              <input type="checkbox" @click="selectAll" v-model="allSelected" />
             </th>
-            <th width="280px">Tên phúc lợi</th>
-            <th width="320px">Mô tả</th>
+            <th width="320px">Tên phúc lợi</th>
             <th width="120px">Năm</th>
             <th width="280px">Người cập nhật</th>
             <th width="130px">Loại phúc lợi</th>
 
-            <th width="140px">Số tiền ban đầu</th>
-            <th width="140px">Số tiền thay đổi</th>
+            <th width="240px">Số tiền ban đầu</th>
+            <th width="240px">Số tiền thay đổi</th>
             <th width="130px">Trạng thái</th>
 
-            <th width="160px">Thao tác</th>
+            <th width="200px">Thao tác</th>
           </tr>
         </thead>
 
         <tbody class="welfare-body">
           <tr v-for="item in list" :key="item.id">
             <td>
-              <input type="checkbox" />
+              <input type="checkbox" v-model="listRequest" :value="item" />
             </td>
             <td style="text-align: left">{{ item.name }}</td>
-
-            <td style="text-align: left">{{ item.text }}</td>
             <td style="text-align: center">{{ item.year }}</td>
             <td style="text-align: center">{{ item.nameStaff }}</td>
-            <td style="text-align: center" v-if="item.is_general == 1">
+            <td style="text-align: center;color:green;" v-if="item.is_general == 1">
               Chung
             </td>
-            <td style="text-align: center" v-if="item.is_general == 0">
+            <td style="text-align: center;color:goldenrod;" v-if="item.is_general == 0">
               Cá nhân
             </td>
-            <td style="text-align: right" v-if="item.price === null">
+            <td style="text-align: center" v-if="item.price === null">
               Không có
             </td>
-            <td style="text-align: right" v-if="item.price != null">
+            <td style="text-align: center" v-if="item.price != null">
               {{ formatCurrency(item.price) }}
             </td>
 
-            <td style="text-align: right">
+            <td style="text-align: center">
               {{ formatCurrency(item.money_update) }}
             </td>
-            <td style="text-align: center" v-if="item.price === null">
+            <td style="text-align: center;color:green;" v-if="item.price === null">
               Thêm mới
             </td>
-            <td style="text-align: center" v-if="item.price != null">
+            <td style="text-align: center;color:goldenrod;" v-if="item.price != null">
               Chỉnh sửa
             </td>
 
             <td style="text-align: center">
               <span class="icon-submit">
-                <el-button
-                  @click="handleSuccess(item)"
-                  type="success"
-                  icon="el-icon-check"
-                  circle
-                >
+                <el-button @click="handleSuccess(item)" type="success" icon="el-icon-check" circle>
                 </el-button>
                 &ensp;
-                <el-button
-                  @click="handleDeny(item.id)"
-                  type="danger"
-                  icon="el-icon-close"
-                  circle
-                ></el-button>
+                <el-button @click="handleDeny(item.id)" type="danger" icon="el-icon-close" circle></el-button>
               </span>
             </td>
           </tr>
@@ -122,9 +103,98 @@ export default {
       list: [],
       dialogAccept: false,
       dialogDeny: false,
+      allSelected: false,
+      listRequest: [],
+      listSubmit: []
     };
   },
   methods: {
+    notifyAll(title,message,type) {
+      return  this.$notify({
+        title: title,
+        message: message,
+        type: type,
+      });
+    },
+    confirmAll(message,type){
+      return this.$confirm(message, "Xác nhận", {
+          confirmButtonText: "OK",
+          cancelButtonText: "Cancel",
+          type: type,
+        })
+    },
+    messageAll(title,message,type) {
+      return this.$messageAll({
+        title: title,
+        message: message,
+        type: type,
+      });
+    },
+    denyAll() {
+      if (this.listRequest.length == 0) {
+        this.notifyAll("Lưu ý","Bạn chưa tích ô nào để hủy bỏ tất cả","info")
+      } else {
+        this.listSubmit = [];
+        this.confirmAll("Bạn có chắc muốn hủy bỏ tất cả","success").then(() => {
+          for (let item in this.listRequest) {
+            this.listSubmit.push(this.listRequest[item].id)
+          }
+          welfareApi.denyAllWelfare(this.listSubmit).then(() => {
+            welfareApi.getAllWelfareUpdate().then((res) => {
+              this.list = res.data;
+
+            });
+            this.notifyAll("Thành công","Bạn đã từ chối thành công","success");
+            this.allSelected = false
+          }
+          )
+        })
+
+
+      }
+    },
+    acceptAll() {
+      if (this.listRequest.length == 0) {
+        this.notifyAll("Lưu ý","Bạn chưa tích ô nào để chấp nhận tất cả","info")
+      } else {
+        this.confirmAll("Bạn có chắc muốn chấp nhận tất cả","success").then(() => {
+          for (let item in this.listRequest) {
+            let object = {
+              id: this.listRequest[item].id,
+              idWelfare: this.listRequest[item].id_welfare,
+              name: this.listRequest[item].name,
+              text: this.listRequest[item].text,
+              moneyUpdate: this.listRequest[item].money_update,
+              status: 0,
+              isGeneral: this.listRequest[item].is_general,
+              idStaff: this.listRequest[item].id_staff,
+              year: this.listRequest[item].year,
+              isQuantity: this.listRequest[item].is_quantity
+            }
+            this.listSubmit.push(object)
+          }
+          welfareApi.acceptAllWelfare(this.listSubmit).then(() => {
+            welfareApi.getAllWelfareUpdate().then((res) => {
+              this.list = res.data;
+
+            });
+            this.notifyAll("Thành công","Bạn đã xét duyệt thành công","success");
+            this.allSelected = false
+          }
+          )
+        })
+
+
+      }
+    },
+    selectAll() {
+      this.listRequest = [];
+      if (!this.allSelected) {
+        for (let item in this.list) {
+          this.listRequest.push(this.list[item])
+        }
+      }
+    },
     formatCurrency(value) {
       if (typeof value == "string") {
         value = value.replaceAll(",", "");
@@ -153,11 +223,7 @@ export default {
       };
       console.log(item.is_general);
       console.log(item.money_update);
-      this.$confirm("Bạn muốn chấp nhận thay đổi này?", "Xác nhận", {
-        confirmButtonText: "OK",
-        cancelButtonText: "Cancel",
-        type: "success",
-      }).then(() => {
+      this.confirmAll("Bạn muốn chấp nhận thay đổi này?","success").then(() => {
         if (item.price === null) {
           welfareApi
             .acceptCreateWelfare(object)
@@ -166,11 +232,7 @@ export default {
               welfareApi.getAllWelfareUpdate().then((res) => {
                 this.list = res.data;
               });
-              this.$message({
-                type: "success",
-                message: "Đã chấp nhận",
-                title: "Thông báo",
-              });
+              this.messageAll("Thông báo","Đã chấp nhận","success")
             })
             .catch((error) => {
               console.log(error);
@@ -183,11 +245,8 @@ export default {
               welfareApi.getAllWelfareUpdate().then((res) => {
                 this.list = res.data;
               });
-              this.$message({
-                type: "success",
-                message: "Đã chấp nhận",
-                title: "Thông báo",
-              });
+              this.messageAll("Thông báo","Đã chấp nhận","success")
+
             })
             .catch((error) => {
               console.log(error);
@@ -196,20 +255,14 @@ export default {
       });
     },
     handleDeny(id) {
-      this.$confirm("Bạn muốn từ chối thay đổi này?", "Xác nhận", {
-        confirmButtonText: "OK",
-        cancelButtonText: "Cancel",
-        type: "success",
-      }).then(() => {
+      this.confirmAll("Bạn muốn từ chối thay đổi này?","success").then(() => {
         welfareApi
-          .Acceptmoney(id)
+          .denyWelfareUpdate(id)
           .then(() => {
-            this.getAllMoneyUp();
-            this.$message({
-              type: "success",
-              message: "Đã từ chối",
-              title: "Thông báo",
+            welfareApi.getAllWelfareUpdate().then((res) => {
+              this.list = res.data;
             });
+            this.messageAll("Thông báo","Đã từ chối","success")
           })
           .catch((error) => {
             console.log(error);
@@ -277,12 +330,21 @@ export default {
 
 .welfare-table_content {
   text-align: center;
-    padding: 0 0 0 60px;  
+  padding: 0 0 0 60px;
   overflow: auto;
   height: 100%;
 }
 
 .welfare-body tr td {
   padding: 15px;
+}
+.welfare-table_content{
+  height:620px;
+  overflow: scroll;
+}
+.welfare-table_content table thead tr {
+    background-color: #fdf9f8;
+    position: sticky;
+    top: 0;
 }
 </style>

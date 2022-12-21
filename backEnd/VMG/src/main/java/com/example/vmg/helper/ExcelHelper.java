@@ -40,8 +40,8 @@ public class ExcelHelper {
     @Autowired
     private DepartmentRepository departmentRepository;
     public static String TYPE = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-    static String[] HEADERs = {"Code", "Name", "Date", "Email", "Welfare_money", "Status"
-            , "Department_name"};
+    static String[] HEADERs = {"Mã nhân viên", "Họ tên", "Ngày sinh", "Email"
+            , "Phòng ban"};
     static String SHEET = "Staffs";
 
     public boolean hasExcelFormat(MultipartFile file) {
@@ -87,10 +87,10 @@ public class ExcelHelper {
                             staff.setEmail(currentCell.getStringCellValue());
                             break;
                         case 4:
-                            staff.setWelfareMoney(BigDecimal.valueOf(currentCell.getNumericCellValue()));
+                            staff.setWelfareMoney(BigDecimal.valueOf(0));
                             break;
                         case 5:
-                            staff.setStatus((int) currentCell.getNumericCellValue());
+                            staff.setStatus(3);
                             break;
                         case 6:
                             staff.setDepartment(departmentRepository.getDepartmentByName(currentCell.getStringCellValue()));

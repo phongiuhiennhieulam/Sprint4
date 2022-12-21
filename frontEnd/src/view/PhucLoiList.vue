@@ -12,6 +12,9 @@
                 <el-option label="Phúc Lợi Cá Nhân Hóa" :value="0"> </el-option>
                 <el-option label="Phúc Lợi Chung" :value="1"> </el-option>
               </el-select>
+              <el-select v-model="valueYear" placeholder="Năm" style="width: auto;">
+                <el-option v-for="year in years" :key="year" :value="year" :label="year"> </el-option>
+              </el-select>
             </div>
             <div class="plList-table">
               <div class="plList-table__content">
@@ -21,9 +24,9 @@
                     <tr>
                       <th>STT</th>
                       <th>Tên phúc lợi</th>
-                      <th>Mô tả</th>
+                      <!-- <th>Mô tả</th> -->
                       <th>Thành Tiền(VNĐ)</th>
-                      <th>Loại phúc lợi</th>
+                      <th v-if="value == 0">Loại phúc lợi</th>
                       <!-- <th>Trạng thái</th> -->
                       <th>Trạng thái</th>
                       <th>Thao tác</th>
@@ -34,15 +37,15 @@
                     <tr v-for="(item, index) in list" :key="index">
                       <td>{{ index + 1 }}</td>
                       <td style="text-align: left">{{ item.name }}</td>
-                      <td style="text-align: left">{{ item.text }}</td>
+                      <!-- <td style="text-align: left">{{ item.text }}</td> -->
                       <td style="text-align: right">
                         {{ formatCurrency(item.price) }}
                       </td>
-                      <td v-if="item.isQuantity">
+                      <td v-if="item.isQuantity && value == 0" style="color:goldenrod">
                         Chỉ chọn 1
 
                       </td>
-                      <td v-if="!item.isQuantity">
+                      <td v-if="!item.isQuantity && value == 0" style="color:#FF69B4">
                         Chọn số lượng
 
                       </td>
@@ -138,7 +141,7 @@
                                 (*)</span></strong>
                           </label>
                           <el-form-item prop="year" label-width="0px">
-                            <el-input v-model="add.year" type="number"></el-input>
+                            <el-input v-model="add.year" type="number" disabled>{{ valueYear }}</el-input>
                           </el-form-item>
                         </div>
                       </div>
@@ -149,7 +152,7 @@
                             (*)</span></strong>
                       </label>
                       <el-form-item prop="year" label-width="0px">
-                        <el-input type="number" v-model="add.year"></el-input>
+                        <el-input type="number" v-model="add.year" disabled>{{ valueYear }}</el-input>
                       </el-form-item>
 
                     </div>
@@ -254,7 +257,7 @@
                               (*)</span></strong>
                         </label>
                         <el-form-item prop="year" label-width="0px">
-                          <el-input v-model="add.year" type="text"></el-input>
+                          <el-input v-model="add.year" type="text" disabled>{{ valueYear }}</el-input>
                         </el-form-item>
                       </div>
                     </div>
@@ -311,7 +314,7 @@ export default {
         text: "",
         price: "",
         isQuantity: false,
-        year: "",
+        year: new Date().getFullYear(),
         idStaff: ""
       },
       idStaff: "",
@@ -324,7 +327,9 @@ export default {
       userName: "",
       duplicateName: false,
       listCheck: [],
-      listWelfareWaitToUpdate: []
+      listWelfareWaitToUpdate: [],
+      years:[],
+      valueYear:new Date().getFullYear()
     };
   },
 
@@ -350,12 +355,21 @@ export default {
   },
   watch: {
     value: function (newVal) {
+      this.add.year = this.valueYear
       if (newVal === 0) {
-        this.getAllWelfare();
+        this.getAllWelfare(this.valueYear);
         this.addText = "Thêm mới phúc lợi cá nhân hóa";
       } else {
-        this.getAllGeneralWelfares();
+        this.getAllGeneralWelfares(this.valueYear);
         this.addText = "Thêm mới phúc lợi chung";
+      }
+    },
+    valueYear: function (newVal) {
+      this.add.year = newVal
+      if (this.value === 0) {
+        this.getAllWelfare(newVal);       
+      } else {
+        this.getAllGeneralWelfares(newVal);
       }
     },
 
@@ -576,6 +590,7 @@ export default {
     showAddForm() {
       this.isShowAdd = true;
       this.formMode = 'add'
+      this.add.year = this.valueYear
     },
     showEditForm(item) {
       setTimeout(() => {
@@ -623,15 +638,15 @@ export default {
 
       this.centerDialogVisible = false;
     },
-    getAllWelfare() {
-      welfareApi.getAllWelfare().then((res) => {
+    getAllWelfare(year) {
+      welfareApi.getAllWelfare(year).then((res) => {
         // self.isLoaded = true;
         this.list = res.data;
         this.listCheck = res.data;
       });
     },
-    getAllGeneralWelfares() {
-      welfareApi.getAllGeneralWelfare().then((res) => {
+    getAllGeneralWelfares(year) {
+      welfareApi.getAllGeneralWelfare(year).then((res) => {
         // self.isLoaded = true;
         this.list = res.data;
       });
@@ -668,7 +683,7 @@ export default {
   },
   created() {
     // const self = this;
-    this.getAllWelfare();
+    this.getAllWelfare(new Date().getFullYear());
     this.setUpListNameWelfare();
     if (localStorage.getItem("user")) {
       // this.getStaff(this.userName)
@@ -679,6 +694,9 @@ export default {
 
 
     this.getAllWelfareWaitToUpdate();
+    for(let i = 2021;i <= new Date().getFullYear() + 1;i++)
+      this.years.push(i);
+
 
   },
 };

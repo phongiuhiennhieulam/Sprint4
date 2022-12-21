@@ -6,6 +6,7 @@ import com.example.vmg.dto.respose.MessageResponse;
 import com.example.vmg.model.*;
 
 import com.example.vmg.form.WelfareForm;
+import com.example.vmg.respository.NotificationRepository;
 import com.example.vmg.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,7 +19,12 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
+import java.text.NumberFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 @RestController
 @CrossOrigin(origins = "*")
@@ -29,19 +35,21 @@ public class WelfareController {
     @Autowired private WelfareStaffEntityService welfareStaffEntityService;
     @Autowired private GeneralWelfareService generalWelfareService;
     @Autowired private RegisterWelfareService registerWelfareService;
+    @Autowired private StaffService staffService;
+    @Autowired private NotificationRepository notificationRepository;
 
     //@PreAuthorize("hasRole('ROLE_MODERATOR') or hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
-    @GetMapping("/welfares")
-    public List<Welfare> getlist(){
-        return welfareService.getListOrder();
+    @GetMapping("/welfares/{year}")
+    public List<Welfare> getlist(@PathVariable Long year){
+        return welfareService.getListOrder(year);
     }
     @GetMapping("/welfares-user")
     public List<Welfare> getByStatus(){
         return welfareService.getListByStatus();
     }
-    @GetMapping("/general-welfanes")
-    public List<GeneralWelfare> getlistPhucLoiBiDong(){
-        return generalWelfareService.getListOrder();
+    @GetMapping("/general-welfanes/{year}")
+    public List<GeneralWelfare> getlistPhucLoiBiDong(@PathVariable Long year){
+        return generalWelfareService.getListOrder(year);
     }
     @PostMapping("/welfare")
     public ResponseEntity<Void> addPhucLoi(@RequestBody WelfareUpdate welfareUpdate){
@@ -66,6 +74,23 @@ public class WelfareController {
             generalWelfare.setIdStaff(welfareUpdate.getIdStaff());
             generalWelfareService.save(generalWelfare);
         }
+        for (Long idStaff:staffService.getAllIdOfStaff()
+             ) {
+            Notification notification = new Notification();
+            Date date = new Date();
+            notification.setDate(date);
+            notification.setCategory(0);
+            notification.setIdStaff(idStaff);
+            notification.setStatus(0);
+            notification.setLink(2);
+            String message = "Phúc lợi ";
+            String kindOfWelfare = welfareUpdate.getIsGeneral() == 0 ? "riêng " : "chung ";
+            message += kindOfWelfare + welfareUpdate.getName() + " đã được thêm vào danh sách phúc lợi của công ty";
+            notification.setMessage(message);
+            notificationRepository.save(notification);
+
+
+        }
             return new ResponseEntity<Void>(HttpStatus.OK);
     }
     @PostMapping("/welfare-approval/{status}")
@@ -82,6 +107,103 @@ public class WelfareController {
         welfareUpdateService.saveUpdateOrCreate(welfareUpdate);
         return new ResponseEntity<Void>(HttpStatus.OK);
     }
+    @PostMapping("/accept-all-welfare")
+    public ResponseEntity<Void> acceptAllWelfareApproval(@RequestBody  List<WelfareUpdate>welfareUpdates){
+        for (WelfareUpdate welfareUpdate:
+                welfareUpdates) {
+            welfareUpdateService.updateWelfareApproval(0,welfareUpdate.getId());
+            String oldName = "";
+            BigDecimal oldMoney = BigDecimal.valueOf(0);
+            Boolean oldIsQuantity = false;
+            if(welfareUpdate.getIsGeneral() == 0) {
+                Welfare phucLoi = welfareUpdate.getIdWelfare() == null ? new Welfare() : welfareService.getById(welfareUpdate.getIdWelfare());
+                if(welfareUpdate.getIdWelfare() != null) {
+                    oldName = welfareService.getById(welfareUpdate.getIdWelfare()).getName();
+                    oldMoney = welfareService.getById(welfareUpdate.getIdWelfare()).getPrice();
+                    oldIsQuantity = welfareService.getById(welfareUpdate.getIdWelfare()).getIsQuantity();
+                }
+                phucLoi.setName(welfareUpdate.getName());
+                phucLoi.setText(welfareUpdate.getText());
+                phucLoi.setPrice(welfareUpdate.getMoneyUpdate());
+                phucLoi.setIsQuantity(welfareUpdate.getIsQuantity());
+                phucLoi.setIdStaff(welfareUpdate.getIdStaff());
+                phucLoi.setStatus(0);
+                phucLoi.setYear(welfareUpdate.getYear());
+                welfareService.saveOrUpdate(phucLoi);
+            }else{
+                GeneralWelfare generalWelfare = welfareUpdate.getIdWelfare() == null ? new GeneralWelfare() : generalWelfareService.getById(welfareUpdate.getIdWelfare());
+                if(welfareUpdate.getIdWelfare() != null) {
+                    oldName = generalWelfareService.getById(welfareUpdate.getIdWelfare()).getName();
+                    oldMoney = generalWelfareService.getById(welfareUpdate.getIdWelfare()).getPrice();
+                }
+                generalWelfare.setName(welfareUpdate.getName());
+                generalWelfare.setText(welfareUpdate.getText());
+                generalWelfare.setPrice(welfareUpdate.getMoneyUpdate());
+                generalWelfare.setStatus(0);
+                generalWelfare.setYear(welfareUpdate.getYear());
+                generalWelfare.setIdStaff(welfareUpdate.getIdStaff());
+
+                generalWelfareService.save(generalWelfare);
+            }
+                for (Long idStaff : staffService.getAllIdOfStaff()
+                ) {
+                    Notification notification = new Notification();
+                    Date date = new Date();
+                    notification.setDate(date);
+                    notification.setCategory(0);
+                    notification.setIdStaff(idStaff);
+                    notification.setStatus(0);
+                    notification.setLink(2);
+                    String message = "Phúc lợi ";
+                    String kindOfWelfare = welfareUpdate.getIsGeneral() == 0 ? "riêng " : "chung ";
+                    message += kindOfWelfare;
+                    if(welfareUpdate.getIdWelfare() == null) {
+                        message += (welfareUpdate.getName() + " đã được thêm vào danh sách phúc lợi của công ty");
+
+
+                    }else{
+                        message += oldName;
+                        System.out.println(oldName);
+                        if(!welfareUpdate.getName().equals(oldName)){
+                            message += " bị đổi tên thành "+welfareUpdate.getName() + ", ";
+                        }
+                        if(welfareUpdate.getMoneyUpdate().compareTo(oldMoney) != 1){
+                            message += " được cập nhật tiền từ "+ oldMoney + " thành "+welfareUpdate.getMoneyUpdate() + " ";
+                        }
+                        if(welfareUpdate.getIsQuantity() != oldIsQuantity && welfareUpdate.getIsQuantity() == false && welfareUpdate.getIsGeneral() == 0)
+                            message += " chuyển thành có thể chọn số lương";
+                        if(welfareUpdate.getIsQuantity() != oldIsQuantity && welfareUpdate.getIsQuantity() == true && welfareUpdate.getIsGeneral() == 0)
+                            message += " chuyển thành chỉ chọn được 1 lần";
+                    }
+
+
+                    notification.setMessage(message);
+                    notificationRepository.save(notification);
+
+
+
+
+
+
+                }
+
+            }
+        return new ResponseEntity<Void>(HttpStatus.OK);
+        }
+//    @PostMapping("/welfare-approval/{status}")
+//    public ResponseEntity<Void> approvalAddWelfareOfLeader(@PathVariable Integer status,@ModelAttribute WelfareForm welfareForm){
+//        WelfareUpdate welfareUpdate = new WelfareUpdate();
+//        welfareUpdate.setName(welfareForm.getName());
+//        welfareUpdate.setText(welfareForm.getText());
+//        welfareUpdate.setMoneyUpdate(welfareForm.getPrice());
+//        welfareUpdate.setIsGeneral(status);
+//        welfareUpdate.setStatus(2);
+//        welfareUpdate.setIdStaff(welfareForm.getIdStaff());
+//        welfareUpdate.setYear(welfareForm.getYear());
+//        welfareUpdate.setIsQuantity(welfareForm.getIsQuantity());
+//        welfareUpdateService.saveUpdateOrCreate(welfareUpdate);
+//        return new ResponseEntity<Void>(HttpStatus.OK);
+//    }
     @PostMapping("/general-welfane")
     public ResponseEntity<?> addPhucLoiBiDong(@ModelAttribute WelfareForm welfareForm){
         GeneralWelfare generalWelfare = new GeneralWelfare();
@@ -171,6 +293,19 @@ public class WelfareController {
         welfareUpdateService.saveUpdateOrCreate(welfareUpdate);
         return new ResponseEntity<Void>(HttpStatus.OK);
     }
+    @PutMapping("/deny-all-welfare")
+    public ResponseEntity<Void> denyAllWelfareApproval(@RequestParam("ids") List<Long> ids) {
+        for (Long index:ids) {
+            welfareUpdateService.updateWelfareApproval(0,index);
+        }
+        return new ResponseEntity<Void>(HttpStatus.OK);
+    }
+    @PutMapping("/deny-welfare-update-approval/{id}")
+    public ResponseEntity<Void> denyApprovalAllWelfare(@PathVariable Long id){
+        welfareUpdateService.updateWelfareApproval(0,id);
+        return new ResponseEntity<Void>(HttpStatus.OK);
+    }
+
 
     @PutMapping("/general-welfane/{id}")
     public ResponseEntity<Void> update2(@PathVariable Long id, @ModelAttribute WelfareForm welfareForm){

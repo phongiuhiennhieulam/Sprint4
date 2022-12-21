@@ -141,5 +141,10 @@ public class StaffService {
     public  List<OderMoneyInterface> getOders(){
         return staffRepository.getOder();
     }
-
+    public List<Long> getId(){
+        return staffRepository.getIDLD();
+    }
+    public List<Long> getAllIdOfStaff(){
+        return staffRepository.getAllIdStaff();
+    }
 }

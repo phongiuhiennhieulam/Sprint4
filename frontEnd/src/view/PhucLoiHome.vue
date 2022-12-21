@@ -143,7 +143,7 @@ export default {
       });
     },
     async getAllGeneralWelfares() {
-      await welfareApi.getAllGeneralWelfare().then((res) => {
+      await welfareApi.getAllGeneralWelfare(new Date().getFullYear).then((res) => {
         // self.isLoaded = true;
         this.listGeneral = res.data;
         // console.log(res.data);
