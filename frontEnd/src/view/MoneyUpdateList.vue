@@ -234,6 +234,7 @@ export default {
       keyComponent: 0,
       checkpage: false,
       checkpage2: false,
+      checkpage3: false,
       status: null,
     };
   },
@@ -247,16 +248,25 @@ export default {
       this.status = command;
       if (command === "accept") {
         this.handlelistAccept();
+        this.checkpage = true;
+        this.checkpage2 = false;
+        this.checkpage3 = false;
       }
-
       if (command === "cancel") { 
         this.handlelistCancel();
+        this.checkpage = false
+        this.checkpage2 = true
+        this.checkpage3 = false
       }
       if (command === "waiting") {
         this.handlelistWaiting();
+        this.checkpage = false
+        this.checkpage2 = false
+        this.checkpage3 = true
       }
       if (command === "all") {
         this.handlelistAll();
+        this.checkpage = false
       }
     },
     handlelistAccept() {
@@ -302,7 +312,7 @@ export default {
       new AcceptMoneyService()
         .getmoneyAccept(params)
         .then((response) => {
-          this.listMoneyAccpet = response.data;
+          this.listUpdateMoneys = response.data;
           this.hasRole = true;
           this.count = response.data.totalPages;
           this.itemCount = response.data.totalElements;
@@ -321,7 +331,7 @@ export default {
       new AcceptMoneyService()
         .getmoneyCancel(params)
         .then((response) => {
-          this.listMoneyCancel = response.data;
+          this.listUpdateMoneys = response.data;
           this.hasRole = true;
           this.count = response.data.totalPages;
           this.itemCount = response.data.totalElements;
@@ -385,18 +395,17 @@ export default {
 
     handlePageChange(value) {
       this.page = value;
-      if (this.status === "accept") {
+      if (this.checkpage === true) {
         this.getmoneyAccept();
-      } else if (this.status === "cancel") {
-        this.getmoneyCancel;
-      } else if (this.status === "waiting") {
+      }else if(this.checkpage2 === true){
+        this.getmoneyCancel();
+      }else if(this.checkpage3 === true){
         this.getmoneyWaiting();
-      } else if (this.status === "all") {
-        this.handlelistAll();
-      } else {
-        this.page = value;
-        this.getAllMoneyUp();
+      }else{
+        this.getAllMoneyUp()
       }
+      
+      
     },
 
     handleSuccess(id) {

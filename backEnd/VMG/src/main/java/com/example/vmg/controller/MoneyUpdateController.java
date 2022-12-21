@@ -45,7 +45,7 @@ public class MoneyUpdateController {
 //        return new ResponseEntity<Long>(moneyUpdateRepository.validate(id), HttpStatus.OK);
 //    }
 
-    @PreAuthorize("hasRole('ROLE_MODERATOR')")
+//    @PreAuthorize("hasRole('ROLE_MODERATOR')")
     @GetMapping("/getList/moneyAccept")
     public ResponseEntity<Page<MoneyUpdateInterface>> getMoneyAccept(@RequestParam(defaultValue = "0") int page
             , @RequestParam(defaultValue = "9") int pageSize, @RequestParam(defaultValue = "") String keyWord) {
