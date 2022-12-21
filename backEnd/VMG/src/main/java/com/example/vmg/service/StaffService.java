@@ -144,4 +144,8 @@ public class StaffService {
     public List<Long> getId(){
         return staffRepository.getIDLD();
     }
+
+    public List<?> getByMoney(Long id) {
+        return staffRepository.getByMoney(id);
+    }
 }

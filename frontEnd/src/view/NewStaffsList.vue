@@ -18,13 +18,13 @@
               <el-button type="warning" @click="onFind()">Tìm kiếm</el-button>
             </el-form-item>
 
-            <el-form-item>
+            <el-form-item v-if="selected.length !== 0">
               <el-button round @click="handleSuccessAll()" class="acceptMoney"
                 ><strong>Chấp thuận</strong>
               </el-button>
             </el-form-item>
 
-            <el-form-item>
+            <el-form-item v-if="selected.length !== 0">
               <el-button round @click="handleCancelAll()" class="cancelMoney"
                 ><strong>Hủy bỏ</strong>
               </el-button>
@@ -137,12 +137,29 @@ export default {
         var selected = [];
         if (value) {
           this.listNewStaffs.content.forEach(function (listNewStaff) {
-            selected.push(listNewStaff.id);
+            selected.push(listNewStaff.id); 
           });
         }
         this.selected = selected;
       },
     },
+    checkSelected:{
+      get: function () {
+        return this.listNewStaffs.content
+          ? this.selected.length == this.listNewStaffs.content.length
+          : false;
+      },
+      set: function (value) {
+        var selected = [];
+
+        if (value) {
+          this.listNewStaffs.content.forEach(function (listNewStaff) {
+            selected.push(listNewStaff.id);
+          });
+        }
+        this.selected = selected;
+      },
+    }
   },
   mounted() {},
   data() {

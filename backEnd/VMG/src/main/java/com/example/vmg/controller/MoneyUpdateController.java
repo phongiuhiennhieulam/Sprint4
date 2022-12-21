@@ -13,7 +13,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -48,21 +47,38 @@ public class MoneyUpdateController {
 
     @PreAuthorize("hasRole('ROLE_MODERATOR')")
     @GetMapping("/getList/moneyAccept")
-    public ResponseEntity<List<MoneyUpdateInterface>> getMoneyAccept() {
-        return new ResponseEntity<List<MoneyUpdateInterface>>(moneyUpdateService.getMoneyAccept(), HttpStatus.OK);
+    public ResponseEntity<Page<MoneyUpdateInterface>> getMoneyAccept(@RequestParam(defaultValue = "0") int page
+            , @RequestParam(defaultValue = "9") int pageSize, @RequestParam(defaultValue = "") String keyWord) {
+        if (!(keyWord.equals("undefined") || keyWord == null)) {
+            keyWord = keyWord.trim();
+            return new ResponseEntity<Page<MoneyUpdateInterface>>(moneyUpdateService.getMoneyAccept(page, pageSize, keyWord), HttpStatus.OK);
+        } else {
+            return null;
+        }
     }
 
     @PreAuthorize("hasRole('ROLE_MODERATOR')")
     @GetMapping("/getList/moneyCancel")
-    public ResponseEntity<List<MoneyUpdateInterface>> getMoneyCancel() {
-        return new ResponseEntity<List<MoneyUpdateInterface>>(moneyUpdateService.getMoneyCancel(), HttpStatus.OK);
+    public ResponseEntity<Page<MoneyUpdateInterface>> getMoneyCancel(@RequestParam(defaultValue = "0") int page
+            , @RequestParam(defaultValue = "9") int pageSize, @RequestParam(defaultValue = "") String keyWord) {
+        if (!(keyWord.equals("undefined") || keyWord == null)) {
+            keyWord = keyWord.trim();
+            return new ResponseEntity<Page<MoneyUpdateInterface>>(moneyUpdateService.getMoneyCancel(page, pageSize, keyWord), HttpStatus.OK);
+        } else {
+            return null;
+        }
     }
 
     @PreAuthorize("hasRole('ROLE_MODERATOR')")
     @GetMapping("/getList/moneyWaiting")
-    public ResponseEntity<List<MoneyUpdateInterface>> getMoneyWaiting() {
-        return new ResponseEntity<List<MoneyUpdateInterface>>(moneyUpdateService.getMoneyWating(), HttpStatus.OK);
-    }
+    public ResponseEntity<Page<MoneyUpdateInterface>> getMoneyWaiting(@RequestParam(defaultValue = "0") int page
+            , @RequestParam(defaultValue = "9") int pageSize, @RequestParam(defaultValue = "") String keyWord) {
+        if (!(keyWord.equals("undefined") || keyWord == null)) {
+            keyWord = keyWord.trim();
+            return new ResponseEntity<Page<MoneyUpdateInterface>>(moneyUpdateService.getMoneyWaiting(page, pageSize, keyWord), HttpStatus.OK);
+        } else {
+            return null;
+        }    }
 
     //Xét duyệt tiền của lãnh đạo
     @PutMapping("/accpet-money/{id}")
@@ -91,7 +107,7 @@ public class MoneyUpdateController {
         MoneyUpdate moneyUpdate = moneyUpdateService.findById(id).get();
         moneyUpdate.setStatus(0);
         moneyUpdateService.update(id, moneyUpdate);
-        
+
         return ResponseEntity.ok(new MessageResponse("successfully!"));
     }
 

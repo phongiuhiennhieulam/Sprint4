@@ -26,8 +26,10 @@ public class MoneyUpdateService {
         return moneyUpdateRepository.getPage(pageable,keyWord);
     }
 
-    public List<MoneyUpdateInterface> getMoneyAccept() {
-        return moneyUpdateRepository.getMonneyAccept();
+    public Page<MoneyUpdateInterface> getMoneyAccept(int pageNumber, int maxNumber, String keyWord ) {
+        Pageable pageable = PageRequest.of(pageNumber, maxNumber);
+        keyWord = "%" + keyWord.trim() ;
+        return moneyUpdateRepository.getMonneyAccept(pageable,keyWord);
     }
 
 
@@ -64,14 +66,21 @@ public class MoneyUpdateService {
 
 
 
-    public List<MoneyUpdateInterface> getMoneyWating() {
-        return moneyUpdateRepository.getMonneyWaiting();
+    public Page<MoneyUpdateInterface> getMoneyWaiting(int pageNumber, int maxNumber, String keyWord) {
+        Pageable pageable = PageRequest.of(pageNumber, maxNumber);
+        keyWord = "%" + keyWord.trim() ;
+        return moneyUpdateRepository.getMoneyWating(pageable,keyWord);
     }
 
-    public List<MoneyUpdateInterface> getMoneyCancel() {
-        return moneyUpdateRepository.getMonneyCancel();
-    }
+
+
     public void delete(Long id){moneyUpdateRepository.deleteById(id);}
+
+    public Page<MoneyUpdateInterface> getMoneyCancel(int pageNumber, int maxNumber, String keyWord) {
+        Pageable pageable = PageRequest.of(pageNumber, maxNumber);
+        keyWord = "%" + keyWord.trim() ;
+        return moneyUpdateRepository.getMoneyCancel(pageable,keyWord);
+    }
 
 //    public String getNotification(Long id, String status, BigDecimal welfareMoney) {
 //        return moneyUpdateRepository.getNotification();

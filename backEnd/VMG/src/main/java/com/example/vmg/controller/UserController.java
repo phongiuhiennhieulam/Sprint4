@@ -56,33 +56,9 @@ public class UserController {
         return userService.findAll();
     }
 
-
-//    @PutMapping("/user-update/{id}")
-//    public ResponseEntity<User> UpdatePassWord(@PathVariable("id") Long id, @RequestBody UserForm userForm) {
-//        User user = userRepository.findById(id).get();
-//
-//        System.out.println("aaaaaaaaaaaa: "+user.getPassWord());
-//        System.out.println("bbbbbbbbbbb: "+ passwordEncoder.matches(userForm.getPassWord(), user.getPassWord()));
-//
-//        if (isValidPW(userForm.getPassWord())) {
-//            System.out.println("userForm.getPassWord()userForm.getPassWord()userForm.getPassWord(): " + isValidPW(userForm.getPassWord()));
-//
-//            user.setPassWord(passwordEncoder.encode(userForm.getPassWord()));
-//            user.setId(id);
-//            this.userService.save(user);
-//            return new ResponseEntity<User>(HttpStatus.OK);
-//        } else {
-//            return new ResponseEntity<User>(HttpStatus.BAD_REQUEST);
-//        }
-//    }
-
-
-
     @PutMapping("/user-update/{id}")
     public ResponseEntity<String>UpdatePassWord(@PathVariable Long id, @RequestBody User user){
         User user1 = userRepository.findById(id).get();
-
-        System.out.println("iiiiiiiiiiiiiii: "+user1);
         if (isValidPW(user.getPassWord())) {
             user1.setPassWord(passwordEncoder.encode(user.getPassWord()));
             userService.update(id, user1);

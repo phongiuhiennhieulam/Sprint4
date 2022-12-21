@@ -77,6 +77,16 @@ public class RegisterStaffController {
             staff.setWelfareMoney(BigDecimal.valueOf(0.0));
             moneyUpdateService.delete(money);
             staffService.update(id, staff);
+            //Thông báo
+            Notification notification = new Notification();
+
+            notification.setIdStaff(staff.getId());
+            notification.setMessage("Bạn chưa được cấp tiền hỗ trợ phúc lợi"  );
+            Date date = new Date();
+            notification.setDate(date);
+            notification.setStatus(0);
+            notification.setCategory(0);
+            notificationRepository.save(notification);
             return ResponseEntity.ok(new MessageResponse("successfully!"));
         }catch (Exception e){
             e.printStackTrace();

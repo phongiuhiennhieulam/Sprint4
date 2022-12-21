@@ -18,19 +18,19 @@
               <el-button type="warning" @click="onFind()">Tìm kiếm</el-button>
             </el-form-item>
 
-            <el-form-item>
+            <el-form-item v-if="selected.length !== 0">
               <el-button round @click="handleSuccessAll()" class="acceptMoney"
                 ><strong>Chấp thuận</strong>
               </el-button>
             </el-form-item>
 
-            <el-form-item>
+            <el-form-item v-if="selected.length !== 0">
               <el-button round @click="handleCancelAll()" class="cancelMoney"
                 ><strong>Hủy bỏ</strong>
               </el-button>
             </el-form-item>
 
-            <el-form-item>
+            <el-form-item v-if="selected.length !== 0">
               <el-button round @click="handleReturnAll()" class="returnMoney"
                 ><strong>Hoàn tác</strong>
               </el-button>
@@ -71,16 +71,16 @@
                   </span>
                   <template #dropdown>
                     <el-dropdown-menu>
-                      <el-dropdown-item command="accept"
+                      <el-dropdown-item command="accept" :value="1"
                         ><strong>Chấp Thuận</strong></el-dropdown-item
                       >
-                      <el-dropdown-item command="cancel"
+                      <el-dropdown-item command="cancel" :value="2"
                         ><strong>Hủy Bỏ</strong></el-dropdown-item
                       >
-                      <el-dropdown-item command="waiting"
+                      <el-dropdown-item command="waiting" :value="3"
                         ><strong>Chờ Duyệt</strong></el-dropdown-item
                       >
-                      <el-dropdown-item command="all"
+                      <el-dropdown-item command="all" :value="0"
                         ><strong>Tất cả</strong></el-dropdown-item
                       >
                     </el-dropdown-menu>
@@ -117,19 +117,19 @@
                 {{ formatCurrency(item.moneyNew - item.moneyOld) }}
               </td>
               <td style="text-align: center">
-                <span v-show="(item.status == 0)">
+                <span v-show="item.status == 0">
                   <Strong style="color: orange">Chờ duyệt</Strong>
                 </span>
-                <span v-show="(item.status == 2)">
+                <span v-show="item.status == 2">
                   <Strong style="color: red">Hủy bỏ</Strong>
                 </span>
-                <span v-show="(item.status == 1)">
+                <span v-show="item.status == 1">
                   <Strong style="color: #5db830">Chấp thuận</Strong>
                 </span>
               </td>
 
               <td style="text-align: center">
-                <span v-if="(item.status === 1 || item.status === 2)">
+                <span v-if="item.status === 1 || item.status === 2">
                   <el-button
                     @click="handleReturn(item.id, index)"
                     type="warning"
@@ -138,7 +138,7 @@
                   ></el-button>
                 </span>
 
-                <span class="icon-submit" v-if="(item.status === 0)">
+                <span class="icon-submit" v-if="item.status === 0">
                   <el-button
                     @click="handleSuccess(item.id, index)"
                     type="success"
@@ -196,21 +196,45 @@ export default {
         this.selected = selected;
       },
     },
+    checkSelected: {
+      get: function () {
+        return this.listUpdateMoneys.content
+          ? this.selected.length == this.listUpdateMoneys.content.length
+          : false;
+      },
+      set: function (value) {
+        var selected = [];
+
+        if (value) {
+          this.listUpdateMoneys.content.forEach(function (listUpdateMoney) {
+            selected.push(listUpdateMoney.id);
+          });
+        }
+        this.selected = selected;
+      },
+    },
   },
   mounted() {},
   data() {
     return {
       checkAll: false,
       listUpdateMoneys: [],
+      listMoneyAccpet: [],
+      listMoneyCancel: [],
+      listMoneyWaiting: [],
       listNewStaffs: [],
       keyWord: null,
       pageSize: 9,
       count: 0,
+      page: 0,
       selected: [],
       pageSizes: [2, 4, 6],
       isIndeterminate: true,
       content: "",
       keyComponent: 0,
+      checkpage: false,
+      checkpage2: false,
+      status: null,
     };
   },
   methods: {
@@ -220,11 +244,12 @@ export default {
       );
     },
     handleCommand(command) {
+      this.status = command;
       if (command === "accept") {
         this.handlelistAccept();
       }
 
-      if (command === "cancel") {
+      if (command === "cancel") { 
         this.handlelistCancel();
       }
       if (command === "waiting") {
@@ -236,33 +261,85 @@ export default {
     },
     handlelistAccept() {
       new AcceptMoneyService().getmoneyAccept().then((response) => {
-        this.listUpdateMoneys.content = response.data;
+        this.listUpdateMoneys  = response.data;
+        this.hasRole = true;
+        this.count = response.data.totalPages;
+        this.itemCount = response.data.totalElements;
       });
     },
     handlelistCancel() {
       new AcceptMoneyService().getmoneyCancel().then((response) => {
-        this.listUpdateMoneys.content = response.data;
+        this.listUpdateMoneys = response.data;
+        this.hasRole = true;
+        this.count = response.data.totalPages;
+        this.itemCount = response.data.totalElements;
       });
     },
 
     handlelistWaiting() {
       new AcceptMoneyService().getmoneyWaiting().then((response) => {
-        this.listUpdateMoneys.content = response.data;
+        this.listUpdateMoneys = response.data;
+        this.hasRole = true;
+        this.count = response.data.totalPages;
+        this.itemCount = response.data.totalElements;
       });
     },
     handlelistAll() {
       new AcceptMoneyService().getAllMoney().then((response) => {
         this.listUpdateMoneys = response.data;
+        this.hasRole = true;
+        this.count = response.data.totalPages;
+        this.itemCount = response.data.totalElements;
       });
     },
-    getAllMoneyUp() {
+    getmoneyAccept() {
       const params = this.getRequestParams(
         this.page,
         this.pageSize,
         this.keyWord
       );
       // console.log(params);
-      new AcceptMoneyService().getAllMoney(params).then((response) => {
+      new AcceptMoneyService()
+        .getmoneyAccept(params)
+        .then((response) => {
+          this.listMoneyAccpet = response.data;
+          this.hasRole = true;
+          this.count = response.data.totalPages;
+          this.itemCount = response.data.totalElements;
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+    getmoneyCancel() {
+      const params = this.getRequestParams(
+        this.page,
+        this.pageSize,
+        this.keyWord
+      );
+      // console.log(params);
+      new AcceptMoneyService()
+        .getmoneyCancel(params)
+        .then((response) => {
+          this.listMoneyCancel = response.data;
+          this.hasRole = true;
+          this.count = response.data.totalPages;
+          this.itemCount = response.data.totalElements;
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+    getmoneyWaiting() {
+      const params = this.getRequestParams(
+        this.page,
+        this.pageSize,
+        this.keyWord
+      );
+      // console.log(params);
+      new AcceptMoneyService()
+        .getmoneyWaiting(params)
+        .then((response) => {
           this.listUpdateMoneys = response.data;
           this.hasRole = true;
           this.count = response.data.totalPages;
@@ -272,7 +349,27 @@ export default {
           console.log(error);
         });
     },
-    getRequestParams(page, pageSize, keyWord) {
+    getAllMoneyUp() {
+      const params = this.getRequestParams(
+        this.page,
+        this.pageSize,
+        this.keyWord
+      );
+      // console.log(params);
+      new AcceptMoneyService()
+        .getAllMoney(params)
+        .then((response) => {
+          this.listUpdateMoneys = response.data;
+          this.hasRole = true;
+          this.count = response.data.totalPages;
+          this.itemCount = response.data.totalElements;
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+
+    getRequestParams(page, pageSize = 9, keyWord) {
       let params = {};
       if (page) {
         params["page"] = page - 1;
@@ -288,7 +385,18 @@ export default {
 
     handlePageChange(value) {
       this.page = value;
-      this.getAllMoneyUp();
+      if (this.status === "accept") {
+        this.getmoneyAccept();
+      } else if (this.status === "cancel") {
+        this.getmoneyCancel;
+      } else if (this.status === "waiting") {
+        this.getmoneyWaiting();
+      } else if (this.status === "all") {
+        this.handlelistAll();
+      } else {
+        this.page = value;
+        this.getAllMoneyUp();
+      }
     },
 
     handleSuccess(id) {
@@ -414,7 +522,7 @@ export default {
           .CancelAll(this.selected)
           .then(() => {
             this.getAllMoneyUp();
-            this.$notify  ({
+            this.$notify({
               type: "warning",
               message: "Đã Hủy Bỏ",
               title: "success",

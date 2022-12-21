@@ -436,4 +436,9 @@ public class StaffController {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseMessage(message));
     }
 
+    @GetMapping("/getMoney/{id}")
+    public List<?> getMoney(@PathVariable("id") Long id){
+        return staffService.getByMoney(id);
+    }
+
 }

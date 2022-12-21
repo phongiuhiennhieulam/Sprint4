@@ -2,7 +2,6 @@ package com.example.vmg.respository;
 
 import com.example.vmg.model.MoneyUpdate;
 import com.example.vmg.model.MoneyUpdateInterface;
-import com.example.vmg.model.OderMoneyInterface;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -51,7 +50,7 @@ public interface MoneyUpdateRepository extends JpaRepository<MoneyUpdate, Long> 
             "                               mu.status as status\n" +
             "                        from Staff  s, MoneyUpdate mu, User u, Department d\n" +
             "                        where s.code = mu.maNV and mu.idStaff = u.id and d.id = s.department.id and mu.status = 1")
-    List<MoneyUpdateInterface> getMonneyAccept();
+    Page<MoneyUpdateInterface> getMonneyAccept(Pageable pageable, String keyWord);
 
     @Query("select mu.id as id,\n" +
             "                               s.name as name,\n" +
@@ -76,6 +75,32 @@ public interface MoneyUpdateRepository extends JpaRepository<MoneyUpdate, Long> 
             "                        from Staff  s, MoneyUpdate mu, User u, Department d\n" +
             "                        where s.code = mu.maNV and mu.idStaff = u.id and d.id = s.department.id and mu.status = 0")
     List<MoneyUpdateInterface> getMonneyWaiting();
+
+    @Query("select mu.id as id,\n" +
+            "                               s.name as name,\n" +
+            "                               s.welfareMoney as moneyOld,\n" +
+            "                               s.code as code,\n" +
+            "                               d.name as department,\n" +
+            "                              mu.moneyUpdate as moneyNew,\n" +
+            "                               u.name as nameAdmin,\n" +
+            "                               mu.status as status\n" +
+            "                        from Staff  s, MoneyUpdate mu, User u, Department d\n" +
+            "                        where s.code = mu.maNV and mu.idStaff = u.id and d.id = s.department.id and mu.status = 0")
+    Page<MoneyUpdateInterface> getMoneyWating(Pageable pageable, String keyWord);
+
+    @Query("select mu.id as id,\n" +
+            "                               s.name as name,\n" +
+            "                               s.welfareMoney as moneyOld,\n" +
+            "                               s.code as code,\n" +
+            "                               d.name as department,\n" +
+            "                              mu.moneyUpdate as moneyNew,\n" +
+            "                               u.name as nameAdmin,\n" +
+            "                               mu.status as status\n" +
+            "                        from Staff  s, MoneyUpdate mu, User u, Department d\n" +
+            "                        where s.code = mu.maNV and mu.idStaff = u.id and d.id = s.department.id and mu.status = 2")
+    Page<MoneyUpdateInterface> getMoneyCancel(Pageable pageable, String keyWord);
+
+
 
 //    String getNotification();
 

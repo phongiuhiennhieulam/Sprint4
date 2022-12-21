@@ -238,11 +238,11 @@
                 </el-dropdown-menu>
               </el-dropdown>
               &ensp;
-              <div v-if="!quanly && !user && !nhansu">
+              <!-- <div >
                 <Strong style="color: red">
-                  Tài khoản của bạn đã bị khóa!
+                  Bạn chưa được cấp tiền hỗ trợ
                 </Strong>
-              </div>
+              </div> -->
               <div class="header-right__item">
                 <!-- <i class="el-icon-s-custom"></i> -->
                 <el-dropdown>
@@ -263,6 +263,7 @@
                   </el-dropdown-menu>
                 </el-dropdown>
               </div>
+
             </div>
           </div>
           <div v-else>
@@ -483,6 +484,7 @@ export default {
       quanly: false,
       nhansu: false,
       lanhdao: false,
+      // statusSt: null,
       list: [],
       listbirthdays: [],
       staffErorr: [],

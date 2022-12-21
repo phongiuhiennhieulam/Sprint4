@@ -129,4 +129,9 @@ public interface StaffRepository extends JpaRepository<Staff,Long> {
             "           and u.user_name = s.email\n" +
             "            and ur.role_id = 2",nativeQuery = true)
     public List<Long> getIDLD();
+
+    @Modifying
+    @Transactional
+    @Query(value = "select s.id, s.welfare_money  from Staff s ", nativeQuery = true)
+    List<?> getByMoney(Long id);
 }

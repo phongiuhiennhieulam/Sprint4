@@ -38,7 +38,8 @@ public class AutoController {
                 Staff staff = staffService.findByCode(moneyUpdates.get(i).getMaNV()).get(0);
                 staff.setWelfareMoney(moneyUpdates.get(i).getMoneyUpdate());
                 staffService.saveOrUpDate(staff);
-                moneyUpdateRepository.deleteAll();
+
+                //moneyUpdateRepository.deleteAll();
             }
         }
 

@@ -1,5 +1,6 @@
 <template>
-    <div class="accept-money" >
+  <div>
+    <div class="accept-money" v-if="hasRole">
       <div class="money-title">
         <span><strong>DANH SÁCH XÉT DUYỆT TIỀN PHÚC LỢI</strong></span>
       </div>
@@ -25,10 +26,12 @@
         </div>
       </div>
     </div>
+    <Error401 v-if="!hasRole"></Error401>
+  </div>
 </template>
   
   <script>
-  /* eslint-disable */
+/* eslint-disable */
 import AcceptMoneyService from "@/service/acceptMoney";
 import MoneyUpdateList from "./MoneyUpdateList.vue";
 import WelfareUpdate from "./WelfareUpdate.vue";
@@ -37,27 +40,13 @@ import Error401 from "./401-error.vue";
 export default {
   name: "AcceptMoney",
   computed: {
-    selectAll: {
-      get: function () {
-        return this.listUpdateMoneys.content
-          ? this.selected.length == this.listUpdateMoneys.content.length
-          : false;
-      },
-      set: function (value) {
-        var selected = [];
-        if (value) {
-          this.listUpdateMoneys.content.forEach(function (listUpdateMoney) {
-            selected.push(listUpdateMoney.id);
-          });
-        }
-        this.selected = selected;
-      },
-    },
+    
   },
   components: {
     MoneyUpdateList,
     NewStaffsList,
     WelfareUpdate,
+    Error401,
   },
   mounted() {},
   data() {
@@ -65,6 +54,7 @@ export default {
       checkAll: false,
       listUpdateMoneys: [],
       listNewStaffs: [],
+      hasRole: true,
       keyWord: null,
       pageSize: 10,
       count: 0,
@@ -103,202 +93,12 @@ export default {
         this.check = 3;
       }
     },
-
-    handlelistAccept() {
-      new AcceptMoneyService().getmoneyAccept().then((response) => {
-        this.listUpdateMoneys.content = response.data;
-      });
-    },
-    handlelistCancel() {
-      new AcceptMoneyService().getmoneyCancel().then((response) => {
-        this.listUpdateMoneys.content = response.data;
-      });
-    },
-
-    handlelistWaiting() {
-      new AcceptMoneyService().getmoneyWaiting().then((response) => {
-        this.listUpdateMoneys.content = response.data;
-      });
-    },
-
-    getAllMoneyUp() {
-      const params = this.getRequestParams(
-        this.page,
-        this.pageSize,
-        this.keyWord
-      );
-      // console.log(params);
-      new AcceptMoneyService().getAllMoney(params).then((response) => {
-        this.listUpdateMoneys = response.data;
-        this.count = response.data.totalPages;
-        this.itemCount = response.data.totalElements;
-      }); 
-    },
-
-    getRequestParams(page, pageSize, keyWord) {
-      let params = {};
-      if (page) {
-        params["page"] = page - 1;
-      }
-      if (pageSize) {
-        params["size"] = pageSize;
-      }
-      if (keyWord) {
-        params["keyWord"] = keyWord;
-      }
-      return params;
-    },
-
-    handlePageChange(value) {
-      this.page = value;
-      this.getAllMoneyUp();
-    },
-
-    handleSuccess(id) {
-      this.$confirm("Bạn muốn chấp nhận cho nhân viên này?", "Thông báo", {
-        confirmButtonText: "OK",
-        cancelButtonText: "Cancel",
-        type: "success",
-      })
-        .then(() => {
-          new AcceptMoneyService().Acceptmoney(id);
-          this.loading();
-          this.getAllMoneyUp();
-        })
-        .catch(() => {
-          this.$notify({
-            type: "success",
-            message: "Đã chấp nhận",
-            title: "success",
-          });
-        });
-    },
-
-    handleDelete(id) {
-      this.$confirm("Bạn không chấp thuận cho nhân viên này?", "Thông báo", {
-        confirmButtonText: "OK",
-        cancelButtonText: "Cancel",
-        type: "error",
-      })
-        .then(() => {
-          new AcceptMoneyService().Cancelmoney(id);
-          this.loading();
-          this.getAllMoneyUp();
-        })
-        .catch(() => {
-          this.$notify({
-            type: "warning",
-            message: "Đã hủy bỏ",
-          });
-        });
-    },
-
-    handleReturn(id) {
-      this.$confirm(
-        "Bạn muốn hoàn tác đánh giá cho nhân viên này?",
-        "Thông báo",
-        {
-          confirmButtonText: "OK",
-          cancelButtonText: "Cancel",
-          type: "",
-        }
-      )
-        .then(() => {
-          new AcceptMoneyService().Returnmoney(id);
-          this.loading();
-          this.getAllMoneyUp();
-        })
-        .catch(() => {
-          this.$notify({
-            type: "info",
-            message: "Đã hoàn tác",
-          });
-        });
-    },
-
-    handleSuccessAll() {
-      this.$confirm("Bạn muốn chấp nhận những nhân viên này?", "Thông báo", {
-        confirmButtonText: "OK",
-        cancelButtonText: "Cancel",
-        type: "success",
-      })
-        .then(() => {
-          new AcceptMoneyService().AcceptAll(this.selected);
-          this.loading();
-          this.getAllMoneyUp();
-          this.$notify({
-            type: "success",
-            message: "Đã chấp thuận",
-          });
-        })
-        .catch(() => {
-          this.$notify({
-            type: "warning",
-            message: "Đã hủy bỏ",
-          });
-        });
-    },
-
-    handleReturnAll() {
-      this.$confirm("Hoàn tác xét duyệt những nhân viên này?", "Thông báo", {
-        confirmButtonText: "OK",
-        cancelButtonText: "Cancel",
-        type: "success",
-      })
-        .then(() => {
-          new AcceptMoneyService().ReturnAll(this.selected);
-          this.loading();
-          this.$notify({
-            type: "success",
-            message: "Đã hoàn tác",
-          });
-          //this.$router.go();
-        })
-        .catch(() => {
-          this.$notify({
-            type: "warning",
-            message: "Đã hủy bỏ",
-          });
-        });
-    },
-
-    handleCancelAll() {
-      this.$confirm("Hủy xét duyệt những nhân viên này?", "Thông báo", {
-        confirmButtonText: "OK",
-        cancelButtonText: "Cancel",
-        type: "success",
-      })
-        .then(() => {
-          new AcceptMoneyService().CancelAll(this.selected);
-          this.loading();
-          this.$notify({
-            type: "success",
-            message: "Đã chấp thuận",
-          });
-          //this.$router.go();
-        })
-        .catch(() => {
-          this.$notify({
-            type: "warning",
-            message: "Đã hủy bỏ",
-          });
-        });
-    },
-    loading() {
-      const loading = this.$loading({
-        lock: true,
-        text: "Loading",
-        spinner: "el-icon-loading",
-        background: "rgba(0, 0, 0, 0.7)",
-      });
-      setTimeout(() => {
-        loading.close();
-        this.$router.go();
-      }, 100);
-    },
   },
   created() {
     // this.getAllMoneyUp();
+    this.value = this.options[0].value;
+    this.selectApprove(this.value)
+    console.log(11,this.value)
   },
 };
 </script>
@@ -348,7 +148,7 @@ export default {
 .accept-money {
   background: linear-gradient(90deg, #fad1a5 0%, rgba(255, 255, 255, 0) 100%),
     #f3cce1;
-  height: 100%;
+  height: 100vh;
 }
 .moneyup-drop {
   width: 260px;

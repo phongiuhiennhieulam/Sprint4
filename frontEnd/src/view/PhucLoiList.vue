@@ -304,7 +304,7 @@ export default {
   data() {
     return {
       value: 0,
-      hasRole: false,
+      hasRole: true,
       isShowDialog: false,
       isShowAdd: false,
       idDelete: "",
