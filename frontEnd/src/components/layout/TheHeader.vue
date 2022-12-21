@@ -79,7 +79,7 @@
                 </el-dropdown>
               </div>
               <div class="header-right__item" v-if="quanly || nhansu">
-                <el-badge :value="list.length" :max="99" class="item" style="margin-right: 5px; margin-left: 5px">
+                <el-badge :value="list.length > 0 ?  list.length : none" :max="9" class="item" style="margin-right: 5px; margin-left: 5px">
                   <router-link to="/xetduyet" style="
                       text-decoration: none;
                       color: #606266;
@@ -100,7 +100,7 @@
                 </el-badge>
               </div>
               <el-dropdown trigger="click" v-if="quanly">
-                <el-badge :value="listbirthdays.length" :max="10" class="item" style="
+                <el-badge :value="listbirthdays.length > 0 ?  listbirthdays.length : none" :max="10" class="item" style="
                         text-decoration: none;
                         color: #606266;
                         cursor: pointer;
@@ -176,13 +176,16 @@
                 </div>
               </div>
               <el-dropdown trigger="click" v-if="quanly || nhanvien ">
-                <el-badge :value="listNew.length" :max="9" class="item" style="
+                <el-badge :value="listNew.length > 0 ?  listNew.length : none" :max="9" class="item" style="
                         text-decoration: none;
                         color: #606266;
                         cursor: pointer;
+                        margin-left: 8px;
                       ">
                   <!-- <i class="fa-solid fa-gift"></i> -->
-                  <span style="font-size: 18px" class="nowrap"  @click="getSeen()"> Thông báo</span>
+                  <span style="font-size: 18px" class="nowrap"  @click="getSeen()">
+                    <i class="el-icon-message-solid"></i>
+                  </span>
                 </el-badge>
                 <el-dropdown-menu slot="dropdown" style="width: 300px;" class="item-list" >
                   <el-dropdown-item v-for="x in listNew" :key="x.id"
@@ -217,7 +220,7 @@
                         <div class="item-icon">
                           <i class="fa-sharp fa-solid fa-bell"></i>
                         </div>
-                        <div>
+                        <div @click="getRouter(x.link)">
                           {{x.message}}
                         </div>
                       </div>
@@ -512,6 +515,20 @@ export default {
     },
   },
   methods: {
+    getRouter(link){
+      if(link===0){
+        this.$router.push("/accept_money");
+      }
+      if(link===1){
+        this.$router.push("/xetduyet");
+      }
+      if(link===2){
+        this.$router.push("/register_welfare");
+      }
+      if(link===3){
+        this.$router.push("/home_welfare");
+      }
+    },
     formatDay(date){
       if(date){
         var d1 = new Date();

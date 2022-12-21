@@ -53,7 +53,6 @@ public class NotificationController {
     public ResponseEntity<?> Senn(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user = userService.findByUsername(authentication.getName()).get();
-
         Staff staff = staffService.getByEmail(user.getUserName());
         List<Notification> notifications = notificationService.getNewNTF(staff.getId());
         for (Notification n : notifications){
@@ -63,4 +62,5 @@ public class NotificationController {
         }
         return ResponseEntity.ok(new MessageResponse("seen"));
     }
+
 }

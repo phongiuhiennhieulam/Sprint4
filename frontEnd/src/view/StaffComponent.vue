@@ -35,17 +35,8 @@
                   <el-form :inline="true" class="demo-form-inline" style="margin-left: 300px;">
                     <span v-if="isCreate">
                       <el-form-item>
-                        <el-input
-                        id="moneyUpdate" name="moneyUpdate"
-                        placeholder="Số tiền hỗ trợ phúc lợi"
-                        style="width: 200px"  v-on:blur="keyupUpdateMoney" 
-                        @keydown="keyupUpdateMoney" 
-                        v-model="moneyUpdate" required
-                      >
-                      ></el-input>
-
                       <el-button style="margin-left: 6px;" type="danger"  v-loading.fullscreen.lock="fullscreenLoading"
-                      @click.prevent="handlUpdateMoney2()">
+                      @click.prevent="hanShow2()">
                         <strong>Thêm <i class="el-icon-right"></i></strong>
                       </el-button>
                     </el-form-item>
@@ -64,17 +55,9 @@
                     </span>
                     <span v-if="isUpdate">
                       <el-form-item name="form-updateMoney">
-                      <el-input
-                        id="moneyUpdate" name="moneyUpdate"
-                        placeholder="Số tiền hỗ trợ phúc lợi"
-                        style="width: 200px"  v-on:blur="keyupUpdateMoney" 
-                        @keydown="keyupUpdateMoney" 
-                        v-model="moneyUpdate" required
-                      >
-                      ></el-input>
 
                       <el-button style="margin-left: 6px;" type="danger"  v-loading.fullscreen.lock="fullscreenLoading"
-                      @click.prevent="handlUpdateMoney()">
+                      @click.prevent="hanShow1()">
                         <i class="el-icon-refresh"></i> <strong>Cập nhật tiền hỗ trợ</strong>
                       </el-button>
                     </el-form-item>
@@ -231,6 +214,54 @@
       </div>
     </div>
     </el-dialog>
+    <!-- dialog update money -->
+    <el-dialog :visible.sync="isShow1" width="500px" label-width="100px" top="5vh" left="150px" title="temp">
+          <span slot="title" class="title-dialog"> <Strong>Số tiền hỗ trợ cập nhật</Strong></span>
+          <div class="row">
+            <form name="form-updateMoney">
+              <div class="row">
+                <div>
+                  <div class="mb-3">
+
+                    <label class="form-label"><Strong>Số tiền hỗ trợ phúc lợi:</Strong></label>
+                    <input v-on:blur="keyupUpdateMoney" @keydown="keyupUpdateMoney" v-model="moneyUpdate" required
+                      id="moneyUpdate" name="moneyUpdate" type="text" class="form-control"
+                      placeholder="Tiền hỗ trợ phúc lợi"/>
+                  </div>
+                </div>
+              </div>
+              <div style="text-align: center">
+                <button @click.prevent="handlUpdateMoney()" class="btn btn-danger" style="width: 100px;">
+                  <strong>Gửi</strong>
+                </button>
+              </div>
+            </form>
+          </div>
+        </el-dialog>
+            <!-- dialog regter money -->
+    <el-dialog :visible.sync="isShow2" width="500px" label-width="100px" top="5vh" left="150px" title="temp">
+          <span slot="title" class="title-dialog"> <Strong>Số tiền hỗ trợ</Strong></span>
+          <div class="row">
+            <form name="form-updateMoney">
+              <div class="row">
+                <div>
+                  <div class="mb-3">
+
+                    <label class="form-label"><Strong>Số tiền hỗ trợ phúc lợi:</Strong></label>
+                    <input v-on:blur="keyupUpdateMoney" @keydown="keyupUpdateMoney" v-model="moneyUpdate" required
+                      id="moneyUpdate" name="moneyUpdate" type="text" class="form-control"
+                      placeholder="Tiền hỗ trợ phúc lợi"/>
+                  </div>
+                </div>
+              </div>
+              <div style="text-align: center">
+                <button @click.prevent="handlUpdateMoney2" class="btn btn-danger" style="width: 100px;">
+                  <strong>Gửi</strong>
+                </button>
+              </div>
+            </form>
+          </div>
+        </el-dialog>
   </div>
 </template>
     
@@ -256,11 +287,20 @@ export default {
       user: {},
       ok: 'hehe',
         list: [],
-        selected: []
+        selected: [],
+        isShow1: false,
+        isShow2: false,
+
   }
 },
  
   methods: {
+    hanShow1(){
+      this.isShow1 = true
+    },
+    hanShow2(){
+      this.isShow2 = true
+    },
     addCommas(nStr) {
         var x, x1, x2;
 

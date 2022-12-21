@@ -11,6 +11,7 @@ import com.example.vmg.model.User;
 import com.example.vmg.respository.MoneyUpdateRepository;
 import com.example.vmg.respository.NotificationRepository;
 import com.example.vmg.respository.StaffRepository;
+import com.example.vmg.respository.WelfareRepository;
 import com.example.vmg.service.RoleServiceImpl;
 import com.example.vmg.service.StaffService;
 import com.example.vmg.service.UserServiceImpl;
@@ -50,7 +51,7 @@ public class StaffController {
 
     @Autowired private MoneyUpdateRepository moneyUpdateRepository;
 
-    @Autowired private StaffRepository staffRepository;
+    @Autowired private WelfareRepository welfareRepository;
     @Autowired private NotificationRepository notificationRepository;
 
 
@@ -299,11 +300,24 @@ public class StaffController {
     public ResponseEntity <List<StaffInterface>> getByRegister(){
         return new ResponseEntity<List<StaffInterface>>(welfareStaffEntityService.getStaffRegister(), HttpStatus.OK);
     }
+
     @PutMapping("/register/{id}")
     public ResponseEntity <?> SuccessRegisters(@PathVariable Long id){
         WelfareStaffEntity welfareStaff = welfareStaffEntityService.findById(id).get();
         welfareStaff.setStatus(0);
         welfareStaffEntityService.update(id, welfareStaff);
+
+        Notification notification = new Notification();
+        Welfare welfare = welfareRepository.getById(welfareStaff.getIdWelfare());
+        Date date = new Date();
+        notification.setMessage("Phúc lợi " + welfare.getName().toUpperCase() + " " + " của bạn đã được xét duyệt");
+        notification.setIdStaff(welfareStaff.getIdStaff());
+        notification.setDate(date);
+        notification.setLink(3);
+        notification.setStatus(0);
+        notificationRepository.save(notification);
+
+
         return ResponseEntity.ok(new MessageResponse("successfully!"));
     }
     @PutMapping("/register-delete/{id}")
@@ -312,6 +326,16 @@ public class StaffController {
             WelfareStaffEntity welfareStaff = welfareStaffEntityService.getById(id);
             welfareStaff.setStatus(1);
             welfareStaffEntityService.update(id, welfareStaff);
+
+            Notification notification = new Notification();
+            Welfare welfare = welfareRepository.getById(welfareStaff.getIdWelfare());
+            Date date = new Date();
+            notification.setMessage("Phúc lợi " + welfare.getName().toUpperCase() + " " + " của bạn đã bị từ chối");
+            notification.setIdStaff(welfareStaff.getIdStaff());
+            notification.setDate(date);
+            notification.setLink(2);
+            notification.setStatus(0);
+            notificationRepository.save(notification);
             return ResponseEntity.ok(new MessageResponse("successfully!"));
         }catch (Exception e){
             e.printStackTrace();
