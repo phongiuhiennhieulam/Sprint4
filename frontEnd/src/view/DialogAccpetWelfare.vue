@@ -29,6 +29,9 @@
                 </tbody>
               </table>
             </form>
+            <b-form-file @change="addFile($event)"
+                   v-model="file" class="mb-2"></b-form-file>
+                   <input type="file" @change="readFiles($event)">
           </div>
         </div>
       </div>
@@ -125,6 +128,7 @@ import StaffService from "../service/hrService";
 import WelfareApi from "@/service/phucLoiService";
 let welfareApi = new WelfareApi();
 import _ from 'lodash'
+const ExcelJS = require('exceljs')
 export default {
   name: "PhucLoiList",
   data() {
@@ -140,13 +144,33 @@ export default {
       staff: {},
       listRegister: [],
       listHistory: [],
-      isHistory: false
+      isHistory: false,
+      items: [],
 
     };
   },
   methods: {
+    readFiles(e) {
+      const reader = new FileReader()
+      reader.onloadend = async() => {
+        const workbook = new ExcelJS.Workbook()
+        await workbook.xlsx.load(reader.result)
+        const worksheet = workbook.getWorksheet('ImportMark')
+        try {
+          worksheet.eachRow((row, index) => {
+            const mark = {
+              stt: row.getCell('A').value,
+              ok: row.getCell('B').value
+            }
+            this.item.push(mark)
+          })
+        } catch (error) {
+          console.log(error)
+        }
+      }
+      reader.readAsArrayBuffer(e.target.files[0])
+    },
     showAddForm() {
-
       this.edit = {};
       this.isShowAdd = true;
     },
