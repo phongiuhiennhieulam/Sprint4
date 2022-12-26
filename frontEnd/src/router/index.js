@@ -18,9 +18,76 @@ const routes = [
     meta: { requiresAuth: true }
   },
   {
+    path:'/auth-redirect', redirect: '/welcome_page'
+  },
+  {
+    path: "/erorr-404",
+    name: "Erorrpage",
+    component: () => import("@/view/404-error.vue"),
+  },
+  {
+    path:'*', redirect: '/erorr-404'
+  },
+  {
+    path: "/accept_money",
+    name: "AcceptMoney",
+    component: () => import("@/view/AcceptMoney.vue"),
+    meta: { requiresAuth: true }
+  },
+
+  
+  {
+    path: "/moneyupdate",
+    name: "MoneyupdateList",
+    component: () => import("@/view/MoneyUpdateList.vue"),
+  },
+  {
+    path: "/newstaffs",
+    name: "NewStaffsList",
+    component: () => import("@/view/NewStaffsList.vue"),
+  },
+  
+
+  {
+    path: "/welfare-update",
+    name: "WelfareUpdate",
+    component: () => import("@/view/WelfareUpdate.vue"),
+    meta: { requiresAuth: true }
+  },
+  {
+    path: "/thongke",
+    name: "thongke",
+    component: () => import("@/view/StatisticalAll.vue"),
+    meta: { requiresAuth: true }
+  },
+  {
+    path: "/thongke2",
+    name: "thongke2",
+    component: () => import("../view/StatisticalCost.vue"),
+    meta: { requiresAuth: true }
+  },
+  {
     path: "/hr",
-    name: "HrList",
-    component: () => import("@/view/HrList.vue"),
+    name: "hr",
+    component: () => import("../view/HrList.vue"),
+    meta: { requiresAuth: true }
+  },
+  {
+    path: "/user",
+    name: "UserList",
+    component: () => import("../view/User.vue"),
+    meta: { requiresAuth: true }
+  },
+  {
+    path: "/department",
+    name: "DepartmentList",
+    component: () => import("../view/Department.vue"),
+    meta: { requiresAuth: true }
+  },
+  {
+    path: "/statistical",
+    name: "Thống kê",
+    component: () => import("@/view/StatisticPage.vue"),
     meta: { requiresAuth: true }
   },
   {
@@ -50,6 +117,12 @@ const routes = [
     path: "/welcome_page",
     name: "WelcomePage",
     component: () => import("../view/WelcomePage.vue"),
+    meta: { requiresAuth: true }
+  },
+  {
+    path: "/staff",
+    name: "Staff",
+    component: () => import("../view/StaffComponent.vue"),
     meta: { requiresAuth: true }
   },
   {

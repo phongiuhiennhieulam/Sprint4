@@ -1,9 +1,9 @@
 <template>
-  <div class="pl-body">
-    <div class="pl-content">
-      <div class="pl-title">ĐĂNG KÍ PHÚC LỢI CÁ NHÂN</div>
-      <div class="pl-ele">
-        <div class="pl-table">
+  <div class="registerWelfare-body">
+    <div class="registerWelfare-content">
+      <div class="registerWelfare-title"><strong>ĐĂNG KÍ PHÚC LỢI CÁ NHÂN</strong></div>
+      <div class="registerWelfare-ele">
+        <div class="registerWelfare-table">
           <div class="money">
             <div>
               Tiền đã đăng kí:&nbsp;<span style="color: green">{{
@@ -21,7 +21,7 @@
               }}&nbsp;<span style="color: red" v-show="sum > total">(Lỗi)</span></span>
             </div>
           </div>
-          <div class="pl-table__content">
+          <div class="registerWelfare-table__content">
             <form id="form" label-width="120px" class="scroll-table">
               <table>
                 <thead>
@@ -48,7 +48,9 @@
                     <td>{{ formatCurrency(item.price) }}</td>
                     <td>
                       <el-input-number v-model="listQuantity[item.id]" :disabled="isDisableNumberic(item)"
-                        :max="preventAdd(item)" :min="1" v-show="!item.isQuantity"></el-input-number>
+                        :max="maxQuantityCanAdd(item)" :min="1" v-show="!item.isQuantity" @change="handleChange"
+                        @blur="handleBlur(item.id)">
+                      </el-input-number>
                       <span v-show="item.isQuantity">Chỉ chọn 1</span>
                     </td>
                     <td style="text-align: right">
@@ -60,39 +62,110 @@
             </form>
           </div>
         </div>
-
-        <div class="pl-button">
+        <div class="registerWelfare-button">
           <el-popover placement="right" :width="220" trigger="hover" content="Đăng kí các phúc lợi đã tích ở trên">
             <template #reference>
-              <el-button class="pl-button__detail btn btn-danger" @click="centerDialogVisible = true">Đăng Kí Phúc Lợi
+              <el-button class="registerWelfare-button__detail btn btn-danger" @click="showDialogRegister()">Đăng Kí
+                Phúc Lợi
+              </el-button>
+              <el-button class="registerWelfare-button__detail btn btn-danger" @click="toggleRegisterStatus()">Trạng
+                thái
+                đăng kí
               </el-button>
             </template>
           </el-popover>
         </div>
-        <el-dialog title="Xác nhận" :visible.sync="centerDialogVisible" width="30%" center>
-          <div style="text-align: center; margin-top: 10px">
-            Bạn có chắc chắn muốn chọn các phúc lợi trên?
-          </div>
-          <div style="text-align: center; margin-top: 10px; color: red">
-            Phúc lợi chỉ được đăng kí 1 lần 1 năm
-          </div>
-          <span slot="footer" class="dialog-footer">
-            <el-button @click="centerDialogVisible = false">Hủy</el-button>
-            <el-button type="primary" @click.prevent="registerWelfares" style="background-color: red; border: none">Xác nhận
-            </el-button>
-          </span>
-        </el-dialog>
       </div>
     </div>
+    <el-dialog title="Xác nhận" :visible.sync="centerDialogVisible" width="30%" center>
+      <div style="text-align: center; margin-top: 10px">
+        Bạn có chắc chắn muốn chọn các phúc lợi trên?
+      </div>
+      <div style="text-align: center; margin-top: 10px; color: red">
+        Phúc lợi chỉ được đăng kí 1 lần 1 năm
+      </div>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="centerDialogVisible = false">Hủy</el-button>
+        <el-button type="primary" @click.prevent="registerWelfares" style="background-color: red; border: none">Xác
+          nhận
+        </el-button>
+      </span>
+    </el-dialog>
+    <el-dialog title="Xác nhận" :visible.sync="dialogVisibleCheckNull" width="25%" center>
+      <div style="text-align: center; margin-top: 5px">
+        Bạn chưa chọn bất kì phúc lợi nào!!!
+      </div>
+      <div style="text-align: center; margin-top: 10px; color: red">
+        Hãy đăng kí phúc lợi trước
+      </div>
+      <span slot="footer" class="dialog-footer">
+        <!-- <el-button @click="centerDialogVisible = false">Hủy</el-button> -->
+        <el-button type="primary" @click.prevent="dialogVisibleCheckNull = false"
+          style="background-color: red; border: none">OK
+        </el-button>
+      </span>
+    </el-dialog>
+    <el-dialog :visible.sync="isShowRegisterStatus" width="900px" label-width="100px" top="5vh" left="150px"
+      title="Trạng thái các phúc lợi đăng kí" boder="">
+      <div label-width="120px" class="registerStatus-table__content">
+        <table>
+          <thead>
+            <tr>
+              <!-- <th colspan="1">STT</th> -->
+              <th>Tên phúc lợi</th>
+              <th>Đơn giá</th>
+              <th>Số lượng</th>
+              <th>Thành tiền</th>
+              <th>Trạng Thái</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- <tr>
+              <td style="font-weight: bold">I</td>
+              <td colspan="3" style="font-weight: bold; text-align: center;">Phúc Lợi Chung</td>
+              <td><strong>2</strong></td>
+            </tr> -->
+            <!-- <tr>
+              <td style="font-weight: bold">1.</td>
+              <td>test</td>
+              <td>1212</td>
+              <td>1</td>
+              <td>
+                12
+              </td>
+            </tr> -->
+            <!-- <tr>
+             <td style="font-weight: bold">I</td> 
+               <td></td>
+              <td colspan="3" style="font-weight: bold;  text-align: center;">Phúc Lợi Cá Nhân Hóa</td>
+              <td><strong>2</strong></td> -->
+            <!-- </tr> -->
+            <tr v-for="item in statusRegister" :key="item.id">
+              <!-- <td style="font-weight: bold">1.</td> -->
+              <td>{{ item.name }}</td>
+              <td>{{ item.price }}</td>
+              <td>{{ item.quantity }}</td>
+              <td>
+                {{ formatCurrency(item.price * item.quantity) }}
+              </td>
+              <td v-if="item.status == 2">Chờ duyệt</td>
+              <td v-if="item.status == 1">Hủy bỏ</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </el-dialog>
   </div>
 </template>
   
 <script>
 /* eslint-disable */
 import WelfareApi from "@/service/phucLoiService";
+
 let welfareApi = new WelfareApi();
 export default {
   name: "PhucLoiList",
+
   data() {
     return {
       selected: [],
@@ -101,10 +174,15 @@ export default {
       sum: 0,
       userId: 0,
       centerDialogVisible: false,
+      dialogVisibleCheckNull: false,
       total: 0,
       listQuantity: [],
-      nameStaff:"",
-      listOnlyOne:[]
+      nameStaff: "",
+      listOnlyOne: [],
+      newVal: '',
+      oldVal: '',
+      isShowRegisterStatus: false,
+      statusRegister: []
     };
   },
   computed: {
@@ -122,9 +200,32 @@ export default {
   },
 
   methods: {
-    preventAdd(item) {
+    toggleRegisterStatus() {
+      this.isShowRegisterStatus = !this.isShowRegisterStatus;
+    },
+    handleChange(newVal, oldVal) {
+      this.newVal = newVal
+      this.oldVal = oldVal
+    },
+    handleBlur(itemId) {
+      const self = this;
+      if (self.newVal === undefined || self.total - self.totalMoney < 0) {
+        self.listQuantity[itemId] = self.oldVal;
+        self.$forceUpdate();
+      }
+    },
+    maxQuantityCanAdd(item) {
       if (this.total - this.totalMoney < 0) {
-        return this.listQuantity[item.id] -1;
+        return this.listQuantity[item.id] - 1;
+      } else {
+        return this.listQuantity[item.id] + Math.floor((this.total - this.totalMoney) / item.price);
+      }
+    },
+    showDialogRegister() {
+      if (this.selected.length === 0) {
+        this.dialogVisibleCheckNull = true;
+      } else {
+        this.centerDialogVisible = true;
       }
     },
     isDisableNumberic(item) {
@@ -135,7 +236,7 @@ export default {
     disableHandler(item, quantity) {
       return (
         (this.totalMoney + item.price * quantity > this.total &&
-        !this.selected.includes(item)) || this.listOnlyOne.includes(item.id)
+          !this.selected.includes(item)) || this.listOnlyOne.includes(item.id)
       );
     },
     formatCurrency(value) {
@@ -157,20 +258,20 @@ export default {
         };
         //id
         welfare_object.id = this.selected[i].id;
-        console.log(welfare_object.id);
+
 
         //so luong
         welfare_object.quantity = this.listQuantity[this.selected[i].id];
-        console.log(welfare_object.quantity);
+
 
         //in ra object
         object.list.push(welfare_object);
-        console.log(welfare_object);
+
       }
-      console.log(object);
+
 
       const res = await welfareApi.registerWelfare(object);
-      console.log(res.status)
+
       if (res.status == 201) {
         this.sum = this.totalMoney;
         this.selected = [];
@@ -183,10 +284,10 @@ export default {
         const myTimeout1 = setTimeout(myGreeting1, 100);
 
         function myGreeting1() {
-            window.location.reload();
+          window.location.reload();
         }
       }
-      if(res.status == 200){
+      if (res.status == 200) {
         this.sum = this.totalMoney;
         this.selected = [];
         this.totalMoney = 0;
@@ -197,8 +298,8 @@ export default {
         const myTimeout = setTimeout(myGreeting, 100);
 
         function myGreeting() {
-            window.location.reload();
-        }   
+          window.location.reload();
+        }
       }
       this.centerDialogVisible = false;
     },
@@ -209,9 +310,9 @@ export default {
     // }
     if (localStorage.getItem("user")) {
       this.userName = JSON.parse(localStorage.getItem("user")).userName;
-      
+
     }
-    welfareApi.getAllWelfare().then((res) => {
+    welfareApi.getAllWelfareByStatus().then((res) => {
       this.list = res.data;
       // console.log(this.list[0].id)
       // console.log(this.list[this.list.length - 1].id)
@@ -234,17 +335,19 @@ export default {
       });
       welfareApi.getOnlyOneWelfareOfUser(this.userId).then((x) => {
         this.listOnlyOne = x.data;
-        console.log(this.listOnlyOne);
+
+      });
+      welfareApi.getStatusAcceptWelfareOfUser(this.userId).then((x) => {
+        this.statusRegister = x.data;
       });
     });
     welfareApi.getTotalMoney(this.userName).then((x) => {
       this.total = x.data;
-      // console.log(this.total);
-      console.log(this.total);
+
       welfareApi.getTotalMoneyGeneralWelfare().then((res) => {
-        console.log(this.total);
+
         this.total = this.total - res.data;
-        console.log(this.total);
+
       });
     });
   }
@@ -252,195 +355,52 @@ export default {
 };
 </script>
   
-<style>
-#colorful {
-  border-bottom: none;
-  height: 8% !important;
-  width: 15% !important;
-}
+<style scoped>
+@import "@/assets/css/welfare/register.css";
 
-.btn {
-  border-radius: 0%;
-}
-
-.pl-title {
-  text-align: center;
-  font-size: 34px;
-  font-weight: 600;
-  font-family: "Poppins", sans-serif;
-  background: rgba(255, 255, 255, 0.13);
-  padding: 6px 0px;
-}
-
-.pl-body {
-  background: linear-gradient(90deg, #e4c9ac 0%, rgba(255, 255, 255, 0) 100%),
-    #e3c1d3;
-  width: 100%;
-  height: 100%;
-}
-
-.money {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 20px;
-  margin-bottom: 15px;
-}
-
-.money div {
-  font-family: "Poppins", sans-serif;
-  font-style: normal;
-  font-weight: 600;
-  font-size: 20px;
-  line-height: 139%;
-}
-
-.pl-table {
-  text-align: center;
-  margin-left: 200px;
-  margin-right: 200px;
-  z-index: 2;
-}
-
-.pl-table__content {
-  height: 600px;
-  overflow-y: auto;
-}
-
-.pl-table__content table {
+.registerStatus-table__content table {
   width: 100%;
   border-collapse: collapse;
+  max-height: 600px;
 }
 
-.pl-table__content table tr {
-  background: #f2e7ddf8;
+.registerStatus-table__content table tr {
+  background: rgba(217, 217, 217, 0.13);
 }
 
-.pl-table__content table tr th {
-  border-right: 1px solid #e4c9ac;
+.registerStatus-table__content table tr th {
+  border-right: 1px solid #c7c7c7;
   padding: 14px;
 }
 
-.pl-table__content table tr td {
+.registerStatus-table__content table tr td {
   padding: 20px;
   line-height: 30px;
   height: 30px;
 }
 
-.pl-table__content table thead tr {
-  background-color: #fdf9f8;
+.registerStatus-table__content table thead tr {
+  background-color: #d9d9d9;
   position: sticky;
   top: 0;
+  z-index: 10;
 }
 
-.pl-table__content table thead th {
+.registerStatus-table__content table thead th {
   font-size: 14px;
   font-weight: 600;
 }
 
-.pl-table__content table tbody tr {
-  border-bottom: 1px solid #e4c9ac;
+.registerStatus-table__content table tr td {
+  border-right: 1px solid #c7c7c7;
 }
 
-.pl-table__content table tr td {
-  border-right: 1px solid #e4c9ac;
+.registerStatus-table__content table tbody tr {
+  border-bottom: 1px solid #c7c7c7;
 }
 
-.pl-table__content table tbody tr:hover {
+.registerStatus-table__content table tbody tr:hover {
   background-color: pink;
-}
-
-.icon-delete {
-  font-size: 20px;
-  color: coral;
-  cursor: pointer;
-}
-
-.icon-edit {
-  font-size: 20px;
-  color: greenyellow;
-  cursor: pointer;
-}
-
-/* input, */
-textarea {
-  outline: none;
-  padding: 20px;
-  width: 60%;
-  background: transparent;
-  border: none;
-  border-bottom: 1px solid #000;
-}
-
-/* input::-webkit-outer-spin-button,
-  input::-webkit-inner-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
-  } */
-/* [placeholder]:focus::-webkit-input-placeholder {
-    transition: text-indent 0.4s 0.4s ease;
-    text-indent: -100%;
-    opacity: 1;
-  } */
-.pl-button {
-  margin-left: 200px;
-  margin-top: 30px;
-}
-
-.pl-button__detail {
-  color: white !important;
-  font-size: 14px !important;
-  font-weight: 600 !important;
-}
-
-.pl-button__detail:hover {
-  background-color: rgba(255, 0, 0, 0.1) !important;
-  border-color: rgba(255, 0, 0, 0.1) !important;
-}
-
-.pl-button__detail:focus {
-  background-color: rgba(255, 0, 0, 0.2) !important;
-  border-color: rgba(255, 0, 0, 0.2) !important;
-}
-
-.pl-button__detail:active {
-  background-color: rgba(255, 0, 0, 0.3) !important;
-  border-color: rgba(255, 0, 0, 0.3) !important;
-}
-
-table {
-  overflow: scroll;
-}
-
-.el-form-item__label {
-  color: #f00 !important;
-  font-size: 22px;
-  font-weight: 600;
-  line-height: 31px;
-  letter-spacing: 0em;
-  text-align: left;
-  line-height: 0px;
-  margin-bottom: 6px;
-}
-
-.el-form-item__content input {
-  border-radius: 8px !important;
-  box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.15);
-  border: 1px solid #23282b8f;
-}
-
-.el-dialog__title {
-  margin-left: 56px;
-  font-size: 25px;
-  font-weight: 700;
-  line-height: 35px;
-  letter-spacing: 0em;
-  text-align: left;
-}
-
-.el-dialog__headerbtn i {
-  font-size: 24px;
-  font-weight: 700;
-  color: #f00 !important;
 }
 </style>
   

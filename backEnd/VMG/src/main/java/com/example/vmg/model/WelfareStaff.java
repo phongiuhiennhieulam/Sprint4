@@ -12,7 +12,7 @@ import java.io.Serializable;
 @Setter
 @SuppressWarnings("serial")
 @Entity
-@Table(name = "demo12312344")
+@Table(name = "demo", schema = "demoqlpl", catalog = "")
 public class WelfareStaff implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,7 +20,7 @@ public class WelfareStaff implements Serializable {
 
     @Column
     private Integer status;
-
+    private Long quantity;
     @ManyToOne
     @JoinColumn(name = "idStaff")
     private Staff staff;

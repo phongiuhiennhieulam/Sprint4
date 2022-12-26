@@ -31,32 +31,39 @@ import java.util.stream.Collectors;
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/api/auth")
-public class AuthController {
-    @Autowired
+public class  AuthController {
+    @Autowired private
     UserServiceImpl userService;
-    @Autowired
+    @Autowired private
     RoleServiceImpl roleService;
-    @Autowired PasswordEncoder passwordEncoder;
-    @Autowired AuthenticationManager authenticationManager;
-    @Autowired
+    @Autowired private PasswordEncoder passwordEncoder;
+    @Autowired private AuthenticationManager authenticationManager;
+    @Autowired private
     JwtProvider jwtProvider;
+
 
     @PostMapping("/signin")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginForm loginForm) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginForm.getUserName(), loginForm.getPassWord()));
+       // Authentication authentication2 = SecurityContextHolder.getContext().getAuthentication();
+        User user = userService.findByUsername(authentication.getName()).get();
+        if (user.getStatus() == 0){
 
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        String token = jwtProvider.createToken(authentication);
+          SecurityContextHolder.getContext().setAuthentication(authentication);
+          String token = jwtProvider.createToken(authentication);
 
-        UserPrinciple userPrinciple = (UserPrinciple) authentication.getPrincipal();
-        List<String> roles = userPrinciple.getAuthorities().stream()
-                .map(item -> item.getAuthority())
-                .collect(Collectors.toList());
+          UserPrinciple userPrinciple = (UserPrinciple) authentication.getPrincipal();
+          List<String> roles = userPrinciple.getAuthorities().stream()
+                  .map(item -> item.getAuthority())
+                  .collect(Collectors.toList());
+          return ResponseEntity.ok(new JwtResponse(token,
+                  userPrinciple.getUsername(),
+                  userPrinciple.getAuthorities()));
+      }else {
+            return ResponseEntity.ok(new MessageResponse("Account has been locked"));
+        }
 
-        return ResponseEntity.ok(new JwtResponse(token,
-                userPrinciple.getUsername(),
-                userPrinciple.getAuthorities()));
     }
 
     @PostMapping("/signup")
@@ -97,6 +104,12 @@ public class AuthController {
                         roles.add(modRole);
 
                         break;
+                    case "per":
+                        Role perRole = roleService.findByName(ERole.ROLE_PERSONNEL)
+                                .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+                        roles.add(perRole);
+
+                        break;
                     default:
                         Role userRole = roleService.findByName(ERole.ROLE_USER)
                                 .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
@@ -104,7 +117,7 @@ public class AuthController {
                 }
             });
         }
-
+        user.setStatus(0);
         user.setRoles(roles);
         userService.save(user);
 

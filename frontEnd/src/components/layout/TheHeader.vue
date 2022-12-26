@@ -16,151 +16,492 @@
       </svg>
     </div>
     <Transition name="fade">
-      <div class="header-right" v-if="loggedIn">
-        <div class="header-right__item" v-if="nhanvien">
-          <div class="header-right__item">
-            <i class="el-icon-s-home"></i>
-            <button class="btn nav-link">
-              <router-link to="/home_welfare" style="text-decoration: none; color: black; cursor: pointer">Phúc lợi của tôi</router-link>
-            </button>
-          </div>
-        </div>
-        <div class="header-right__item" v-if="nhanvien">
-          <i class="el-icon-s-promotion"></i>
-          <div class="header-right__item--text">
-            <router-link to="/register_welfare" style="text-decoration: none; color: black; cursor: pointer">Đăng Kí
-              Phúc Lợi</router-link>
-          </div>
-          <div class="header-right__item--icon"></div>
-        </div>
-        <div class="header-right__item" v-if="quanly">
-          <i class="el-icon-s-order"></i>
-          <el-dropdown>
-            <span class="el-dropdown-link" style="cursor: pointer; font-size: 19px; color: black">
-              Quản Lý<i class="el-icon-arrow-down el-icon--right"></i>
-            </span>
-            <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item>
-                <router-link to="/hr" style="text-decoration: none;color:black;cursor:pointer width: 100%;">Quản lý nhân
-                  viên</router-link>
-              </el-dropdown-item>
-              <el-dropdown-item>
-                <router-link to="/phucloi" style="text-decoration: none;color:black;cursor:pointer width: 100%;">Quản lý
-                  phúc lợi</router-link>
-              </el-dropdown-item>
-            </el-dropdown-menu>
-          </el-dropdown>
-        </div>
-        <div class="header-right__item" v-if="quanly">
-          <el-badge :value="list.length" :max="99" class="item" style="margin-right: 10px; margin-left: 5px">
-            <i class="el-icon-s-claim"></i>
-            <router-link style="
-              text-decoration: none;
-              color: black;
-              cursor: pointer;
-              font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
-                Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue',
-                sans-serif;
-            " to="/xetduyet">Xét duyệt
-            </router-link>
-          </el-badge>
-        </div>
-        <el-dropdown v-if="quanly">
-          <el-badge :value="listbirthdays.length" :max="10" class="item" style="margin-right: 10px; margin-left: 5px">
-            <span class="el-dropdown-link" style="cursor: pointer; font-size: 19px; color: black">
-              <i class="el-icon-message-solid"></i>
-            </span>
-          </el-badge>
+      <!--  Desktop header right -->
+      <MediaQueryProvider :queries="$options.queries">
+        <MatchMedia v-slot="{ desktop }">
+          <div v-if="desktop">
+            <div class="header-right" v-if="loggedIn">
+              <div class="header-right__item" v-if="nhanvien">
+                <div class="header-right__item">
+                  <!-- <i class="el-icon-s-home"></i> -->
+                  <button class="btn nav-link">
+                    <router-link to="/home_welfare" style="
+                        text-decoration: none;
+                        color: #606266;
+                        cursor: pointer;
+                      ">Phúc lợi của tôi</router-link>
+                  </button>
+                </div>
+              </div>
+              <div class="header-right__item" v-if="nhanvien">
+                <!-- <i class="el-icon-s-promotion"></i> -->
+                <div class="header-right__item--text">
+                  <router-link to="/register_welfare" style="
+                      text-decoration: none;
+                      color: #606266;
+                      cursor: pointer;
+                    ">
+                    Đăng kí phúc lợi</router-link>
+                </div>
+                <div class="header-right__item--icon"></div>
+              </div>
+              <div class="header-right__item" v-if="quanly" style="margin-right: 5px; margin-left: 5px">
+                <!-- <i class="el-icon-s-order"></i> -->
+                <el-dropdown trigger="click">
+                  <span class="el-dropdown-link nowrap" style="cursor: pointer; font-size: 19px; color: #606266">
+                    <!-- <i class="fa-solid fa-table-list"></i> -->
+                    Quản Lý <i class="el-icon-arrow-down el-icon--right"></i>
+                  </span>
+                  <el-dropdown-menu slot="dropdown">
+                    <router-link to="/hr" style="text-decoration: none">
+                      <el-dropdown-item> Quản lý nhân viên </el-dropdown-item>
+                    </router-link>
+                    <router-link to="/phucloi" style="text-decoration: none;color:#606266;cursor:pointer width: 100%;">
+                      <el-dropdown-item> Quản lý phúc lợi </el-dropdown-item>
+                    </router-link>
 
-          <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item style="text-decoration: none;color:black;cursor:pointer width: 100%; font-size: 15px">
-              <strong>
-                Có {{ listbirthdays.length }} nhân viên sinh nhật trong tháng này
-              </strong>
-              <ul v-for="x in listbirthdays" :key="x.id">
-                <li>
-                  <strong>Họ tên: </strong> {{ x.name
-                  }}<strong>&nbsp;-&nbsp;Mã Nhân viên: </strong> {{ x.code }}
-                </li>
-              </ul>
-            </el-dropdown-item>
-          </el-dropdown-menu>
-        </el-dropdown>
-        <div>
-          <div v-if="staffErorr == ''">
+                    <router-link to="/user" style="text-decoration: none;color:#606266;cursor:pointer width: 100%;">
+                      <el-dropdown-item> Quản lý tài khoản </el-dropdown-item>
+                    </router-link>
+                    <router-link to="/staff" style="text-decoration: none;color:#606266;cursor:pointer width: 100%;">
+                      <el-dropdown-item> Quản lý tiền phúc lợi </el-dropdown-item>
+                    </router-link>
 
+                    <router-link to="/department"
+                      style="text-decoration: none;color:#606266;cursor:pointer width: 100%;">
+                      <el-dropdown-item> Quản lý phòng ban </el-dropdown-item>
+                    </router-link>
+
+                    <router-link to="/thongke" style="text-decoration: none;color:#606266;cursor:pointer width: 100%;">
+                      <el-dropdown-item> Thống kê </el-dropdown-item>
+                    </router-link>
+                  </el-dropdown-menu>
+                </el-dropdown>
+              </div>
+              <div class="header-right__item" v-if="quanly || nhansu">
+                <el-badge :value="list.length > 0 ?  list.length : none" :max="9" class="item" style="margin-right: 5px; margin-left: 5px">
+                  <router-link to="/xetduyet" style="
+                      text-decoration: none;
+                      color: #606266;
+                      cursor: pointer;
+                    ">
+                    <!-- <i class="fa-solid fa-clipboard-check"></i> -->
+                    Xét duyệt
+                  </router-link>
+                </el-badge>
+              </div>
+
+              <div class="header-right__item" v-if="lanhdao">
+                <el-badge  class="item" style="margin-right: 5px; margin-left: 5px">
+                  <router-link to="/accept_money" style="text-decoration: none; color: #606266; cursor: pointer">
+                    <!-- <i class="fa-solid fa-clipboard-check"></i> -->
+                    Xét duyệt tiền phúc lợi
+                  </router-link>
+                </el-badge>
+              </div>
+              <el-dropdown trigger="click" v-if="quanly">
+                <el-badge :value="listbirthdays.length > 0 ?  listbirthdays.length : none" :max="10" class="item" style="
+                        text-decoration: none;
+                        color: #606266;
+                        cursor: pointer;
+                      ">
+                  <!-- <i class="fa-solid fa-gift"></i> -->
+                  <span style="font-size: 18px" class="nowrap"> Sinh nhật</span>
+                </el-badge>
+                <el-dropdown-menu slot="dropdown" style="width: 300px;" class="item-list">
+                  <p class="text-center border-bottom item-list__header">
+                    Có <strong>{{ listbirthdays.length }}</strong> nhân viên sinh nhật trong
+                    tháng này
+                  </p>
+                  <el-dropdown-item v-for="x in listbirthdays" :key="x.id"
+                    style="text-decoration: none;color:#606266;cursor:pointer width: 100%; font-size: 15px"
+                    class="item-container">
+                    <div class="item">
+                      <div class="item-detail d-flex align-items-start">
+                        <div class="item-icon">
+                          <i class="fa-solid fa-user"></i>
+                        </div>
+                        <div>
+                          <span class="item-detail__text">{{ x.code }} - {{ x.name }}</span>
+                          <span class="item-detail__text">
+                            {{ x.department.name }}
+                          </span>
+                        </div>
+                      </div>
+                      <div class="item-detail d-flex align-items-center">
+                        <div class="item-icon">
+                          <i class="fa-solid fa-gift"></i>
+                        </div>
+                        <div class="item-detail__text">{{ formatDate(x.date) }}</div>
+                      </div>
+                    </div>
+                  </el-dropdown-item>
+
+                </el-dropdown-menu>
+              </el-dropdown>
+              &ensp;
+              <div>
+                <div v-if="staffErorr == ''"></div>
+                <div v-else>
+                  <el-dropdown trigger="click" v-if="quanly">
+                    <el-badge :value="staffErorr.length" :max="10" class="item"
+                      style="margin-right: 10px; margin-left: 5px">
+                      <span class="el-dropdown-link" style="cursor: pointer; font-size: 18px; color: #606266">
+                        <div>
+                          <span style="color: red" class="nowrap">Thông báo lỗi!</span>
+                        </div>
+                      </span>
+                    </el-badge>
+                    <el-dropdown-menu slot="dropdown" style="width: 300px;" class="item-list">
+                      <p class="text-center border-bottom item-list__header">
+                        Có <strong>{{ staffErorr.length }}</strong> nhân viên đang sử dụng
+                        quá số tiền trợ cấp phúc lợi
+                      </p>
+                      <el-dropdown-item v-for="x in staffErorr" :key="x.id"
+                        style="text-decoration: none;color:#606266;cursor:pointer width: 100%; font-size: 15px"
+                        class="item-container">
+                        <div class="item">
+                          <div class="item-detail d-flex align-items-start">
+                            <div class="item-icon">
+                              <i class="fa-solid fa-user"></i>
+                            </div>
+                            <div>
+                              <span class="item-detail__text">{{ x.code }} - {{ x.name }}</span>
+                            </div>
+                          </div>
+                        </div>
+                      </el-dropdown-item>
+                    </el-dropdown-menu>
+                  </el-dropdown>
+                </div>
+              </div>
+              <el-dropdown trigger="click" v-if="quanly || nhanvien ">
+                <el-badge :value="listNew.length > 0 ?  listNew.length : none" :max="9" class="item" style="
+                        text-decoration: none;
+                        color: #606266;
+                        cursor: pointer;
+                        margin-left: 8px;
+                      ">
+                  <!-- <i class="fa-solid fa-gift"></i> -->
+                  <span style="font-size: 18px" class="nowrap"  @click="getSeen()">
+                    <i class="el-icon-message-solid"></i>
+                  </span>
+                </el-badge>
+                <el-dropdown-menu slot="dropdown" style="width: 300px;" class="item-list" >
+                  <el-dropdown-item v-for="x in listNew" :key="x.id"
+                    style="text-decoration: none;color:#606266;cursor:pointer width: 100%; font-size: 15px"
+                    class="item-container">
+                    <div class="item">
+                      <div class="item-detail__text">{{ formatDate(x.date) }}</div>
+                      <div class="item-detail d-flex align-items-start">
+                        <div class="item-icon">
+                          <i class="fa-sharp fa-solid fa-bell"></i>
+                        </div>
+                        <div>
+                          {{x.message}}
+                        </div>
+                      </div>
+                      <div class="item-detail d-flex align-items-start">
+                        <div class="item-icon">
+                          <i class="fa-brands fa-github"></i>
+                        </div>
+                        <div>
+                          <span class="item-detail__text" style="color: palevioletred;">New</span>
+                        </div>
+                      </div>
+                    </div>
+                  </el-dropdown-item>
+                  <el-dropdown-item v-for="x in listOld" :key="x.id"
+                    style="text-decoration: none;color:#606266;cursor:pointer width: 100%; font-size: 15px"
+                    class="item-container">
+                    <div class="item">
+                      <div class="item-detail__text">{{ formatDate(x.date) }}</div>
+                      <div class="item-detail d-flex align-items-start">
+                        <div class="item-icon">
+                          <i class="fa-sharp fa-solid fa-bell"></i>
+                        </div>
+                        <div @click="getRouter(x.link)">
+                          {{x.message}}
+                        </div>
+                      </div>
+                      <div class="item-detail d-flex align-items-start">
+                        <div class="item-icon">
+                          <i class="fa-brands fa-github"></i>
+                        </div>
+                        <div>
+                          <div v-if="formatDay(x.date) <= 24">
+                            <span class="item-detail__text" style="color: palevioletred;">Hôm nay</span>
+                          </div>
+                          <div v-if="formatDay(x.date) > 24">
+                            <span class="item-detail__text" style="color: palevioletred;"> {{(formatDay(x.date)/24).toFixed(0)}} Ngày trước</span>
+                          </div>
+        
+                        </div>
+                      </div>
+                    </div>
+                  </el-dropdown-item>
+
+                </el-dropdown-menu>
+              </el-dropdown>
+              &ensp;
+              <div v-if="!quanly && !user && !nhansu">
+                <Strong style="color: red">
+                  Tài khoản của bạn đã bị khóa!
+                </Strong>
+              </div>
+              <div class="header-right__item">
+                <!-- <i class="el-icon-s-custom"></i> -->
+                <el-dropdown>
+                  <span class="el-dropdown-link" style="cursor: pointer; font-size: 19px">
+                    <span>
+                      | <Strong>{{ user.name }}</Strong><span v-if="quanly"></span>
+                      <Strong v-if="!nhanvien && !quanly && !nhansu" style="color: red">
+                        Tài khoản của bạn đã bị khóa!
+                      </Strong></span>
+                  </span>
+                  <el-dropdown-menu slot="dropdown">
+                    <el-dropdown-item
+                      style="text-decoration: none;color:#606266;cursor:pointer width: 100%; font-size: 19px">
+                      <button class="btn nav-link" @click="logOut">
+                        Đăng Xuất
+                      </button>
+                    </el-dropdown-item>
+                  </el-dropdown-menu>
+                </el-dropdown>
+              </div>
+            </div>
           </div>
           <div v-else>
-            <el-dropdown v-if="quanly">
-              <el-badge :value="staffErorr.length" :max="10" class="item"
-                style="margin-right: 10px; margin-left: 5px ;">
-                <span class="el-dropdown-link" style="cursor: pointer; font-size: 19px; color: black;">
-                  <samp style="color: red;"><strong>Warning!</strong></samp>
-                </span>
-              </el-badge>
-              <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item style="text-decoration: none;color:black;cursor:pointer width: 100%; font-size: 15px">
-                  <strong>
-                    <H4>
-                      Có {{ staffErorr.length }} nhân viên đang sử dụng quá số tiền trợ cấp phúc lợi
-                    </H4>
-                  </strong>
-                  <ul v-for="x in staffErorr" :key="x.id">
-                    <li><strong>Họ tên: </strong> {{ x.name }}<strong>&nbsp;-&nbsp;Mã Nhân viên: </strong> {{ x.code }}
-                    </li>
-                  </ul>
+            <el-dropdown :hide-on-click="false" trigger="click">
+              <div class="menu-dropdown">
+                <!-- <i class="fa-solid fa-bars"></i> -->
+              </div>
+              <el-dropdown-menu>
+                <el-dropdown-item class="header-right__item" v-if="nhanvien">
+                  <!-- <i class="el-icon-s-home"></i> -->
+                  <button class="btn nav-link">
+                    <router-link to="/home_welfare" style="
+                        text-decoration: none;
+                        color: #606266;
+                        cursor: pointer;
+                      ">
+                      Phúc lợi của tôi</router-link>
+                  </button>
+                </el-dropdown-item>
+                <el-dropdown-item class="header-right__item" v-if="nhanvien">
+                  <i class="el-icon-s-promotion"></i>
+                  <div class="header-right__item--text">
+                    <router-link to="/register_welfare" style="
+                        text-decoration: none;
+                        color: #606266;
+                        cursor: pointer;
+                      ">
+                      Đăng Kí Phúc Lợi</router-link>
+                  </div>
+                  <div class="header-right__item--icon"></div>
+                </el-dropdown-item>
+                <el-dropdown-item class="header-right__item" v-if="quanly">
+                  <el-dropdown :hide-on-click="true" :hide-timeout="0" trigger="click">
+                    <span class="el-dropdown-link nowrap" style="font-size: 20px">
+                      <!-- <i class="fa-solid fa-table-list"></i> -->
+                      Quản Lý <i class="el-icon-arrow-down el-icon--right"></i>
+                    </span>
+                    <el-dropdown-menu slot="dropdown">
+                      <el-dropdown-item class="header-right__item">
+                        <router-link to="/hr" style="text-decoration: none;color:#606266;cursor:pointer width: 100%;">
+                          Quản lý nhân viên
+                        </router-link>
+                      </el-dropdown-item>
+                      <el-dropdown-item class="header-right__item">
+                        <router-link to="/phucloi"
+                          style="text-decoration: none;color:#606266;cursor:pointer width: 100%;">
+                          Quản lý phúc lợi
+                        </router-link>
+                      </el-dropdown-item>
+                      <el-dropdown-item class="header-right__item">
+                        <router-link to="/user" style="text-decoration: none;color:#606266;cursor:pointer width: 100%;">
+                          Quản lý tài khoản
+                        </router-link>
+                      </el-dropdown-item>
+                      <el-dropdown-item class="header-right__item">
+                        <router-link to="/department"
+                          style="text-decoration: none;color:#606266;cursor:pointer width: 100%;">
+                          Quản lý phòng ban
+                        </router-link>
+                      </el-dropdown-item>
+                      <el-dropdown-item>
+                        <router-link to="/thongke"
+                          style="text-decoration: none;color:#606266;cursor:pointer width: 100%;">
+                          Thống kê
+                        </router-link>
+                      </el-dropdown-item>
+                    </el-dropdown-menu>
+                  </el-dropdown>
+                </el-dropdown-item>
+                <el-dropdown-item class="header-right__item" v-if="quanly || nhansu">
+                  <el-badge :value="list.length" :max="99" class="item">
+                    <router-link to="/xetduyet"
+                      style="text-decoration: none;color:#606266;cursor:pointer width: 100%;font-size: 20px;">
+                      <!-- <i class="fa-solid fa-clipboard-check"></i> -->
+
+                      <div class="nowrap">
+                        Xét duyệt
+                      </div>
+                    </router-link>
+                  </el-badge>
+                </el-dropdown-item>
+
+                <el-dropdown-item class="header-right__item" v-if="quanly">
+                  <el-dropdown trigger="click">
+                    <el-badge :value="listbirthdays.length" :max="10" class="item">
+                      <!-- <i class="fa-solid fa-gift"></i> -->
+                      <span style="font-size: 21px"> Sinh nhật</span>
+                    </el-badge>
+                    <el-dropdown-menu slot="dropdown">
+                      <el-dropdown-item
+                        style="text-decoration: none;color:#606266;cursor:pointer width: 100%; font-size: 15px">
+                        <strong>
+                          Có {{ listbirthdays.length }} nhân viên sinh nhật
+                          trong tháng này
+                        </strong>
+                        <hr />
+                        <div class="birthday-scroll">
+                          <div v-for="x in listbirthdays" :key="x.id" style="border: 1px solid" class="itemTbale">
+                            <div class="item">
+                              <div class="d-flex flex-column">
+                                <div>
+                                  Nhân viên: <strong> {{ x.name }}</strong>
+                                </div>
+                                <div>
+                                  Mã nhân viên: <strong>{{ x.code }}</strong>
+                                </div>
+                                <div class="">
+                                  <span class="fas fa-gift">_{{ formatDate(x.date) }}</span>
+                                </div>
+                                <div class="
+                                    d-flex
+                                    flex-column
+                                    justify-content-center
+                                  ">
+                                  <div class="text-muted">
+                                    {{ x.department.name }}
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </el-dropdown-item>
+                    </el-dropdown-menu>
+                  </el-dropdown>
+                </el-dropdown-item>
+                <div v-if="staffErorr == ''"></div>
+                <div v-else>
+                  <el-dropdown v-if="quanly">
+                    <el-badge :value="staffErorr.length" :max="10" class="item"
+                      style="margin-right: 10px; margin-left: 5px">
+                      <span class="el-dropdown-link" style="cursor: pointer; font-size: 15px; color: #606266">
+                        <div>
+                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                            class="bi bi-bell-fill" viewBox="0 0 16 16">
+                            <path style="color: crimson"
+                              d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2zm.995-14.901a1 1 0 1 0-1.99 0A5.002 5.002 0 0 0 3 6c0 1.098-.5 6-2 7h14c-1.5-1-2-5.902-2-7 0-2.42-1.72-4.44-4.005-4.901z" />
+                          </svg>
+                          <span style="color: red" class="nowrap">Thông báo lỗi!</span>
+                        </div>
+                      </span>
+                    </el-badge>
+                    <el-dropdown-menu slot="dropdown">
+                      <el-dropdown-item
+                        style="text-decoration: none;color:#606266;cursor:pointer width: 60%; font-size: 15px">
+                        <strong>
+                          <H4>
+                            Có {{ staffErorr.length }} nhân viên đang sử dụng
+                            quá số tiền trợ cấp phúc lợi
+                          </H4>
+                        </strong>
+                        <div class="error-scroll">
+                          <ul v-for="x in staffErorr" :key="x.id" style="border: 1px solid" class="itemTbale">
+                            <li>
+                              Họ tên:<strong> {{ x.name }}</strong> <br />
+                              Mã Nhân viên:<strong>{{ x.code }}</strong>
+                            </li>
+                          </ul>
+                        </div>
+                      </el-dropdown-item>
+                    </el-dropdown-menu>
+                  </el-dropdown>
+                </div>
+                <div v-if="!quanly && !user && !nhansu">
+                  <Strong style="color: red">
+                    Tài khoản của bạn đã bị khóa!
+                  </Strong>
+                </div>
+                <el-dropdown-item class="header-right__item">
+                  <el-dropdown>
+                    <span class="el-dropdown-link" style="cursor: pointer; font-size: 20px">
+                      <i class="fa-solid fa-user"></i>
+                      <span>Hello: <Strong>{{ user.userName }}</Strong><span v-if="quanly">(quản lý)</span>
+                        <Strong v-if="!nhanvien && !quanly && !nhansu" style="color: red">
+                          Tài khoản của bạn đã bị khóa!
+                        </Strong></span>
+                    </span>
+                    <el-dropdown-menu slot="dropdown">
+                      <el-dropdown-item
+                        style="text-decoration: none;color:#606266;cursor:pointer width: 100%; font-size: 20px">
+                        <button class="btn nav-link" @click="logOut">
+                          Đăng Xuất
+                        </button>
+                      </el-dropdown-item>
+                    </el-dropdown-menu>
+                  </el-dropdown>
                 </el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
           </div>
-        </div>
+        </MatchMedia>
+      </MediaQueryProvider>
 
-        <div class="header-right__item">
-          <i class="el-icon-s-custom"></i>
-          <el-dropdown>
-            <span class="el-dropdown-link" style="cursor: pointer; font-size: 19px">
-              <span>Hello: <Strong>{{ user.userName }}</Strong><span v-if="quanly">(quản lý)</span></span>
-            </span>
-            <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item style="text-decoration: none;color:black;cursor:pointer width: 100%; font-size: 19px">
-                <button class="btn nav-link" @click="logOut">Đăng Xuất</button>
-              </el-dropdown-item>
-            </el-dropdown-menu>
-          </el-dropdown>
-        </div>
-      </div>
-      <div v-else class="header-right">
-        <div class="header-right__item">
-          <div class="header-right__item--text">
-            <i class="el-icon-s-custom"></i>
-            <router-link to="/" style="text-decoration: none; color: black; cursor: pointer">Đăng nhập</router-link>
-          </div>
-        </div>
-      </div>
+      <!-- Mobile header right -->
     </Transition>
-
   </div>
 </template>
   
 <script>
 import moment from "moment";
-
-import login from "@/view/PhucLoiLogin.vue";
 import StaffService from "@/service/hrService";
+import NftService from "@/service/NftService";
+
+import { MediaQueryProvider } from "vue-component-media-queries";
+import { MatchMedia } from "vue-component-media-queries";
+const queries = {
+  mobile: "(max-width: 760px)",
+  desktop: "(min-width: 761px)",
+};
 export default {
   name: "app",
+  queries,
   data() {
     return {
       user: {},
       auth: {},
       nhanvien: false,
       quanly: false,
+      nhansu: false,
+      lanhdao: false,
       list: [],
       listbirthdays: [],
-      staffErorr: []
+      staffErorr: [],
+      listNew: [],
+      listOld: [],
+      userData: {},
+      isLoad: false
     };
   },
-  components: login,
+  components: {
+    MediaQueryProvider,
+    MatchMedia,
+  },
   computed: {
     loggedIn() {
       return this.$store.state.auth.status.loggedIn;
@@ -171,9 +512,62 @@ export default {
       if (value) {
         this.getDataHeader();
       }
-    }
+    },
   },
   methods: {
+    getRouter(link){
+      if(link===0){
+        this.$router.push("/accept_money");
+      }
+      if(link===1){
+        this.$router.push("/xetduyet");
+      }
+      if(link===2){
+        this.$router.push("/register_welfare");
+      }
+      if(link===3){
+        this.$router.push("/home_welfare");
+      }
+    },
+    formatDay(date){
+      if(date){
+        var d1 = new Date();
+        
+         //"now"
+        var d2 = new Date(date);  // some date
+        var diff = Math.abs(d1-d2);
+        var time = diff/3600000
+        return Math.round(time)
+      }
+       
+    },
+    getLoad(){
+      this.isLoad=true;
+    },
+    getNft(){
+      NftService.getNew()
+      .then((response) => {
+          this.listNew = response.data;
+
+        })
+        NftService.getOld()
+      .then((response) => {
+          this.listOld = response.data;
+        })
+    },
+    getSeen(){
+      NftService.Seen().then((response) => {
+        console.log(response)
+
+        this.getNft()
+      this.isLoad = false
+        })
+      
+      // .then((response) => {
+      //     console.log(response)
+      //     this.getNft();
+      //   })
+    },
     logOut() {
       this.$store.dispatch("auth/logout");
       this.$router.push("/");
@@ -182,6 +576,11 @@ export default {
     formatDate(value) {
       if (value) {
         return moment(String(value)).format("DD/MM/yyyy");
+      }
+    },
+    formatDate2(value) {
+      if (value) {
+        return moment(String(value)).format("yyyy/MM/DD");
       }
     },
     getAll() {
@@ -215,8 +614,14 @@ export default {
         if (this.userExists("ROLE_USER")) {
           this.nhanvien = true;
         }
-        if (this.userExists("ROLE_MODERATOR")) {
+        if (this.userExists("ROLE_ADMIN")) {
           this.quanly = true;
+        }
+        if (this.userExists("ROLE_PERSONNEL")) {
+          this.nhansu = true;
+        }
+        if (this.userExists("ROLE_MODERATOR")) {
+          this.lanhdao = true;
         }
       }
     },
@@ -227,22 +632,90 @@ export default {
       this.getBD();
       this.getErorr();
     },
-    getErorr(){
-      StaffService.getErorr()
-        .then(response => {
-          this.staffErorr = response.data
-        })
-    }
+    getErorr() {
+      StaffService.getErorr().then((response) => {
+        this.staffErorr = response.data;
+      });
+    },
   },
   created() {
-
     this.getDataHeader();
-  },
+    this.getNft();
+    StaffService.getUser()
+        .then((response) => {
+          this.userData = response.data;
+        })
+         
+  }
 
 };
 </script>
   
 <style>
+.item-list {
+  background: #FFF0E6 !important;
+  border: none !important;
+  /* margin: 0 !important; */
+  padding: 0px 8px 8px 8px !important;
+  max-height: 416px !important;
+  box-sizing: border-box !important;
+  overflow: auto !important;
+}
+
+.item-list__header {
+  background: #FFF0E6 !important;
+  position: sticky;
+  top: 0px;
+
+}
+
+.item-container {
+  border-radius: 8px;
+  margin: 8px 0px !important;
+  background: #FFE0CC;
+}
+
+.item-icon {
+  margin-right: 14px;
+  font-size: 14px;
+}
+
+.item-detail__text {
+  font-weight: 600;
+  display: block;
+}
+
+.nowrap {
+  white-space: nowrap;
+}
+
+.menu-dropdown {
+  margin: 4px !important;
+}
+
+.menu-dropdown i {
+  font-size: 30px;
+}
+
+.header-logo {
+  width: 100px;
+  height: 100px;
+  margin-left: 35px;
+  margin-top: 10px;
+}
+
+.birthday-scroll {
+  max-height: 348px;
+  overflow: auto;
+  padding: 0 12px;
+}
+
+.error-scroll {
+  max-height: 224px;
+  overflow: auto;
+  padding: 0 12px;
+}
+
 .fade-enter-active,
 .fade-leave-active {
   transition: opacity 0.5s ease;
@@ -260,27 +733,19 @@ export default {
   /* font-family: "Poppins"; */
   font-style: normal;
   font-weight: 400;
-  font-size: 18px;
-  background: linear-gradient(90deg, #eddaca 0%, rgba(255, 255, 255, 0) 100%),
-    #ebd5e0;
-}
-
-.header-logo {
-  width: 100px;
-  height: 100px;
-  margin-left: 35px;
-  margin-top: 10px;
+  font-size: 19px;
+  background: linear-gradient(90deg, #ece1e8 0%, rgba(235, 227, 210, 0) 100%),
+    #f1d3a4;
 }
 
 .header-right {
   display: flex;
-  margin-right: 188px;
+  margin-right: 100px;
   align-items: center;
-
 }
 
 .header-right__item {
-  margin: 0px 10px 0px 10px;
+  margin: 0px 15px 0 15px;
   display: flex;
   align-items: center;
 }
@@ -301,9 +766,56 @@ export default {
   margin-right: 6px;
 }
 
+.itemTbale:hover {
+  background-color: rgba(255, 0, 0, 0.1) !important;
+  border-color: rgba(240, 0, 0, 0.1) !important;
+}
+
+.hr-title {
+  text-align: center;
+  font-size: 34px;
+  font-weight: 600;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+    Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+  background: rgba(255, 255, 255, 0.13);
+  padding: 6px 0px;
+}
+
+.title-dialog {
+  color: red;
+  font-size: 30px;
+  display: block;
+  text-align: center;
+}
+
 router-link {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
     Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+}
+
+.menu-dropdown {
+  width: 80px;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@media only screen and (max-width: 760px) {
+  .el-dropdown-menu__item i {
+    font-size: 20px;
+  }
+
+  .header-logo {
+    width: 80px;
+    height: 80px;
+    margin: 4px;
+  }
+
+  .header-logo svg {
+    width: 80px;
+    height: 80px;
+  }
 }
 </style>
   

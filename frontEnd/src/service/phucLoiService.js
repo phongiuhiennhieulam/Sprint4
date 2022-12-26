@@ -8,16 +8,28 @@ class WelfareApi {
     async getAllWelfare() {
         return await axios.get('http://localhost:8083/api/welfares');
     }
+    async getAllWelfareByStatus() {
+        return await axios.get('http://localhost:8083/api/welfares-user');
+    }
+    async getAllWelfareWaitToUpdate() {
+        return await axios.get('http://localhost:8083/api/get-welfare-waiting-update');
+    }
 
     async deleteWelfare(id) {
         return await axios.delete('http://localhost:8083/api/welfare/' + id)
     }
-    async updateWelfare(id, object) {
+    async updateWelfare(id,status, object) {
 
-        return await axios.put('http://localhost:8083/api/welfare/' + id, object)
+        return await axios.put('http://localhost:8083/api/welfare-approval/' + id + '/'+status, object)
     }
-    async createWelfare(object) {
+    async createWelfare(status,object) {
+        return await axios.post('http://localhost:8083/api/welfare-approval/'+status, object)
+    }
+    async acceptCreateWelfare(object) {
         return await axios.post('http://localhost:8083/api/welfare', object)
+    }
+    async acceptUpdateWelfare(id,object) {
+        return await axios.put('http://localhost:8083/api/welfare/'+id, object)
     }
     async registerWelfare(object) {
         return await axios.post('http://localhost:8083/api/regis_welfare', object)
@@ -35,7 +47,7 @@ class WelfareApi {
         return await axios.put('http://localhost:8083/api/general-welfane/'+ id, object);
     }
     async createGeneralWelfare(object) {
-        return await axios.post('http://localhost:8083/api/general-welfane',object);
+        return await axios.post('http://localhost:8083/api/general-welfane-approval',object);
     }
     async getAllWelfareByUser(id) {
         return await axios.get('http://localhost:8083/api/staff-show-all/'+id);
@@ -58,6 +70,23 @@ class WelfareApi {
     
     async getAcceptWelfareOfUser(id) {
         return await axios.get('http://localhost:8083/api/getAcceptWelfare/'+id);
+    }
+    async getHistoryAcceptWelfareOfUser() {
+        return await axios.get('http://localhost:8083/api/get-history-accept-welfare');
+    }
+
+    async getWelfare(id) {
+        return await axios.get(`http://localhost:8083/api/getWelfare/${id}`);
+    }
+    async changeStatusWelfare(object){
+        return await axios.put('http://localhost:8083/api/status-welfare', object);
+
+    }
+    async getStatusAcceptWelfareOfUser(id) {
+        return await axios.get('http://localhost:8083/api/get-welfare-status/'+id);
+    }
+    async getAllWelfareUpdate() {
+        return await axios.get('http://localhost:8083/api/get-welfare-update-approval');
     }
     
 

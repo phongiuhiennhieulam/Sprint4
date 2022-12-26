@@ -18,4 +18,6 @@ public class GeneralWelfare implements Serializable {
     private Integer status;
     private BigDecimal price;
     private Boolean quantity;
+    private Long year;
+    private Long idStaff;
 }

@@ -1,15 +1,16 @@
 package com.example.vmg.service;
 
-import com.example.vmg.model.Staff;
-import com.example.vmg.model.StaffInterface;
-import com.example.vmg.model.Welfare;
+import com.example.vmg.helper.ExcelHelper;
+import com.example.vmg.model.*;
 import com.example.vmg.respository.StaffRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
@@ -20,6 +21,9 @@ import java.util.Optional;
 public class StaffService {
     @Autowired
     private StaffRepository staffRepository;
+
+    @Autowired
+    private ExcelHelper excelHelper;
 
     public List<Staff> getList(){
         return staffRepository.findAll();
@@ -32,25 +36,57 @@ public class StaffService {
         return staffRepository.getErorr();
     }
 
+    public List<Staff> findByCode(String code){
+        return staffRepository.findByListCode(code);
+    }
+    public Staff findbyoneCode(String code){
+        return staffRepository.findByCode(code);
+    }
     public Page<Staff> getByPage(int pageNumber, int maxNumber){
         Pageable pageable = PageRequest.of(pageNumber, maxNumber);
         return staffRepository.getPage(pageable);
     }
+    public Page<Staff> getByPage2(int pageNumber, int maxNumber, Integer status){
+        Pageable pageable = PageRequest.of(pageNumber, maxNumber);
+        return staffRepository.getPage2(pageable, status);
+    }
+    public List<StatisticalInterface> getStaffByWelfare(Long id){
+        return staffRepository.getStaffByWelfare(id);
+    }
+
     public Staff getById(Long id){
         return staffRepository.findById(id).get();
     }
+
+    public List<String> getEmailByUpdate(Long id){
+        return staffRepository.getEmailByUpdate(id);
+    }
+    public List<CostInterface> getCost(){
+        return staffRepository.getCost();
+    }
+
+    public List<String> getCodeByUpdate(Long id){
+        return staffRepository.getCodeByUpdate(id);
+    }
+
+
     public List<String> getCode(){
         return staffRepository.getCode();
     }
     public List<String> getEmail(){
         return staffRepository.getEmail();
     }
+    public List<String> getEmailById(List<Long> longs){
+        return staffRepository.getEmailById(longs);
+    }
+
     public Staff getByEmail(String email){
         return staffRepository.findByEmail(email);
     }
 
-    public void saveOrUpDate(Staff staff){
-        staffRepository.save(staff);
+    public Staff saveOrUpDate(Staff staff){
+        Staff res = staffRepository.save(staff);
+        return res;
     }
     public Optional<Staff> findById(Long id){
         return staffRepository.findById(id);
@@ -77,7 +113,7 @@ public class StaffService {
         staffRepository.MutipartDelete(longs);
     }
 
-    public Integer getTotalMoney(Long id){return staffRepository.getMoney(id);}
+    public Long getTotalMoney(Long id){return staffRepository.getMoney(id);}
 
     public void update(Long id, Staff staff) {
         staffRepository.save(staff);
@@ -93,4 +129,19 @@ public class StaffService {
         return staffRepository.finByEmail(email);
     }
 
+    public void saveExcel(MultipartFile file){
+        try{
+            excelHelper.excelToTutorials(file.getInputStream());
+//            staffRepository.saveAll(staffs);
+
+        } catch (IOException e) {
+            throw new RuntimeException("fail to store data "+e.getMessage());
+        }
+    }
+    public  List<OderMoneyInterface> getOders(){
+        return staffRepository.getOder();
+    }
+    public List<Long> getId(){
+        return staffRepository.getIDLD();
+    }
 }
