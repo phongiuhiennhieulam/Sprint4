@@ -30,9 +30,16 @@
                 </tbody>
               </table>
             </form>
+            <!-- <b-form-file @change="readFiles($event)"
+                   v-model="file" class="mb-2"></b-form-file> -->
+            <input type="file" @change="readFiles($event)">
+            <button @click="showfile()">show </button>
           </div>
         </div>
       </div>
+      <tr v-for="x in items" :key="x.ok">
+        {{ x.ok }}
+      </tr>
     </div>
     <!-- dialog lịch sử xet duyet -->
 
@@ -155,6 +162,8 @@ import StaffService from "../service/hrService";
 import WelfareApi from "@/service/phucLoiService";
 let welfareApi = new WelfareApi();
 import _ from 'lodash'
+const ExcelJS = require('exceljs')
+
 export default {
   name: "PhucLoiList",
   data() {
@@ -170,13 +179,51 @@ export default {
       staff: {},
       listRegister: [],
       listHistory: [],
-      isHistory: false
+      isHistory: false,
+      items: [],
+      file: null,
+      data: [
+        {
+          ok: '1',
+          name: 2
+        },
+        {
+          ok: '1',
+          name: 2
+        }
+      ]
 
     };
   },
   methods: {
-    showAddForm() {
+    readFiles(event) {
+      const reader = new FileReader()
+      reader.onloadend = async() => {
+        const workbook = new ExcelJS.Workbook()
+        await workbook.xlsx.load(reader.result)
+        const worksheet = workbook.getWorksheet('SheetJS')
+        try {
+          worksheet.eachRow((row, index) => {
+            if (index > 2){
+              const mark = {
+              stt: row.getCell('A').value,
+              ok: row.getCell('B').value
+            }
+            this.items.push(mark)
+            }
+          })
+        } catch (error) {
+          console.log(error)
+        }
+      }
+      reader.readAsArrayBuffer(event.target.files[0])
+    },
+    showfile(){
+      console.log(this.items)
+      console.log(this.data)
 
+    },
+    showAddForm() {
       this.edit = {};
       this.isShowAdd = true;
     },

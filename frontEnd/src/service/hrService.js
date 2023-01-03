@@ -45,8 +45,8 @@ class StaffService {
      getUser() {
         return  axios.get('http://localhost:8083/api/get-user', { headers: authHeader()})
     }
-     getFind(text) {
-        return  axios.get(`http://localhost:8083/api/staffs/=${text}`, { headers: authHeader()})
+     getFind(text, prams) {
+        return  axios.get(`http://localhost:8083/api/staffs/find?text=${text}`, {prams, headers: authHeader()})
     }
      getWelfare(id) {
         return  axios.get(`http://localhost:8083/api/staff-show/${id}`, { headers: authHeader()}) ;
@@ -64,7 +64,7 @@ class StaffService {
         return  axios.put(`http://localhost:8083/api/staff-delete/${id}`, { headers: authHeader()})
     }
      unlookStaff(id) {
-        return  axios.put(`http://localhost:8083/api/staff-unlock/${id}`, { headers: authHeader()})
+        return  axios.post(`http://localhost:8083/api/vmg/staff/unlock/${id}`, { headers: authHeader()})
     }
      updateStaff(id, staff) {
         return  axios.put(`http://localhost:8083/api/staffs/${id}`, staff,  { headers: authHeader()})

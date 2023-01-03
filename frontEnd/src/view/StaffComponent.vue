@@ -13,9 +13,9 @@
               <th>
                   <el-form :inline="true" class="demo-form-inline">
                     <el-form-item>
-                      <el-input
+                      <el-input v-model="text"
                        
-                        placeholder="Nhập tên hoặc mã nhân viên "
+                        placeholder="Nhập tên/ mã hoặc phòng ban nhân viên "
                         style="width: 500px"
                       >
                         <i
@@ -152,7 +152,7 @@
               </table>
             </div>
             <!-- phân trang -->
-            <el-pagination v-if="staffs.content.length > 10"
+            <el-pagination
               style="text-align: right"
               background
               layout="prev, pager, next"
@@ -290,6 +290,7 @@ export default {
         selected: [],
         isShow1: false,
         isShow2: false,
+        text: null
 
   }
 },
@@ -338,8 +339,23 @@ export default {
         return params;
       },
       handlePageChange(value) {
-        this.page = value;
-        this.getAll();
+        if (this.isAll === true) {
+          this.page = value;
+          this.getAll();
+        }
+        else if (this.isCreate === true) {
+          this.page = value;
+          this.retrieveStaff(3)
+        }   
+        else if (this.isUpdate === true) {
+          this.page = value;
+          this.retrieveStaff(0)
+        }
+        else{
+          this.page = value;
+          this.retrieveStaff(2)
+        }
+
       },
       handleCommand(command) {
       if (command === "accept") {
@@ -395,7 +411,7 @@ export default {
       },
       getAll() {
         const params = this.getRequestParams(this.page, this.pageSize);
-        StaffService.getAll(params)
+        StaffService.getAll(params) 
           .then((response) => {
             this.staffs = response.data;
             // this.staffs.content =
@@ -622,7 +638,18 @@ export default {
              message: "Lỗi hệ thống!",
            });
          });
-     }
+     },
+     onFind() {
+        StaffService.getFind(this.text)
+          .then((response) => {
+            this.staffs = response.data;
+            this.count = response.data.totalPages;
+            this.itemCount = response.data.totalElements;
+          })
+          .catch((e) => {
+            console.log(e);
+          });
+      },
       
   },
   created(){
