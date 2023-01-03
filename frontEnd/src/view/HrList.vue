@@ -730,7 +730,6 @@
           });
       },
       onFind() {
-        console.log(this.text);
         StaffService.getFind(this.text)
           .then((response) => {
             this.staffs = response.data;
@@ -831,7 +830,6 @@
         }, 1200);
       },
       handlUpdateMoney() {
-
         let money = this.moneyUpdate.replace(/,/g, '');
         let x = document.forms["form-updateMoney"]["moneyUpdate"].value;
         if (x == "") {
@@ -1187,6 +1185,8 @@
                 type: "success",
               });
               this.reset();
+              this.getEmail()
+              this.getCode()
               this.ischeckcode = true;
               this.ischeckName = true;
               this.ischeckEmail = true;

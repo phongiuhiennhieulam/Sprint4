@@ -82,7 +82,7 @@ public interface StaffRepository extends JpaRepository<Staff,Long> {
     public List<StaffInterface> getErorr();
 
     @Query("SELECT DISTINCT b FROM Staff b JOIN b.department c " +
-            "WHERE b.status = 0 and b.name LIKE %?1% " +
+            "WHERE b.name LIKE %?1% " +
             "OR c.name LIKE %?1%" +
             "OR b.code LIKE %?1%"
     )

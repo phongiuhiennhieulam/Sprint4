@@ -89,7 +89,6 @@ public class StaffController {
     public List<Staff> getByDepartment(@PathVariable Long id){
         return staffService.getListByDepartMent(id);
     }
-    @PreAuthorize("hasRole('ROLE_MODERATOR') or hasRole('ROLE_ADMIN')")
     @GetMapping("/staffs/find")
     public ResponseEntity<Page<Staff>> getListText(@RequestParam(name="text") String text,
                                                    @RequestParam(defaultValue = "0") int page
